@@ -130,7 +130,7 @@ public class RegistroActivity extends AppCompatActivity {
             String apellido = nameParts.length > 1 ? nameParts[1] : "";
             String role = "user"; // Por defecto
 
-            Toast.makeText(this, "Registro con el Google", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Registro con lo Google", Toast.LENGTH_SHORT).show();
 
             // Lanzar directamente el NFC BottomSheet con los datos de Google
             // Indicar que es registro con Google (password vacío)
