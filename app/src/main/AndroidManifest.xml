@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.NFC" />
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <!-- Desde Android 10+ estos permisos ya están deprecados,
+         si usas lectura de almacenamiento pide MANAGE_EXTERNAL_STORAGE o Storage Access Framework -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- 🔹 NFC requerido para que solo se instale en dispositivos compatibles -->
+    <uses-feature
+        android:name="android.hardware.nfc"
+        android:required="true" />
+
+    <application
+        android:name=".MyApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.TecReciclaje"
+        tools:targetApi="31">
+
+        <!-- 🔹 Servicio de Firebase para notificaciones -->
+        <service
+            android:name=".Model.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- 🔹 Actividades -->
+        <activity android:name=".userpanel.RefrescoActivity" android:exported="false" />
+        <activity android:name=".userpanel.ComidaActivity" android:exported="false" />
+        <activity android:name=".adminpanel.EscanearQrActivity" android:exported="false" />
+        <activity android:name=".userpanel.MisValesActivity" android:exported="false" />
+        <activity android:name=".Model.NFCActivity" android:exported="false" />
+        <activity android:name=".userpanel.DesayunoActivity" android:exported="false" />
+        <activity android:name=".RegistroActivity" android:exported="false" />
+        <activity android:name=".userpanel.CafeActivity" android:exported="false" />
+        <activity android:name=".userpanel.HistorialActivity" android:exported="false" />
+        <activity android:name=".userpanel.PerfilActivity" android:exported="false" />
+
+        <!-- Cropper con barra superior -->
+        <activity
+            android:name="com.canhub.cropper.CropImageActivity"
+            android:exported="false"
+            android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar"
+            tools:replace="android:exported" />
+
+        <!-- Splash como pantalla principal -->
+        <activity
+            android:name=".SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Inicio de sesión -->
+        <activity android:name=".LoginActivity" android:exported="true" />
+
+        <!-- Actividades internas -->
+        <activity android:name=".MainActivity" android:exported="false" />
+        <activity android:name=".UserPanel" android:exported="false" />
+        <activity android:name=".AdminPanel" android:exported="false" />
+
+    </application>
+</manifest>

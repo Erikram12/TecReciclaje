@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "129147203722",
+    "firebase_url": "https://resiclaje-39011-default-rtdb.firebaseio.com",
+    "project_id": "resiclaje-39011",
+    "storage_bucket": "resiclaje-39011.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129147203722:android:32a86db8be530ddc85bd73",
+        "android_client_info": {
+          "package_name": "com.example.tecreciclaje"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "129147203722-heg7ja20q7d6h04ogpm99f00jkpfr1op.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tecreciclaje",
+            "certificate_hash": "374b5697b8db08ecc8a7884ae53a714f4acb44b0"
+          }
+        },
+        {
+          "client_id": "129147203722-q3s0ea67tgf8fpsdmen128frde9n9vqh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB46pwgQQRizRVp6WD9UrL3UumaFxVKMiA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "129147203722-q3s0ea67tgf8fpsdmen128frde9n9vqh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

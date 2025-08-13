@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">EcoRecompensa</string>
+
+    <string-array name="filtro_estados">
+        <item>Válido</item>
+        <item>Expirado</item>
+        <item>Todos</item>
+    </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- Firebase Google Sign-In -->
+    <string name="default_web_client_id">129147203722-heg7ja20q7d6h04ogpm99f00jkpfr1op.apps.googleusercontent.com</string>
+
+    <!-- Facebook -->
+    <string name="facebook_app_id">1486115569402739</string>
+    <string name="fb_login_protocol_scheme">fb1486115569402739</string>
+    <string name="facebook_client_token">0f9433fe3b4603d2e15a592888839cb8</string>
+</resources>

@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.TecReciclaje" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Colores principales -->
+        <item name="colorPrimary">#4c8479</item>
+        <item name="colorPrimaryVariant">#3b6e66</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">#4c8479</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Navigation bar (opcional) -->
+        <item name="android:navigationBarColor">#4c8479</item>
+
+        <!-- Otros -->
+        <item name="android:windowBackground">@color/white</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowActionBar">false</item>
+    </style>
+</resources>
