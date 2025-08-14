@@ -10,7 +10,7 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <!-- Firebase Google Sign-In -->
-    <string name="default_web_client_id">129147203722-heg7ja20q7d6h04ogpm99f00jkpfr1op.apps.googleusercontent.com</string>
+    <string name="default_web_client_id">129147203722-q3s0ea67tgf8fpsdmen128frde9n9vqh.apps.googleusercontent.com</string>
 
     <!-- Facebook -->
     <string name="facebook_app_id">1486115569402739</string>

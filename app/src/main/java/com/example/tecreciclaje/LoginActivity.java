@@ -266,6 +266,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
+                showError("Error al obtener datos del usuario.");
                 showLoading(false);
             }
         });
