@@ -1,20 +1,181 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <style name="Theme.TecReciclaje" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Colores principales -->
-        <item name="colorPrimary">#4c8479</item>
-        <item name="colorPrimaryVariant">#3b6e66</item>
+        <item name="colorPrimary">#1B396A</item>
+        <item name="colorPrimaryVariant">#1B396A</item>
         <item name="colorOnPrimary">#FFFFFF</item>
 
         <!-- Status bar -->
-        <item name="android:statusBarColor">#4c8479</item>
+        <item name="android:statusBarColor">#1B396A</item>
         <item name="android:windowLightStatusBar">false</item>
 
         <!-- Navigation bar (opcional) -->
-        <item name="android:navigationBarColor">#4c8479</item>
+        <item name="android:navigationBarColor">#1B396A</item>
 
         <!-- Otros -->
         <item name="android:windowBackground">@color/white</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
+        
+        <!-- Fuente principal de la aplicación -->
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Estilo personalizado para AlertDialog -->
+    <style name="CustomAlertDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorPrimary">#1B396A</item>
+        <item name="colorPrimaryVariant">#1B396A</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/dark_gray</item>
+        <item name="android:colorAccent">#1B396A</item>
+        <item name="buttonBarPositiveButtonStyle">@style/CustomAlertDialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/CustomAlertDialogButton</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMajor">85%</item>
+        <item name="android:windowMinWidthMinor">85%</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:fontFamily">serif</item>
+    </style>
+
+    <!-- Estilo para botones del AlertDialog -->
+    <style name="CustomAlertDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">#1B396A</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="rippleColor">#1A4c8479</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <!-- Estilo para el título del AlertDialog -->
+    <style name="CustomAlertDialogTitle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+
+    <!-- Estilo para el mensaje del AlertDialog -->
+    <style name="CustomAlertDialogMessage" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <!-- Estilo personalizado para Spinner -->
+    <style name="SpinnerStyle" parent="Widget.AppCompat.Spinner.Underlined">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:backgroundTint">@color/white</item>
+        <item name="android:popupBackground">@color/white</item>
+        <item name="android:dropDownSelector">@color/verde_principal</item>
+        <item name="android:dropDownWidth">match_parent</item>
+        <item name="android:fontFamily">serif</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <!-- Estilo para los items del Spinner -->
+    <style name="SpinnerDropDownItemStyle" parent="Widget.AppCompat.DropDownItem.Spinner">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:letterSpacing">0.02</item>
+    </style>
+
+    <!-- Estilo específico para el diálogo de logout con fuente Nunito -->
+    <style name="LogoutDialogStyle" parent="CustomAlertDialog">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+    </style>
+
+    <!-- Estilo para textos del diálogo de logout -->
+    <style name="LogoutDialogTextStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:gravity">center</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+    </style>
+
+    <!-- Estilo para botones del diálogo de logout -->
+    <style name="LogoutDialogButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <!-- Estilos globales para toda la aplicación -->
+    
+    <!-- Estilo para títulos principales -->
+    <style name="AppTitleStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- Estilo para subtítulos -->
+    <style name="AppSubtitleStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/primary_text_color</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <!-- Estilo para texto del cuerpo -->
+    <style name="AppBodyTextStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/secondary_text_color</item>
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:lineSpacingExtra">4dp</item>
+    </style>
+
+    <!-- Estilo para texto pequeño -->
+    <style name="AppSmallTextStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/secondary_text_color</item>
+        <item name="android:letterSpacing">0.01</item>
+    </style>
+
+    <!-- Estilo para botones principales -->
+    <style name="AppButtonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <!-- Estilo para campos de entrada -->
+    <style name="AppEditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/primary_text_color</item>
+    </style>
+
+    <!-- Estilo para etiquetas -->
+    <style name="AppLabelStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/primary_text_color</item>
     </style>
 </resources>

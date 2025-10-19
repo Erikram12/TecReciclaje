@@ -1,55 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
-    android:elevation="4dp"
-    android:background="@android:color/white"
-    android:padding="12dp">
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="3dp"
+    app:cardUseCompatPadding="true"
+    app:cardBackgroundColor="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:background="@color/white"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical"
+        android:background="@color/white">
 
-        <ImageView
-            android:id="@+id/imgVale"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="12dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/cafesito1" />
+        <!-- Imagen del producto -->
+        <LinearLayout
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:background="@drawable/circle_background"
+            android:gravity="center"
+            android:layout_marginEnd="12dp">
 
+            <ImageView
+                android:id="@+id/imgVale"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/cafesito1" />
+
+        </LinearLayout>
+
+        <!-- Información del vale -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:background="@color/white">
 
+            <!-- Nombre del producto -->
             <TextView
                 android:id="@+id/txtProducto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Producto"
+                android:text="Café"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="#4c8479" />
+                android:textColor="@color/verde_principal"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="2dp" />
 
-            <TextView
-                android:id="@+id/txtEstado"
+            <!-- Estado del vale -->
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Estado"
-                android:textSize="14sp"
-                android:textColor="#888888" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="2dp">
+
+                <View
+                    android:id="@+id/indicadorEstado"
+                    android:layout_width="6dp"
+                    android:layout_height="6dp"
+                    android:background="@drawable/circle_background"
+                    android:layout_marginEnd="6dp" />
+
+                <TextView
+                    android:id="@+id/txtEstado"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Válido"
+                    android:textSize="12sp"
+                    android:textColor="@color/dark_gray"
+                    android:fontFamily="sans-serif-light" />
+
+            </LinearLayout>
+
+            <!-- Fecha de expiración -->
             <TextView
                 android:id="@+id/txtExpiracion"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Expira el: ..."
-                android:textSize="14sp"
-                android:textColor="#888888" />
+                android:text="Expira el: 31/12/2024"
+                android:textSize="12sp"
+                android:textColor="@color/dark_gray"
+                android:fontFamily="sans-serif-light" />
+
         </LinearLayout>
+
+        <!-- Badge de estado -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:background="@color/white">
+
+            <TextView
+                android:id="@+id/badgeEstado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="VÁLIDO"
+                android:textColor="@color/white"
+                android:textSize="9sp"
+                android:fontFamily="sans-serif-medium"
+                android:background="@drawable/circle_light_bg"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="3dp" />
+
+        </LinearLayout>
+
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

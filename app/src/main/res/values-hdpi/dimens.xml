@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dimensiones específicas para hdpi (densidad 1.5x) -->
+    
+    <!-- Tamaños de iconos ajustados para hdpi -->
+    <dimen name="icon_size_small">18dp</dimen>
+    <dimen name="icon_size_medium">27dp</dimen>
+    <dimen name="icon_size_large">36dp</dimen>
+    <dimen name="icon_size_xlarge">54dp</dimen>
+    
+    <!-- Tamaños de imágenes ajustados para hdpi -->
+    <dimen name="image_size_small">45dp</dimen>
+    <dimen name="image_size_medium">60dp</dimen>
+    <dimen name="image_size_large">90dp</dimen>
+    <dimen name="image_size_xlarge">120dp</dimen>
+</resources>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".MainActivity">
+
+    <!-- Panel izquierdo para la animación -->
+    <RelativeLayout
+        android:id="@+id/animation_panel"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:padding="@dimen/margin_large">
+
+        <!-- Animación Lottie centrada -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/login_animation"
+            android:layout_width="@dimen/image_size_xlarge"
+            android:layout_height="@dimen/image_size_xlarge"
+            android:layout_centerInParent="true"
+            android:visibility="visible"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/carga" />
+            
+        <!-- Texto de carga -->
+        <TextView
+            android:id="@+id/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_animation"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="Cargando aplicación..."
+            android:textSize="@dimen/text_size_large"
+            android:textColor="@color/primary_color"
+            android:fontFamily="sans-serif-light" />
+    </RelativeLayout>
+
+    <!-- Panel derecho para información adicional (opcional) -->
+    <LinearLayout
+        android:id="@+id/info_panel"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="@dimen/margin_large"
+        android:gravity="center">
+
+        <!-- Logo o información de la app -->
+        <ImageView
+            android:layout_width="@dimen/image_size_large"
+            android:layout_height="@dimen/image_size_large"
+            android:layout_marginBottom="@dimen/margin_large"
+            android:src="@drawable/logo"
+            android:contentDescription="Logo TecReciclaje" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TecReciclaje"
+            android:textSize="@dimen/text_size_xlarge"
+            android:textColor="@color/primary_color"
+            android:fontFamily="sans-serif-light"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="Sistema de reciclaje inteligente"
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/text_secondary_light"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center" />
+    </LinearLayout>
+
+</LinearLayout>

@@ -4,4 +4,38 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+
+    <!-- Estilo personalizado para AlertDialog (tema oscuro) -->
+    <style name="CustomAlertDialog" parent="Theme.MaterialComponents.DayNight.Dialog.Alert">
+        <item name="colorPrimary">#4c8479</item>
+        <item name="colorPrimaryVariant">#3b6e66</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:textColorPrimary">@color/black</item>
+        <item name="android:textColorSecondary">@color/dark_gray</item>
+        <item name="android:colorAccent">#4c8479</item>
+        <item name="buttonBarPositiveButtonStyle">@style/CustomAlertDialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/CustomAlertDialogButton</item>
+    </style>
+
+    <!-- Estilo para botones del AlertDialog (tema oscuro) -->
+    <style name="CustomAlertDialogButton" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">#4c8479</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="rippleColor">#1A4c8479</item>
+    </style>
+
+    <!-- Estilo para el título del AlertDialog (tema oscuro) -->
+    <style name="CustomAlertDialogTitle" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <!-- Estilo para el mensaje del AlertDialog (tema oscuro) -->
+    <style name="CustomAlertDialogMessage" parent="MaterialAlertDialog.MaterialComponents.Body.Text">
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">16sp</item>
+    </style>
 </resources>

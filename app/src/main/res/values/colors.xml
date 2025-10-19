@@ -11,15 +11,46 @@
     <color name="orange1">#FE6900</color>
     <color name="red">#FE0000</color>
     <color name="lavender">#9ad0d3</color>
-    <color name="lavenderBtn">#4c8479</color>
+    <color name="lavenderBtn">#1B396A</color>
     <color name="border">#49688d</color>
     <color name="background_gradient_start">#000000</color>
     <color name="background_gradient_end">#DDDDDD</color>
     <color name="fastlane_background">#0096a6</color>
     <color name="search_opaque">#ffaa3f</color>
     <color name="selected_background">#ffaa3f</color>
-    <color name="default_background">#3d3d3d</color>
-    <color name="verde_principal">#4C8479</color>
+    <color name="default_background">#1B396A</color>
+    <color name="verde_principal">#1B396A</color>
+    <color name="primary_color">#1B396A</color>
     <color name="light_gray">#F3F3F3</color>
+    <color name="naranja">#FF9800</color>
+    <color name="rojo">#F44336</color>
+    <color name="verde_claro">#E8F5E8</color>
+    <color name="naranja_claro">#FFF3E0</color>
+    <color name="rojo_claro">#FFEBEE</color>
+    <color name="gris_claro">#F5F5F5</color>
+    <color name="notification_color">#4CAF50</color>
+    <color name="notification_light_color">#4CAF50</color>
 
+    <!-- Agregar estos colores a tu colors.xml existente -->
+    <color name="primary_text_color">#2C3E50</color>
+    <color name="secondary_text_color">#5D6D7E</color>
+    <color name="accent_color">#3498DB</color>
+    <color name="danger_color">#E74C3C</color>
+    <color name="success_color">#27AE60</color>
+    <color name="warning_color">#F39C12</color>
+
+    <!-- Colores para el diseño moderno de estadísticas -->
+    <color name="background_light">#F8F9FA</color>
+    <color name="blue_light">#E3F2FD</color>
+    <color name="blue_dark">#1976D2</color>
+    <color name="orange_light">#FFF3E0</color>
+    <color name="orange_dark">#F57C00</color>
+    <color name="green_light">#E8F5E8</color>
+    <color name="green_dark">#388E3C</color>
+    <color name="purple_light">#F3E5F5</color>
+    <color name="purple_dark">#7B1FA2</color>
+    <color name="teal_light">#E0F2F1</color>
+    <color name="teal_dark">#00695C</color>
+    <color name="red_light">#FFEBEE</color>
+    <color name="red_dark">#D32F2F</color>
 </resources>

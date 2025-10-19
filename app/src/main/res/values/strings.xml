@@ -9,11 +9,27 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!-- Firebase Google Sign-In -->
-    <string name="default_web_client_id">129147203722-q3s0ea67tgf8fpsdmen128frde9n9vqh.apps.googleusercontent.com</string>
+    <!-- Mensajes de carga -->
+    <string name="loading_app">Cargando aplicación...</string>
+    <string name="loading">Cargando...</string>
+    
+    <!-- Descripción de la app -->
+    <string name="app_description">Sistema de reciclaje inteligente</string>
+    
+    <!-- Acciones comunes -->
+    <string name="ok">Aceptar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="save">Guardar</string>
+    <string name="delete">Eliminar</string>
+    <string name="edit">Editar</string>
+    <string name="back">Atrás</string>
+    
+    <!-- Navegación -->
+    <string name="home">Inicio</string>
+    <string name="profile">Perfil</string>
+    <string name="history">Historial</string>
+    <string name="settings">Configuración</string>
 
-    <!-- Facebook -->
-    <string name="facebook_app_id">1486115569402739</string>
-    <string name="fb_login_protocol_scheme">fb1486115569402739</string>
-    <string name="facebook_client_token">903f6d62e9e3bc12d073c92318562003</string>
+    <!-- Firebase Google Sign-In -->
+    <string name="default_web_client_id">129147203722-b32p85qb3hg0i0po8cqk2m6sj8bva29b.apps.googleusercontent.com</string>
 </resources>

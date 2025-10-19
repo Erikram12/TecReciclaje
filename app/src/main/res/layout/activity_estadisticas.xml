@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_light"
+    tools:context=".adminpanel.EstadisticasActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+        <!-- Header moderno con gradiente -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@color/primary">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="32dp"
+                android:background="@drawable/header_gradient">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_analytics_24"
+                        android:tint="@color/white"
+                        android:layout_marginEnd="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Detalles estadisticos"
+                            android:textColor="@color/white"
+                            android:textSize="23sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-light" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Análisis detallado de reciclaje"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:alpha="0.9"
+                            android:layout_marginTop="4dp"
+                            android:fontFamily="sans-serif-light" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_trending_up_24"
+                        android:tint="@color/white"
+                        android:alpha="0.8" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="4dp"
+                    android:background="@color/white"
+                    android:alpha="0.7"
+                    android:layout_gravity="center_horizontal" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Resumen de estadísticas con diseño moderno -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="24dp">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_dashboard_24"
+                        android:tint="@color/primary"
+                        android:layout_marginEnd="12dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Métricas Principales"
+                        android:textColor="@color/primary"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-light" />
+
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="3dp"
+                        android:background="@color/primary"
+                        android:alpha="0.3" />
+                </LinearLayout>
+
+                <!-- Grid de métricas con diseño mejorado -->
+                <GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:columnCount="2"
+                    android:rowCount="3"
+                    android:alignmentMode="alignBounds"
+                    android:useDefaultMargins="true">
+
+                    <!-- Total Plásticos -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="6dp"
+                        app:cardBackgroundColor="@color/blue_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_recycle_24"
+                                android:tint="@color/blue_dark"
+                                android:layout_marginBottom="8dp" />
+
+                            <TextView
+                                android:id="@+id/tvTotalPlasticos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/blue_dark"
+                                android:textSize="32sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-light" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Plásticos"
+                                android:textColor="@color/blue_dark"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-light"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Total Aluminios -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="6dp"
+                        app:cardBackgroundColor="@color/orange_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_can_24"
+                                android:tint="@color/orange_dark"
+                                android:layout_marginBottom="8dp" />
+
+                            <TextView
+                                android:id="@+id/tvTotalAluminios"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textColor="@color/orange_dark"
+                                android:textSize="32sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-light" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Aluminios"
+                                android:textColor="@color/orange_dark"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-light"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Total Ganancias -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="6dp"
+                        app:cardBackgroundColor="@color/green_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_money_24"
+                                android:tint="@color/green_dark"
+                                android:layout_marginBottom="8dp" />
+
+                            <TextView
+                                android:id="@+id/tvTotalGanancias"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="$0.00"
+                                android:textColor="@color/green_dark"
+                                android:textSize="28sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-light" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Ganancias"
+                                android:textColor="@color/green_dark"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-light"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Promedio Diario -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="6dp"
+                        app:cardBackgroundColor="@color/purple_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_trending_up_24"
+                                android:tint="@color/purple_dark"
+                                android:layout_marginBottom="8dp" />
+
+                            <TextView
+                                android:id="@+id/tvPromedioDiario"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="$0.00"
+                                android:textColor="@color/purple_dark"
+                                android:textSize="28sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-light" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Promedio Diario"
+                                android:textColor="@color/purple_dark"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-light"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Mejor Día -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="6dp"
+                        app:cardBackgroundColor="@color/teal_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_trophy_24"
+                                android:tint="@color/teal_dark"
+                                android:layout_marginBottom="8dp" />
+
+                            <TextView
+                                android:id="@+id/tvMejorDia"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="N/A"
+                                android:textColor="@color/teal_dark"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-light" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Mejor Día"
+                                android:textColor="@color/teal_dark"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-light"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Peor Día -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_columnWeight="1"
+                        android:layout_margin="8dp"
+                        app:cardCornerRadius="16dp"
+                        app:cardElevation="6dp"
+                        app:cardBackgroundColor="@color/red_light">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp"
+                            android:gravity="center">
+
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_trending_down_24"
+                                android:tint="@color/red_dark"
+                                android:layout_marginBottom="8dp" />
+
+                            <TextView
+                                android:id="@+id/tvPeorDia"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="N/A"
+                                android:textColor="@color/red_dark"
+                                android:textSize="20sp"
+                                android:textStyle="bold"
+                                android:fontFamily="sans-serif-light" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Peor Día"
+                                android:textColor="@color/red_dark"
+                                android:textSize="14sp"
+                                android:fontFamily="sans-serif-light"
+                                android:layout_marginTop="4dp" />
+                        </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+                </GridLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Tabla de datos detallados -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_table_24"
+                        android:tint="@color/primary"
+                        android:layout_marginEnd="12dp" />
+
+                    <TextView
+                        android:id="@+id/tvTituloTabla"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Datos Detallados"
+                        android:textColor="@color/primary"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-light" />
+
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="3dp"
+                        android:background="@color/primary"
+                        android:alpha="0.3" />
+                </LinearLayout>
+
+                <!-- Header de la tabla con diseño moderno -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/primary">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Fecha"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:fontFamily="sans-serif-light" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Plásticos"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:fontFamily="sans-serif-light" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Aluminios"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:fontFamily="sans-serif-light" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.2"
+                            android:text="Ganancias"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:fontFamily="sans-serif-light" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerViewEstadisticas"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false" />
+
+                <!-- Controles de paginación modernos -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/background_light"
+                    android:padding="16dp"
+                    android:radius="12dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAnterior"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="← Anterior"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/primary"
+                        android:textAllCaps="false"
+                        android:layout_marginEnd="16dp"
+                        android:enabled="false"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-light"
+                        app:cornerRadius="24dp"
+                        app:elevation="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvPaginaInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Página 1 de 1"
+                        android:textColor="@color/primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginHorizontal="16dp"
+                        android:fontFamily="sans-serif-light" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSiguiente"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:text="Siguiente →"
+                        android:textColor="@color/white"
+                        android:backgroundTint="@color/primary"
+                        android:textAllCaps="false"
+                        android:layout_marginStart="16dp"
+                        android:enabled="false"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-light"
+                        app:cornerRadius="24dp"
+                        app:elevation="4dp" />
+                </LinearLayout>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Gráfica de estadísticas -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="12dp"
+            app:cardBackgroundColor="@color/white">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_bar_chart_24"
+                        android:tint="@color/primary"
+                        android:layout_marginEnd="12dp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Análisis de Tendencias"
+                        android:textColor="@color/primary"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-light" />
+
+                    <View
+                        android:layout_width="40dp"
+                        android:layout_height="3dp"
+                        android:background="@color/primary"
+                        android:alpha="0.3" />
+                </LinearLayout>
+
+                <!-- Selector de vista con diseño moderno -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="20dp"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="4dp"
+                    app:cardBackgroundColor="@color/background_light">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="4dp">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnVistaDia"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="Por Día"
+                            android:textSize="12sp"
+                            android:textColor="@color/white"
+                            android:backgroundTint="@color/primary"
+                            android:textAllCaps="false"
+                            android:fontFamily="sans-serif-light"
+                            app:cornerRadius="18dp"
+                            app:elevation="2dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnVistaMes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="Por Mes"
+                            android:textSize="12sp"
+                            android:textColor="@color/primary"
+                            android:backgroundTint="@android:color/transparent"
+                            android:textAllCaps="false"
+                            android:fontFamily="sans-serif-light"
+                            app:cornerRadius="18dp" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Gráfico con contenedor moderno -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="6dp"
+                    app:cardBackgroundColor="@color/background_light">
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/barChartEstadisticas"
+                        android:layout_width="match_parent"
+                        android:layout_height="320dp"
+                        android:layout_margin="16dp" />
+                </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Barra de navegación inferior -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="@drawable/bottom_nav_background"
+        android:elevation="16dp"
+        app:itemIconTint="@color/bottom_nav_item_tint"
+        app:itemTextColor="@color/bottom_nav_item_tint"
+        app:itemTextAppearanceActiveBoldEnabled="true"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu_admin" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

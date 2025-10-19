@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dimensiones para tablets grandes (sw720dp) -->
+    
+    <!-- Espaciado general -->
+    <dimen name="margin_small">12dp</dimen>
+    <dimen name="margin_medium">24dp</dimen>
+    <dimen name="margin_large">32dp</dimen>
+    <dimen name="margin_xlarge">48dp</dimen>
+    
+    <!-- Tamaños de texto -->
+    <dimen name="text_size_small">16sp</dimen>
+    <dimen name="text_size_medium">20sp</dimen>
+    <dimen name="text_size_large">28sp</dimen>
+    <dimen name="text_size_xlarge">36sp</dimen>
+    
+    <!-- Tamaños de botones -->
+    <dimen name="button_height">64dp</dimen>
+    <dimen name="button_width_min">240dp</dimen>
+    <dimen name="button_padding_horizontal">32dp</dimen>
+    <dimen name="button_padding_vertical">20dp</dimen>
+    
+    <!-- Tamaños de cards -->
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="card_elevation">12dp</dimen>
+    <dimen name="card_padding">24dp</dimen>
+    
+    <!-- Tamaños de iconos -->
+    <dimen name="icon_size_small">28dp</dimen>
+    <dimen name="icon_size_medium">40dp</dimen>
+    <dimen name="icon_size_large">56dp</dimen>
+    <dimen name="icon_size_xlarge">80dp</dimen>
+    
+    <!-- Tamaños de imágenes -->
+    <dimen name="image_size_small">100dp</dimen>
+    <dimen name="image_size_medium">150dp</dimen>
+    <dimen name="image_size_large">200dp</dimen>
+    <dimen name="image_size_xlarge">250dp</dimen>
+    
+    <!-- Grid y columnas -->
+    <dimen name="grid_spacing">20dp</dimen>
+    <dimen name="item_min_width">250dp</dimen>
+    
+    <!-- Altura de elementos de lista -->
+    <dimen name="list_item_height">80dp</dimen>
+    <dimen name="list_item_padding">20dp</dimen>
+</resources>

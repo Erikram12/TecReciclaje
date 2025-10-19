@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".UserPanel">
+
+    <!-- Contenido principal fijo -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Header modernizado -->
+        <include
+            layout="@layout/header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <!-- Sección de productos dinámicos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <!-- Título de sección -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="20dp"
+                    android:background="@color/verde_principal"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/textCategoria"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Productos Disponibles"
+                    android:textColor="@color/verde_principal"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-light"
+                    android:letterSpacing="0.05" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Canjea tus puntos"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="12sp"
+                    android:background="@drawable/circle_light_bg"
+                    android:padding="6dp" />
+
+            </LinearLayout>
+
+            <!-- RecyclerView para productos dinámicos -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewProductos"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="4dp"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                app:spanCount="2"
+                tools:listitem="@layout/item_producto_user" />
+
+            <!-- Mensaje cuando no hay productos -->
+            <TextView
+                android:id="@+id/tvNoProductos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="No hay productos disponibles"
+                android:textColor="@color/dark_gray"
+                android:textSize="16sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Barra de navegación inferior modernizada -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="@drawable/bottom_nav_background"
+        android:elevation="16dp"
+        app:itemIconTint="@color/bottom_nav_item_tint"
+        app:itemTextColor="@color/bottom_nav_item_tint"
+        app:itemTextAppearanceActiveBoldEnabled="true"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

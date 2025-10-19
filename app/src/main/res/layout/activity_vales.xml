@@ -69,7 +69,6 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/lavenderBtn"
-        app:itemActiveIndicatorStyle="@style/Animation.Design.BottomSheetDialog"
         app:itemIconTint="@color/white"
         app:itemTextAppearanceActiveBoldEnabled="true"
         app:layout_constraintBottom_toBottomOf="parent"

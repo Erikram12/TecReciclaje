@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Fondo blanco limpio -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white" />
+
+    <!-- Botón Cancelar en la esquina superior derecha -->
+    <TextView
+        android:id="@+id/cancelButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Cancelar"
+        android:textColor="@color/dark_gray"
+        android:textSize="16sp"
+        android:padding="8dp"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <!-- Contenido principal centrado -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="32dp">
+
+        <!-- Contenedor del logo con iconos decorativos -->
+        <RelativeLayout
+            android:layout_width="180dp"
+            android:layout_height="180dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/logo_container_background"
+            android:elevation="8dp">
+
+            <!-- Logo principal en el centro -->
+            <ImageView
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_centerInParent="true"
+                android:src="@drawable/resicle" />
+
+            <!-- Icono casa (arriba izquierda) -->
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_house"
+                android:alpha="0.7" />
+
+            <!-- Icono reciclaje (arriba derecha) -->
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_recycle"
+                android:alpha="0.7" />
+
+            <!-- Icono hoja (abajo izquierda) -->
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_leaf"
+                android:alpha="0.7" />
+
+            <!-- Icono basura (abajo derecha) -->
+            <ImageView
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginBottom="20dp"
+                android:layout_marginEnd="20dp"
+                android:src="@drawable/ic_trash"
+                android:alpha="0.7" />
+
+            <!-- Iconos adicionales en el medio -->
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="12dp"
+                android:src="@drawable/ic_eco"
+                android:alpha="0.5" />
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/ic_environment"
+                android:alpha="0.5" />
+
+        </RelativeLayout>
+
+
+        <!-- Nombre de la app con efectos -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_marginBottom="48dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TecReciclaje"
+                android:textColor="@color/black"
+                android:textSize="36sp"
+                android:fontFamily="sans-serif-light"
+                android:letterSpacing="0.1"
+                android:textStyle="bold"
+                android:shadowColor="#40000000"
+                android:shadowDx="2"
+                android:shadowDy="2"
+                android:shadowRadius="4" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Recicla, Gana, Disfruta"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginTop="4dp"
+                android:alpha="0.8" />
+
+        </LinearLayout>
+
+        <!-- Botón de Google -->
+        <RelativeLayout
+            android:id="@+id/btnGoogle"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/google_button_background_main"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="4dp">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="20dp"
+                android:src="@drawable/ic_google"
+                android:contentDescription="Google Icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Continuar con Google"
+                android:textColor="#333333"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-light" />
+
+        </RelativeLayout>
+
+        <!-- Botón de Email -->
+        <RelativeLayout
+            android:id="@+id/btnEmail"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/email_button_background"
+            android:clickable="true"
+            android:focusable="true"
+            android:elevation="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Continuar con Email"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-light" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- Enlaces legales en la parte inferior -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Política de privacidad"
+            android:textColor="@color/dark_gray"
+            android:textSize="14sp"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="•"
+            android:textColor="@color/dark_gray"
+            android:textSize="14sp"
+            android:padding="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Términos del servicio"
+            android:textColor="@color/dark_gray"
+            android:textSize="14sp"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+    </LinearLayout>
+
+    <!-- Indicador de gestos en la parte inferior -->
+    <View
+        android:layout_width="40dp"
+        android:layout_height="4dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:background="@color/dark_gray"
+        android:alpha="0.3" />
+
+</RelativeLayout>

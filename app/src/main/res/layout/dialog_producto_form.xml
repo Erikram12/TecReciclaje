@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Encabezado con ícono -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="28dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/ic_product"
+                android:tint="@color/verde_principal"
+                android:contentDescription="Producto" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Detalles del Producto"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/verde_principal" />
+
+        </LinearLayout>
+
+        <!-- Divisor visual -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/light_gray"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Sección de Imagen mejorada con CardView -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="28dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#F0F9F7">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:padding="20dp">
+
+                <!-- Preview de imagen -->
+                <FrameLayout
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@android:color/white">
+
+                    <ImageView
+                        android:id="@+id/ivImagenPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/placeholder_producto" />
+
+                </FrameLayout>
+
+                <!-- Botón para seleccionar imagen -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSeleccionarImagen"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:text="Seleccionar Imagen"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/verde_principal"
+                    app:icon="@drawable/ic_camera"
+                    app:iconGravity="textStart" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Campo Nombre -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:hint="Nombre del producto"
+            app:startIconDrawable="@drawable/ic_product"
+            app:startIconTint="@color/verde_principal"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="@color/verde_principal"
+            app:hintTextColor="@color/verde_principal">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etNombre"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapWords"
+                android:textSize="14sp"
+                android:textColor="@color/dark_gray" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo Descripción -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="18dp"
+            android:hint="Descripción del producto"
+            app:startIconDrawable="@drawable/ic_description"
+            app:startIconTint="@color/verde_principal"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="@color/verde_principal"
+            app:hintTextColor="@color/verde_principal"
+            app:counterEnabled="true"
+            app:counterMaxLength="150">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textCapSentences"
+                android:maxLines="3"
+                android:minLines="3"
+                android:textSize="14sp"
+                android:textColor="@color/dark_gray" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Campo Precio en Puntos -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="36dp"
+            android:hint="Precio en puntos"
+            app:startIconDrawable="@drawable/ic_points"
+            app:startIconTint="@color/verde_principal"
+            app:suffixText="pts"
+            app:suffixTextColor="@color/verde_principal"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxStrokeColor="@color/verde_principal"
+            app:hintTextColor="@color/verde_principal">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPrecioPuntos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textSize="14sp"
+                android:textColor="@color/dark_gray" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Botones de acción mejorados -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="8dp">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCancelar"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginEnd="10dp"
+                android:text="Cancelar"
+                android:textAllCaps="false"
+                android:textColor="@color/verde_principal"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                app:strokeColor="@color/verde_principal"
+                app:strokeWidth="2dp"
+                app:rippleColor="@color/verde_principal" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGuardar"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:text="Guardar"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/verde_principal"
+                app:rippleColor="@color/white" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

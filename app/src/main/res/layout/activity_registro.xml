@@ -5,8 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@drawable/fondo">
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +36,10 @@
                     android:text="Registrate"
                     android:textSize="32sp"
                     android:textAlignment="center"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:fontFamily="sans-serif-light"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1"/>
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -51,28 +53,32 @@
                 <RelativeLayout
                     android:id="@+id/btnGoogle"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/custom_edittext"
+                    android:layout_height="48dp"
+                    android:background="@drawable/google_button_background"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="8dp"
                     android:clickable="true"
-                    android:focusable="true">
+                    android:focusable="true"
+                    android:elevation="2dp">
 
                     <ImageView
                         android:id="@+id/googleIcon"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/baseline_email_24"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_google"
                         android:layout_centerVertical="true"
-                        android:layout_marginStart="12dp" />
+                        android:layout_marginStart="16dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Continuar con Google"
+                        android:text="Registrate usando Google"
                         android:layout_centerInParent="true"
-                        android:textColor="@color/black"
-                        android:textSize="14sp" />
+                        android:textColor="#757575"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-light"
+                        android:letterSpacing="0.02" />
 
                 </RelativeLayout>
 
@@ -144,7 +150,7 @@
                     android:drawablePadding="8dp"
                     android:textColor="@color/black"/>
 
-                <EditText
+                <AutoCompleteTextView
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:id="@+id/carreraEditText"
@@ -155,7 +161,11 @@
                     android:textColorHint="@color/black"
                     android:drawableLeft="@drawable/baseline_school_24"
                     android:drawablePadding="8dp"
-                    android:textColor="@color/black"/>
+                    android:textColor="@color/black"
+                    android:completionThreshold="1"
+                    android:inputType="text"
+                    android:focusable="false"
+                    android:clickable="true"/>
 
                 <EditText
                     android:id="@+id/emailEditText"
@@ -164,7 +174,7 @@
                     android:background="@drawable/custom_edittext"
                     android:layout_marginTop="10dp"
                     android:padding="8dp"
-                    android:hint="Email"
+                    android:hint="Correo"
                     android:textColorHint="@color/black"
                     android:drawableLeft="@drawable/baseline_email_24"
                     android:drawablePadding="8dp"
@@ -177,22 +187,13 @@
                     android:background="@drawable/custom_edittext"
                     android:layout_marginTop="10dp"
                     android:padding="8dp"
-                    android:hint="Password"
+                    android:hint="Contraseña"
                     android:textColorHint="@color/black"
                     android:drawableLeft="@drawable/baseline_lock_24"
+                    android:drawableRight="@drawable/ic_visibility_off"
                     android:drawablePadding="8dp"
                     android:inputType="textPassword"
                     android:textColor="@color/black"/>
-
-                <Switch
-                    android:id="@+id/roleSwitch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:text="Estudiante"
-                    android:textSize="16sp"
-                    android:textColor="@color/black" />
 
                 <RelativeLayout
                     android:id="@+id/btnSiguiente"
@@ -201,10 +202,7 @@
                     android:layout_marginTop="20dp"
                     android:layout_gravity="center"
                     android:background="@drawable/green_button_background_ripple"
-                    android:clickable="true"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/signup_role_switch">
+                    android:clickable="true">
 
                     <com.airbnb.lottie.LottieAnimationView
                         android:id="@+id/signup_animation"

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Configuraciones de pantalla -->
+    
+    <!-- Breakpoints para diferentes tamaños de pantalla -->
+    <integer name="screen_width_breakpoint_small">320</integer>
+    <integer name="screen_width_breakpoint_normal">480</integer>
+    <integer name="screen_width_breakpoint_large">600</integer>
+    <integer name="screen_width_breakpoint_xlarge">720</integer>
+    
+    <!-- Breakpoints para altura de pantalla -->
+    <integer name="screen_height_breakpoint_small">480</integer>
+    <integer name="screen_height_breakpoint_normal">800</integer>
+    <integer name="screen_height_breakpoint_large">1024</integer>
+    <integer name="screen_height_breakpoint_xlarge">1280</integer>
+    
+    <!-- Densidades de pantalla -->
+    <integer name="density_ldpi">120</integer>
+    <integer name="density_mdpi">160</integer>
+    <integer name="density_hdpi">240</integer>
+    <integer name="density_xhdpi">320</integer>
+    <integer name="density_xxhdpi">480</integer>
+    <integer name="density_xxxhdpi">640</integer>
+    
+    <!-- Configuraciones de grid -->
+    <integer name="grid_columns_phone">2</integer>
+    <integer name="grid_columns_tablet">3</integer>
+    <integer name="grid_columns_large_tablet">4</integer>
+    
+    <!-- Configuraciones de animación -->
+    <integer name="animation_duration_short">200</integer>
+    <integer name="animation_duration_medium">300</integer>
+    <integer name="animation_duration_long">500</integer>
+</resources>

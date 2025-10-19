@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:background="@color/white"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- Contenedor principal para la animación -->
+    <RelativeLayout
+        android:id="@+id/animation_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+        <!-- Animación Lottie que se mostrará mientras carga - Optimizada para landscape -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/login_animation"
+            android:layout_width="@dimen/image_size_large"
+            android:layout_height="@dimen/image_size_large"
+            android:layout_centerInParent="true"
+            android:visibility="visible"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_rawRes="@raw/carga" />
+            
+        <!-- Texto de carga para landscape -->
+        <TextView
+            android:id="@+id/loading_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_animation"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:text="Cargando..."
+            android:textSize="@dimen/text_size_medium"
+            android:textColor="@color/primary_color"
+            android:fontFamily="sans-serif-light" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

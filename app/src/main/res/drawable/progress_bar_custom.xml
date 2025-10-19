@@ -1,14 +1,14 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@android:id/background">
         <shape android:shape="rectangle">
-            <solid android:color="#CCCCCC" /> <!-- Fondo gris -->
+            <solid android:color="#E0E0E0" /> <!-- Fondo gris claro -->
             <corners android:radius="10dp" />
         </shape>
     </item>
     <item android:id="@android:id/progress">
         <clip>
             <shape android:shape="rectangle">
-                <solid android:color="#009432" /> <!-- Color verde para el progreso -->
+                <solid android:color="#4CAF50" /> <!-- Color verde de TecReciclaje -->
                 <corners android:radius="10dp" />
             </shape>
         </clip>

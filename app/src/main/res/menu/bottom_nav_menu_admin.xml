@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_dashboard"
+        android:icon="@drawable/baseline_home_24"
+        android:title="Dashboard"
+        android:iconTint="@color/white"/>
+    <item
+        android:id="@+id/nav_scan"
+        android:icon="@drawable/baseline_search_24"
+        android:title="Escanear" />
+    <item
+        android:id="@+id/nav_stats"
+        android:icon="@drawable/baseline_area_chart_24"
+        android:title="Estadísticas" />
+    <item
+        android:id="@+id/nav_contenedores"
+        android:icon="@drawable/baseline_manage_history_24"
+        android:title="Contenedores"/>
+    <item
+        android:id="@+id/nav_productos"
+        android:icon="@drawable/baseline_inventory_24"
+        android:title="Productos"/>
+</menu>

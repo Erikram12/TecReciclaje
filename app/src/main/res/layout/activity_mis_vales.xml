@@ -6,50 +6,186 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".UserPanel">
+    android:background="@drawable/background"
+    tools:context=".userpanel.MisValesActivity">
 
-    <!-- Reutilizando el encabezado -->
-    <include
+    <!-- Header simplificado -->
+    <LinearLayout
         android:id="@+id/header"
-        layout="@layout/header_layout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/header_gradient"
+        android:elevation="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Spinner de filtro -->
-    <Spinner
-        android:id="@+id/spinnerFiltro"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginTop="8dp"
-        android:entries="@array/filtro_estados"
-        android:theme="@style/SpinnerTheme.BlackText"
-        app:layout_constraintTop_toBottomOf="@id/header"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        <!-- Título principal -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="20dp">
 
-    <!-- Lista de vales -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerVales"
+            <View
+                android:layout_width="4dp"
+                android:layout_height="24dp"
+                android:background="@color/white"
+                android:layout_marginEnd="12dp" />
+
+            <TextView
+                android:id="@+id/textTitulo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Mis Vales"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎫"
+                android:textSize="24sp" />
+
+            <!-- Botón de ayuda -->
+            <Button
+                android:id="@+id/btnAyuda"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="?"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/circle_background"
+                android:layout_marginStart="12dp"
+                android:contentDescription="Ayuda" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Contenido principal -->
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:padding="8dp"
-        app:layout_constraintTop_toBottomOf="@id/spinnerFiltro"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:padding="16dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <!-- Barra de navegación inferior -->
+        <!-- Filtro modernizado -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Filtrar por estado:"
+                android:textColor="@color/dark_gray"
+                android:textSize="14sp"
+                android:fontFamily="sans-serif-medium"
+                android:layout_marginBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/spinnerFiltro"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:entries="@array/filtro_estados"
+                android:theme="@style/SpinnerTheme.BlackText"
+                android:background="@drawable/custom_edittext"
+                android:paddingHorizontal="16dp" />
+
+        </LinearLayout>
+
+        <!-- Estado vacío - Visible cuando no hay vales -->
+        <LinearLayout
+            android:id="@+id/emptyStateLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="32dp">
+
+            <!-- Icono de reciclaje -->
+            <ImageView
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/resicle"
+                android:contentDescription="Icono de reciclaje"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Mensaje principal -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="¡Aún no cuentas con vales!"
+                android:textColor="@color/dark_gray"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Mensaje secundario -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sigue reciclando para ganar puntos y canjear productos"
+                android:textColor="@color/dark_gray"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Botón para ver tutorial -->
+            <Button
+                android:id="@+id/btnVerTutorial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="💡 Ver tutorial"
+                android:textColor="@color/white"
+                android:background="@drawable/green_button_background"
+                android:padding="12dp"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_marginTop="16dp" />
+
+        </LinearLayout>
+
+        <!-- Lista de vales -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerVales"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:scrollbars="vertical"
+            android:clipToPadding="false"
+            android:paddingBottom="8dp" />
+
+    </LinearLayout>
+
+    <!-- Barra de navegación inferior modernizada -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/lavenderBtn"
-        app:itemIconTint="@color/white"
+        android:layout_height="72dp"
+        android:background="@drawable/bottom_nav_background"
+        android:elevation="16dp"
+        app:itemIconTint="@color/bottom_nav_item_tint"
+        app:itemTextColor="@color/bottom_nav_item_tint"
+        app:itemTextAppearanceActiveBoldEnabled="true"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 

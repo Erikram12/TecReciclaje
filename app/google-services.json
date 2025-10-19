@@ -15,15 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "129147203722-heg7ja20q7d6h04ogpm99f00jkpfr1op.apps.googleusercontent.com",
+          "client_id": "129147203722-b32p85qb3hg0i0po8cqk2m6sj8bva29b.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.tecreciclaje",
-            "certificate_hash": "374b5697b8db08ecc8a7884ae53a714f4acb44b0"
+            "certificate_hash": "569d6b66ec2a8765eecc6a32923957f48f70c2b0"
           }
         },
         {
-          "client_id": "129147203722-q3s0ea67tgf8fpsdmen128frde9n9vqh.apps.googleusercontent.com",
+          "client_id": "129147203722-ed1on4o479ndblnaf4dt7kvlf6fsn41s.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -36,7 +36,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "129147203722-q3s0ea67tgf8fpsdmen128frde9n9vqh.apps.googleusercontent.com",
+              "client_id": "129147203722-ed1on4o479ndblnaf4dt7kvlf6fsn41s.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

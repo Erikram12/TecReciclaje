@@ -5,14 +5,124 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@drawable/background"
     tools:context=".userpanel.CafeActivity">
 
-    <!-- ScrollView que ocupa la mayor parte de la pantalla -->
+    <!-- Header modernizado -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/header_gradient"
+        android:elevation="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Título y botón de regreso -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="20dp">
+
+            <ImageButton
+                android:id="@+id/btnBack"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/baseline_arrow_back_24"
+                android:background="@drawable/circle_white_bg"
+                app:tint="@color/verde_principal"
+                android:padding="8dp"
+                android:contentDescription="Regresar" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="☕ Café"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="center" />
+
+            <!-- Botón de ayuda -->
+            <Button
+                android:id="@+id/btnAyuda"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:text="?"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/circle_background"
+                android:layout_marginStart="12dp"
+                android:contentDescription="Ayuda" />
+
+        </LinearLayout>
+
+        <!-- Información de puntos -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="20dp"
+            android:paddingBottom="16dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Puntos Disponibles"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:alpha="0.9"
+                    android:fontFamily="sans-serif-light" />
+
+                <TextView
+                    android:id="@+id/textViewProgreso"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="100 pts"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:fontFamily="sans-serif-medium" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textPrecioPuntos"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="200 pts"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
+                android:background="@drawable/circle_light_bg"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="6dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Contenido principal -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/header"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -20,121 +130,233 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <!-- Reutilizando el encabezado -->
-            <include
-                layout="@layout/header_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-
-            <!-- Sección de categorías y tarjetas -->
-            <TextView
-                android:id="@+id/textCategoria"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dp"
-                android:padding="5dp"
+            <!-- Imagen del producto con contenedor moderno -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
                 android:layout_gravity="center"
-                android:text="Producto seleccionado"
-                android:textColor="@color/black"
-                android:textSize="22sp" />
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
 
-            <LinearLayout
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:id="@+id/imageProducto"
+                        android:layout_width="160dp"
+                        android:layout_height="160dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/cafesito1" />
+
+                    <!-- Badge de puntos -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@drawable/green_button_background"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="6dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="200"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=" pts"
+                            android:textColor="@color/white"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Información del producto -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp"
-                android:gravity="center_horizontal"
-                android:background="@color/white">
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
 
-                <!-- Imagen del producto -->
-                <ImageView
-                    android:id="@+id/imageProducto"
-                    android:layout_width="300dp"
-                    android:layout_height="240dp"
-                    android:src="@drawable/cafesito1"
-                    android:scaleType="centerCrop" />
-
-                <!-- Nombre del producto -->
-                <TextView
-                    android:id="@+id/textNombreProducto"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Taza de Café"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black" />
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                <!-- Descripción del producto -->
-                <TextView
-                    android:id="@+id/textDescripcionProducto"
-                    android:layout_width="wrap_content"
+                    <!-- Nombre del producto -->
+                    <TextView
+                        android:id="@+id/textNombreProducto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Taza de Café"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/verde_principal"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="8dp" />
+
+                    <!-- Descripción del producto -->
+                    <TextView
+                        android:id="@+id/textDescripcionProducto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Deliciosa taza de café recién hecho, perfecta para empezar el día con energía. Aroma intenso y sabor equilibrado."
+                        android:textSize="14sp"
+                        android:textColor="@color/dark_gray"
+                        android:fontFamily="sans-serif-light"
+                        android:lineSpacingExtra="2dp"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Características del producto -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="☕ Caliente"
+                            android:textColor="@color/verde_principal"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="⏱️ 5 min"
+                            android:textColor="@color/verde_principal"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="🌱 Natural"
+                            android:textColor="@color/verde_principal"
+                            android:textSize="12sp"
+                            android:fontFamily="sans-serif-medium" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Barra de progreso moderna -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Deliciosa taza de café recién hecho, perfecta para empezar el día con energía."
-                    android:textSize="16sp"
-                    android:textColor="@color/black"
-                    android:gravity="center" />
+                    android:orientation="vertical"
+                    android:padding="12dp">
 
-                <!-- Precio en puntos -->
-                <TextView
-                    android:id="@+id/textPrecioPuntos"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Costo: 200 pts"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
 
-                <!-- Barra de progreso para los puntos -->
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyleHorizontal"
-                    android:layout_width="200dp"
-                    android:layout_height="20dp"
-                    android:layout_marginTop="8dp"
-                    android:progress="50"
-                    android:max="200"
-                    android:progressDrawable="@drawable/progress_bar_custom" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="📊 Progreso de puntos"
+                            android:textSize="16sp"
+                            android:textColor="@color/dark_gray"
+                            android:fontFamily="sans-serif-medium" />
 
-                <!-- Texto con los puntos actuales -->
-                <TextView
-                    android:id="@+id/textViewProgreso"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="100/200 pts"
-                    android:textSize="16sp"
-                    android:textColor="@color/black" />
+                        <TextView
+                            android:id="@+id/textProgresoDetallado"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="100/200"
+                            android:textSize="14sp"
+                            android:textColor="@color/verde_principal"
+                            android:fontFamily="sans-serif-medium"
+                            android:background="@drawable/circle_light_bg"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="4dp" />
 
-                <Button
-                    android:id="@+id/btnCanjear"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:padding="8dp"
-                    android:text="Canjear"
-                    android:backgroundTint="@color/black"
-                    android:textColor="@android:color/white"/>
+                    </LinearLayout>
 
-            </LinearLayout>
+                    <ProgressBar
+                        android:id="@+id/progressBar"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="12dp"
+                        android:progress="50"
+                        android:max="100"
+                        android:progressDrawable="@drawable/progress_bar_custom" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <!-- Botón de canjear modernizado -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCanjear"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="🛒 Canjear Producto"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
+                android:backgroundTint="@color/verde_principal"
+                android:textColor="@color/white"
+                app:cornerRadius="16dp"
+                app:elevation="4dp" />
+
         </LinearLayout>
+
     </ScrollView>
 
-    <!-- Barra de navegación inferior -->
+    <!-- Barra de navegación inferior modernizada -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/lavenderBtn"
-        app:itemActiveIndicatorStyle="@style/Animation.Design.BottomSheetDialog"
-        app:itemIconTint="@color/white"
+        android:layout_height="72dp"
+        android:background="@drawable/bottom_nav_background"
+        android:elevation="16dp"
+        app:itemIconTint="@color/bottom_nav_item_tint"
+        app:itemTextColor="@color/bottom_nav_item_tint"
         app:itemTextAppearanceActiveBoldEnabled="true"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+
 

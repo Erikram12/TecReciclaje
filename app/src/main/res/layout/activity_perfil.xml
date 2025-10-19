@@ -5,13 +5,14 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:windowSoftInputMode="adjustResize"
+    android:background="@drawable/background"
     tools:context=".userpanel.PerfilActivity">
 
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,162 +22,319 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center_horizontal"
-            android:padding="16dp"
-            android:animateLayoutChanges="true">
+            android:padding="20dp">
 
-            <androidx.cardview.widget.CardView
+            <!-- Header con información del usuario -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:backgroundTint="@color/light_gray"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="8dp">
+                android:orientation="vertical"
+                android:background="@drawable/white_box"
+                android:elevation="8dp"
+                android:layout_marginBottom="20dp"
+                android:padding="24dp">
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Configuración del perfil"
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/verde_principal"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:gravity="center_horizontal" />
+
+                <!-- Contenedor horizontal para foto e información -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="24dp"
-                    android:gravity="center_horizontal">
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-
+                    <!-- Foto del lado izquierdo -->
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imageViewProfile2"
-                        android:layout_width="130dp"
-                        android:layout_height="130dp"
-                        android:layout_marginBottom="12dp"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
                         android:src="@drawable/user"
-                        app:civ_border_width="2dp"
+                        app:civ_border_width="3dp"
                         app:civ_border_color="@color/verde_principal"
-                        android:contentDescription="Imagen de perfil" />
+                        android:contentDescription="Imagen de perfil"
+                        android:elevation="6dp"
+                        android:layout_marginEnd="20dp" />
 
-                    <Button
-                        android:id="@+id/btnSelectImage"
-                        android:layout_width="match_parent"
+                    <!-- Información del lado derecho -->
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="Seleccionar Imagen"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:letterSpacing="0.05"
-                        android:background="@drawable/rounded_button_green"
-                        android:drawableStart="@drawable/baseline_person_24"
-                        android:drawablePadding="12dp"
-                        android:layout_marginBottom="24dp" />
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <!-- Nombre -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:hint="Nombre"
-                        android:textColorHint="@color/black"
-                        app:hintEnabled="true"
-                        android:fitsSystemWindows="true"
-                        app:hintAnimationEnabled="false"
-                        app:expandedHintEnabled="true"
-                        app:boxStrokeColor="@color/verde_principal"
-                        app:boxCornerRadiusTopStart="12dp"
-                        app:boxCornerRadiusTopEnd="12dp"
-                        app:boxCornerRadiusBottomStart="12dp"
-                        app:boxCornerRadiusBottomEnd="12dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextNombre"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/textViewUserName"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:inputType="textPersonName"
-                            android:textColor="@color/black" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:text="Usuario"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/verde_principal"
+                            android:layout_marginBottom="8dp" />
 
-                    <!-- Apellido -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:hint="Apellido"
-                        android:textColorHint="@color/black"
-                        app:hintEnabled="true"
-                        app:hintAnimationEnabled="false"
-                        app:expandedHintEnabled="true"
-                        app:boxStrokeColor="@color/verde_principal">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextApellido"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/textViewUserEmail"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:inputType="textPersonName"
-                            android:textColor="@color/black" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:text="usuario@email.com"
+                            android:textSize="14sp"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginBottom="8dp" />
 
-                    <!-- Email -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:hint="Email"
-                        android:textColorHint="@color/black"
-                        app:hintEnabled="true"
-                        app:hintAnimationEnabled="false"
-                        app:expandedHintEnabled="true"
-                        app:boxStrokeColor="@color/verde_principal">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextCorreo"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/textViewUserCarrera"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:inputType="textEmailAddress"
-                            android:textColor="@color/black" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:text="Carrera: Ingeniería en Sistemas"
+                            android:textSize="14sp"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginBottom="4dp" />
 
-                    <!-- Edad -->
-                    <com.google.android.material.textfield.TextInputLayout
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:hint="Edad"
-                        android:textColorHint="@color/black"
-                        app:hintEnabled="true"
-                        app:hintAnimationEnabled="false"
-                        app:expandedHintEnabled="true"
-                        app:boxStrokeColor="@color/verde_principal">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextEdad"
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/textViewUserNumControl"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:inputType="number"
-                            android:textColor="@color/black" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:text="Número de Control: 12345678"
+                            android:textSize="14sp"
+                            android:textColor="@color/dark_gray"
+                            android:layout_marginBottom="4dp" />
 
-                    <Button
-                        android:id="@+id/btnActualizar"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:background="@drawable/rounded_button_green"
-                        android:text="Actualizar Perfil"
-                        android:textColor="@color/white"
-                        android:textAllCaps="false"
-                        android:textSize="16sp"
-                        android:letterSpacing="0.05" />
+                        <TextView
+                            android:id="@+id/textViewUserEdad"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Edad: 22 años"
+                            android:textSize="14sp"
+                            android:textColor="@color/dark_gray" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+
+            <!-- Sección: Información Personal -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/white_box"
+                android:elevation="8dp"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📋 Información Personal"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/verde_principal"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="sans-serif-medium" />
+
+                <!-- Opción: Editar Perfil -->
+                <LinearLayout
+                    android:id="@+id/optionEditProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/baseline_edit_24"
+                        app:tint="@color/verde_principal"
+                        android:layout_marginEnd="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Editar Información Personal"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Modifica tu nombre, carrera, edad, etc."
+                            android:textSize="14sp"
+                            android:textColor="@color/dark_gray" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/baseline_arrow_back_24"
+                        android:rotation="180"
+                        app:tint="@color/dark_gray" />
+
+                </LinearLayout>
+
+                <!-- Opción: Actualizar Llavero NFC -->
+                <LinearLayout
+                    android:id="@+id/optionUpdateNfc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/baseline_nfc_24"
+                        app:tint="@color/verde_principal"
+                        android:layout_marginEnd="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Actualizar Llavero NFC"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cambiar llavero para reciclar"
+                            android:textSize="14sp"
+                            android:textColor="@color/dark_gray" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/baseline_arrow_back_24"
+                        android:rotation="180"
+                        app:tint="@color/dark_gray" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Sección: Logros -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/white_box"
+                android:elevation="8dp"
+                android:padding="20dp"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🏆 Logros"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/verde_principal"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="sans-serif-medium" />
+
+                <!-- Opción: Ver Logros -->
+                <LinearLayout
+                    android:id="@+id/optionVerLogros"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:layout_marginBottom="8dp">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/baseline_area_chart_24"
+                        app:tint="@color/verde_principal"
+                        android:layout_marginEnd="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ver Mis Logros"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Descubre tus logros y estadísticas"
+                            android:textSize="14sp"
+                            android:textColor="@color/dark_gray" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/baseline_arrow_back_24"
+                        android:rotation="180"
+                        app:tint="@color/dark_gray" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
     </ScrollView>
 
+    <!-- Barra de navegación inferior modernizada -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@color/verde_principal"
-        app:itemIconTint="@color/white"
-        app:itemTextColor="@color/white"
+        android:layout_height="72dp"
+        android:background="@drawable/bottom_nav_background"
+        android:elevation="16dp"
+        app:itemIconTint="@color/bottom_nav_item_tint"
+        app:itemTextColor="@color/bottom_nav_item_tint"
+        app:itemTextAppearanceActiveBoldEnabled="true"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_nav_menu" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
