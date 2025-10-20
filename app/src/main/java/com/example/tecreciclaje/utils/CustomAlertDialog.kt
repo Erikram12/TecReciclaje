@@ -503,4 +503,137 @@ object CustomAlertDialog {
 
         return dialog
     }
+
+    /**
+     * Crea un AlertDialog para confirmar el canje de producto con animación de carga
+     */
+    fun createCanjeProductoDialog(
+        context: Context,
+        nombreProducto: String,
+        puntosNecesarios: Int,
+        onConfirmCanje: (() -> Unit)?
+    ): AlertDialog {
+        // Crear el diálogo personalizado
+        val builder = AlertDialog.Builder(context, R.style.LogoutDialogStyle)
+        val dialog = builder.create()
+
+        // Inflar el layout personalizado
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_canje_producto, null)
+        dialog.setView(dialogView)
+
+        // Referencias a las vistas
+        val tvMensaje = dialogView.findViewById<TextView>(R.id.tvMensajeCanje)
+        val btnCancelar = dialogView.findViewById<Button>(R.id.btnCancelar)
+        val btnCanjear = dialogView.findViewById<Button>(R.id.btnCanjear)
+        val loadingContainer = dialogView.findViewById<View>(R.id.loadingContainer)
+        val buttonsContainer = dialogView.findViewById<View>(R.id.buttonsContainer)
+
+        // Personalizar el mensaje con el nombre del producto y puntos
+        tvMensaje.text = "¿Estás seguro de que deseas canjear $puntosNecesarios puntos por '$nombreProducto'?\n\nSe generará un vale válido por 3 días."
+
+        // Configurar botón cancelar
+        btnCancelar.setOnClickListener { dialog.dismiss() }
+
+        // Configurar botón canjear
+        btnCanjear.setOnClickListener {
+            // Mostrar animación de carga
+            buttonsContainer.visibility = View.GONE
+            loadingContainer.visibility = View.VISIBLE
+
+            // Ejecutar la acción de canje después de un pequeño delay
+            Handler(Looper.getMainLooper()).postDelayed({
+                onConfirmCanje?.invoke()
+                dialog.dismiss()
+            }, 1500)
+        }
+
+        return dialog
+    }
+
+    /**
+     * Crea un AlertDialog de canje exitoso con opciones de navegación
+     */
+    fun createCanjeExitosoDialog(
+        context: Context,
+        onVerVale: (() -> Unit)?,
+        onCerrar: (() -> Unit)?
+    ): AlertDialog {
+        // Crear el diálogo personalizado
+        val builder = AlertDialog.Builder(context, R.style.LogoutDialogStyle)
+        val dialog = builder.create()
+
+        // Inflar el layout personalizado
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_canje_exitoso, null)
+        dialog.setView(dialogView)
+
+        // Referencias a las vistas
+        val btnCerrar = dialogView.findViewById<Button>(R.id.btnCerrar)
+        val btnVerVale = dialogView.findViewById<Button>(R.id.btnVerVale)
+
+        // Configurar botón cerrar
+        btnCerrar.setOnClickListener {
+            onCerrar?.invoke()
+            dialog.dismiss()
+        }
+
+        // Configurar botón ver vale
+        btnVerVale.setOnClickListener {
+            onVerVale?.invoke()
+            dialog.dismiss()
+        }
+
+        // Hacer que no se pueda cerrar tocando fuera
+        dialog.setCancelable(false)
+
+        return dialog
+    }
+
+    /**
+     * Crea un AlertDialog de puntos insuficientes
+     */
+    fun createPuntosInsuficientesDialog(
+        context: Context,
+        puntosActuales: Int,
+        puntosNecesarios: Int,
+        nombreProducto: String
+    ): AlertDialog {
+        // Crear el diálogo personalizado
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Puntos Insuficientes")
+
+        val puntosFaltantes = puntosNecesarios - puntosActuales
+        builder.setMessage("Necesitas $puntosNecesarios puntos para canjear '$nombreProducto'.\n\nTienes: $puntosActuales puntos\nTe faltan: $puntosFaltantes puntos\n\n¡Sigue reciclando para obtener más puntos!")
+
+        builder.setPositiveButton("Entendido") { dialog, _ -> dialog.dismiss() }
+
+        val dialog = builder.create()
+        dialog.setOnShowListener {
+            // Estilizar título en naranja
+            val titleId = context.resources.getIdentifier("alertTitle", "id", "android")
+            if (titleId > 0) {
+                val titleView = dialog.findViewById<TextView>(titleId)
+                titleView?.apply {
+                    setTextColor(Color.parseColor("#FF9800")) // Naranja
+                    textSize = 20f
+                    setTypeface(null, android.graphics.Typeface.BOLD)
+                }
+            }
+
+            // Estilizar mensaje
+            val messageView = dialog.findViewById<TextView>(android.R.id.message)
+            messageView?.apply {
+                setTextColor(Color.parseColor("#616161"))
+                textSize = 16f
+            }
+
+            // Estilizar botón en naranja
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE)?.apply {
+                setTextColor(Color.parseColor("#FF9800"))
+                textSize = 16f
+                setTypeface(null, android.graphics.Typeface.BOLD)
+            }
+        }
+
+        return dialog
+    }
 }

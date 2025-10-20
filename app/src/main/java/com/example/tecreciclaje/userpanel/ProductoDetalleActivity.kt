@@ -233,20 +233,23 @@ class ProductoDetalleActivity : AppCompatActivity() {
             val nombreProducto = producto?.nombre ?: "producto"
 
             if (puntos >= puntosNecesarios) {
-                AlertDialog.Builder(this)
-                    .setTitle("Confirmar Canje")
-                    .setMessage("¿Estás seguro de que deseas canjear $puntosNecesarios puntos por $nombreProducto?")
-                    .setPositiveButton("Sí") { _, _ ->
+                // Mostrar diálogo de confirmación personalizado
+                com.example.tecreciclaje.utils.CustomAlertDialog.createCanjeProductoDialog(
+                    this,
+                    nombreProducto,
+                    puntosNecesarios,
+                    {
                         realizarCanje(uid, puntos)
                     }
-                    .setNegativeButton("No", null)
-                    .show()
+                ).show()
             } else {
-                AlertDialog.Builder(this)
-                    .setTitle("Puntos insuficientes")
-                    .setMessage("Necesitas al menos $puntosNecesarios puntos para canjear este producto.")
-                    .setPositiveButton("OK", null)
-                    .show()
+                // Mostrar diálogo de puntos insuficientes personalizado
+                com.example.tecreciclaje.utils.CustomAlertDialog.createPuntosInsuficientesDialog(
+                    this,
+                    puntos,
+                    puntosNecesarios,
+                    nombreProducto
+                ).show()
             }
         }
     }
@@ -288,15 +291,19 @@ class ProductoDetalleActivity : AppCompatActivity() {
             historialRef.child(historialId).child("historial_userId").setValue(uid)
         }
 
-        AlertDialog.Builder(this)
-            .setTitle("¡Canje exitoso!")
-            .setMessage("Tu vale ha sido generado correctamente.")
-            .setPositiveButton("Ver vale") { _, _ ->
+        // Mostrar diálogo de éxito personalizado
+        com.example.tecreciclaje.utils.CustomAlertDialog.createCanjeExitosoDialog(
+            this,
+            onVerVale = {
+                // Navegar a Mis Vales
                 val intent = Intent(this, MisValesActivity::class.java)
                 startActivity(intent)
                 finish()
+            },
+            onCerrar = {
+                // Solo cerrar el diálogo, permanecer en la pantalla actual
+                // El diálogo se cierra automáticamente
             }
-            .setNegativeButton("Cerrar", null)
-            .show()
+        ).show()
     }
 }
