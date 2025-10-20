@@ -22,15 +22,17 @@
         <LinearLayout
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:background="@drawable/circle_background"
+            android:background="@drawable/circle_light_bg"
             android:gravity="center"
             android:layout_marginEnd="12dp">
 
             <ImageView
                 android:id="@+id/imgVale"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:scaleType="centerCrop"
+                android:background="@drawable/circle_light_bg"
+                android:clipToOutline="true"
                 android:src="@drawable/cafesito1" />
 
         </LinearLayout>
