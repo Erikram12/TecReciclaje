@@ -24,8 +24,8 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_gravity="center_horizontal"
-            app:cardCornerRadius="45dp"
-            app:cardElevation="2dp"
+            app:cardCornerRadius="140dp"
+            app:cardElevation="5dp"
             android:layout_marginBottom="12dp"
             app:cardBackgroundColor="@color/light_gray">
 
