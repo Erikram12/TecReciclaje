@@ -385,13 +385,18 @@ class MisValesActivity : AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             val dialogView = layoutInflater.inflate(R.layout.dialog_qr, null)
             val qrImageView = dialogView.findViewById<ImageView>(R.id.qrImageView)
+            val btnCerrar = dialogView.findViewById<ImageButton>(R.id.btnCerrarDialog)
+
             qrImageView.setImageBitmap(bitmap)
 
-            builder.setView(dialogView)
-                .setTitle("Código QR del Vale")
-                .setMessage("Muestra este código al personal para canjear tu vale")
-                .setPositiveButton("Cerrar", null)
-                .show()
+            val dialog = builder.setView(dialogView).create()
+
+            // Configurar el botón de cerrar
+            btnCerrar.setOnClickListener {
+                dialog.dismiss()
+            }
+
+            dialog.show()
 
         } catch (e: Exception) {
             Toast.makeText(this, "Error al generar QR", Toast.LENGTH_SHORT).show()
