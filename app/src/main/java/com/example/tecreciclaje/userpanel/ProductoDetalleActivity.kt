@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.tecreciclaje.LoginActivity
 import com.example.tecreciclaje.R
-import com.example.tecreciclaje.UserPanel
+import com.example.tecreciclaje.UserPanelDynamic
 import com.example.tecreciclaje.domain.model.Producto
 import com.example.tecreciclaje.utils.TutorialManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -25,7 +25,8 @@ class ProductoDetalleActivity : AppCompatActivity() {
     private lateinit var textProgresoDetallado: TextView
     private lateinit var btnCanjear: Button
     private lateinit var btnBack: ImageButton
-    private lateinit var btnAyuda: Button
+
+    private lateinit var btnQuestion: ImageButton
     private lateinit var progressBar: ProgressBar
     private lateinit var ivImagenProducto: ImageView
     private lateinit var tvNombreProducto: TextView
@@ -70,7 +71,7 @@ class ProductoDetalleActivity : AppCompatActivity() {
         textProgresoDetallado = findViewById(R.id.textProgresoDetallado)
         btnCanjear = findViewById(R.id.btnCanjear)
         btnBack = findViewById(R.id.btnBack)
-        btnAyuda = findViewById(R.id.btnAyuda)
+        btnQuestion = findViewById(R.id.btnQuestion)
         progressBar = findViewById(R.id.progressBar)
         ivImagenProducto = findViewById(R.id.ivImagenProducto)
         tvNombreProducto = findViewById(R.id.tvNombreProducto)
@@ -106,7 +107,7 @@ class ProductoDetalleActivity : AppCompatActivity() {
             val itemId = item.itemId
             when (itemId) {
                 R.id.nav_home -> {
-                    startActivity(Intent(this, UserPanel::class.java))
+                    startActivity(Intent(this, UserPanelDynamic::class.java))
                     true
                 }
                 R.id.nav_docs -> {
@@ -136,7 +137,7 @@ class ProductoDetalleActivity : AppCompatActivity() {
      * Configura el botón de ayuda para mostrar el tutorial
      */
     private fun setupHelpButton() {
-        btnAyuda.setOnClickListener {
+        btnQuestion.setOnClickListener {
             // Mostrar tutorial manualmente
             producto?.let { prod ->
                 TutorialManager.showProductoTutorial(this, prod.nombre, R.drawable.placeholder_producto)

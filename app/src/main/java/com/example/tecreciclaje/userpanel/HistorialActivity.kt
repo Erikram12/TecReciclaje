@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.example.tecreciclaje.Model.HistorialPagerAdapter
 import com.example.tecreciclaje.R
-import com.example.tecreciclaje.UserPanel
 import com.example.tecreciclaje.UserPanelDynamic
 import com.example.tecreciclaje.utils.TutorialManager
 import com.google.android.material.bottomnavigation.BottomNavigationView

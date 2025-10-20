@@ -53,17 +53,14 @@
                 android:textSize="24sp" />
 
             <!-- Botón de ayuda -->
-            <Button
+            <ImageButton
                 android:id="@+id/btnAyuda"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:text="?"
-                android:textColor="@color/white"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:background="@drawable/circle_background"
+                android:src="@drawable/question_mark_24dp_000000_fill0_wght400_grad0_opsz24"            android:backgroundTint="@color/white"
+                android:background="@drawable/circle_white_bg"
                 android:layout_marginStart="12dp"
-                android:contentDescription="Ayuda" />
+                android:contentDescription="Informacion" />
 
         </LinearLayout>
 

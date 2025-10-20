@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tecreciclaje.LoginActivity
 import com.example.tecreciclaje.R
-import com.example.tecreciclaje.UserPanel
 import com.example.tecreciclaje.domain.model.Vale
 import com.example.tecreciclaje.Model.ValesAdapter
 import com.example.tecreciclaje.UserPanelDynamic
@@ -35,7 +34,7 @@ class MisValesActivity : AppCompatActivity() {
     private val valesList = mutableListOf<Vale>()
     private lateinit var spinnerFiltro: Spinner
     private lateinit var emptyStateLayout: LinearLayout
-    private lateinit var btnAyuda: Button
+    private lateinit var btnAyuda: ImageButton
     private lateinit var btnVerTutorial: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -159,40 +158,40 @@ class MisValesActivity : AppCompatActivity() {
     private fun filtrarVales(estadoFiltro: String) {
         val filtrados = mutableListOf<Vale>()
 
-        println("DEBUG: Filtrando vales con filtro: $estadoFiltro")
-        println("DEBUG: Total de vales en lista original: ${valesList.size}")
+        println("Filtrando vales con filtro: $estadoFiltro")
+        println("Total de vales en lista original: ${valesList.size}")
 
         for (vale in valesList) {
-            println("DEBUG: Procesando vale - Estado: ${vale.vale_estado}, Descripción: ${vale.vale_descripcion}")
+            println("Procesando vale - Estado: ${vale.vale_estado}, Descripción: ${vale.vale_descripcion}")
             
             when {
                 estadoFiltro.equals("Todos", ignoreCase = true) -> {
                     filtrados.add(vale)
-                    println("DEBUG: Vale agregado (Todos)")
+                    println("Vale agregado (Todos)")
                 }
                 estadoFiltro.equals("Válido", ignoreCase = true) && vale.vale_estado.equals("Válido", ignoreCase = true) -> {
                     filtrados.add(vale)
-                    println("DEBUG: Vale agregado (Válido)")
+                    println("Vale agregado (Válido)")
                 }
                 estadoFiltro.equals("Disponible", ignoreCase = true) && vale.vale_estado.equals("disponible", ignoreCase = true) -> {
                     filtrados.add(vale)
-                    println("DEBUG: Vale agregado (Disponible)")
+                    println("Vale agregado (Disponible)")
                 }
                 estadoFiltro.equals("Expirado", ignoreCase = true) && vale.vale_estado.equals("expirado", ignoreCase = true) -> {
                     filtrados.add(vale)
-                    println("DEBUG: Vale agregado (Expirado)")
+                    println("Vale agregado (Expirado)")
                 }
                 estadoFiltro.equals("Canjeado", ignoreCase = true) && vale.vale_estado.equals("canjeado", ignoreCase = true) -> {
                     filtrados.add(vale)
-                    println("DEBUG: Vale agregado (Canjeado)")
+                    println("Vale agregado (Canjeado)")
                 }
                 else -> {
-                    println("DEBUG: Vale NO agregado - Estado no coincide")
+                    println("Vale NO agregado - Estado no coincide")
                 }
             }
         }
 
-        println("DEBUG: Vales filtrados: ${filtrados.size}")
+        println("Vales filtrados: ${filtrados.size}")
 
         // Crear nuevo adaptador con los datos filtrados
         val nuevoAdapter = ValesAdapter(filtrados, this)
@@ -219,47 +218,47 @@ class MisValesActivity : AppCompatActivity() {
                     val ahora = System.currentTimeMillis()
 
                     // Log para depuración
-                    println("DEBUG: Buscando vales para usuario: $uid")
-                    println("DEBUG: Número de vales encontrados: ${snapshot.childrenCount}")
+                    println("Buscando vales para usuario: $uid")
+                    println("Número de vales encontrados: ${snapshot.childrenCount}")
 
                     for (s in snapshot.children) {
-                        println("DEBUG: Procesando vale con ID: ${s.key}")
+                        println("Procesando vale con ID: ${s.key}")
                         
                         // Intentar obtener el vale con el nuevo modelo
                         val vale = s.getValue(Vale::class.java)
 
                         if (vale != null) {
                             vale.vale_id = s.key ?: ""
-                            println("DEBUG: Vale encontrado - Estado: ${vale.vale_estado}, Descripción: ${vale.vale_descripcion}")
+                            println("Vale encontrado - Estado: ${vale.vale_estado}, Descripción: ${vale.vale_descripcion}")
                             
                             // MEJORADO: Verificación de expiración más robusta
                             verificarExpiracionVale(vale, s)
                             
                             valesList.add(vale)
                         } else {
-                            println("DEBUG: Error al deserializar vale con ID: ${s.key}")
+                            println("Error al deserializar vale con ID: ${s.key}")
                             // Intentar obtener datos manualmente para debug
                             for (child in s.children) {
-                                println("DEBUG: Campo ${child.key} = ${child.value}")
+                                println("Campo ${child.key} = ${child.value}")
                             }
                         }
                     }
 
-                    println("DEBUG: Total de vales en lista: ${valesList.size}")
+                    println("Total de vales en lista: ${valesList.size}")
 
                     // Si no se encontraron vales, intentar en otra ubicación
                     if (valesList.isEmpty()) {
-                        println("DEBUG: No se encontraron vales, buscando alternativo...")
+                        println("No se encontraron vales, buscando alternativo...")
                         buscarValesAlternativo(uid)
                     } else {
                         // Aplicar el filtro actual si hay uno seleccionado
                         if (spinnerFiltro.selectedItem != null) {
                             val filtroSeleccionado = spinnerFiltro.selectedItem.toString()
-                            println("DEBUG: Aplicando filtro: $filtroSeleccionado")
+                            println("Aplicando filtro: $filtroSeleccionado")
                             filtrarVales(filtroSeleccionado)
                         } else {
                             // Si no hay filtro, mostrar todos
-                            println("DEBUG: Mostrando todos los vales sin filtro")
+                            println("Mostrando todos los vales sin filtro")
                             adapter.notifyDataSetChanged()
                             actualizarEstadoVista()
                         }
@@ -267,7 +266,7 @@ class MisValesActivity : AppCompatActivity() {
                 }
 
                 override fun onCancelled(error: DatabaseError) {
-                    println("DEBUG: Error al obtener vales: ${error.message}")
+                    println("Error al obtener vales: ${error.message}")
                     Toast.makeText(this@MisValesActivity, 
                         "Error al obtener vales: ${error.message}", Toast.LENGTH_SHORT).show()
                 }
@@ -349,7 +348,7 @@ class MisValesActivity : AppCompatActivity() {
                 if (!vale.vale_estado.equals("expirado", ignoreCase = true) && !vale.vale_estado.equals("Caducado", ignoreCase = true)) {
                     vale.vale_estado = "expirado"
                     debeActualizar = true
-                    println("DEBUG: Vale ${vale.vale_id} expirado por tiempo transcurrido")
+                    println("Vale ${vale.vale_id} expirado por tiempo transcurrido")
                 }
             }
         }
@@ -358,7 +357,7 @@ class MisValesActivity : AppCompatActivity() {
         if (vale.vale_estado.equals("Caducado", ignoreCase = true)) {
             vale.vale_estado = "expirado"
             debeActualizar = true
-            println("DEBUG: Vale ${vale.vale_id} estandarizado de 'Caducado' a 'expirado'")
+            println("Vale ${vale.vale_id} estandarizado de 'Caducado' a 'expirado'")
         }
         
         // Actualizar en la base de datos si es necesario
@@ -367,7 +366,7 @@ class MisValesActivity : AppCompatActivity() {
             if (vale.vale_fecha_expiracion == null) {
                 snapshot.ref.child("vale_fecha_expiracion").setValue(ahora)
             }
-            println("DEBUG: Vale ${vale.vale_id} actualizado como expirado en BD")
+            println("Vale ${vale.vale_id} actualizado como expirado en BD")
         }
     }
 

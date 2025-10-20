@@ -15,7 +15,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.example.tecreciclaje.AdminPanel
 import com.example.tecreciclaje.LoginActivity
 import com.example.tecreciclaje.R
-import com.example.tecreciclaje.UserPanel
+import com.example.tecreciclaje.UserPanelDynamic
 import com.example.tecreciclaje.di.DependencyInjection
 import com.example.tecreciclaje.domain.model.Usuario
 import com.example.tecreciclaje.presentation.viewmodel.MainViewModel
@@ -140,7 +140,7 @@ class MainActivityRefactored : AppCompatActivity() {
         val intent = if (role == "admin") {
             Intent(this, AdminPanel::class.java)
         } else {
-            Intent(this, UserPanel::class.java)
+            Intent(this, UserPanelDynamic::class.java)
         }
         startActivity(intent)
         finish()

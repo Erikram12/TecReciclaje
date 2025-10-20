@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tecreciclaje.LoginActivity
 import com.example.tecreciclaje.R
-import com.example.tecreciclaje.UserPanel
 import com.example.tecreciclaje.utils.CircleTransform
 import com.example.tecreciclaje.utils.FCMTokenManager
 import com.example.tecreciclaje.utils.TutorialManager
