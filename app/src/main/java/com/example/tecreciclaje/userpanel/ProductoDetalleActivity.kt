@@ -25,13 +25,12 @@ class ProductoDetalleActivity : AppCompatActivity() {
     private lateinit var textProgresoDetallado: TextView
     private lateinit var btnCanjear: Button
     private lateinit var btnBack: ImageButton
-
     private lateinit var btnQuestion: ImageButton
     private lateinit var progressBar: ProgressBar
     private lateinit var ivImagenProducto: ImageView
     private lateinit var tvNombreProducto: TextView
     private lateinit var tvDescripcionProducto: TextView
-    
+
     private var producto: Producto? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,9 +59,15 @@ class ProductoDetalleActivity : AppCompatActivity() {
         getUserData(currentUser.uid)
         setupNavigation()
         setupBackButton()
-        
+
         // MOSTRAR TUTORIAL SI ES NECESARIO
-        TutorialManager.showProductoTutorialIfNeeded(this, producto!!.nombre, R.drawable.placeholder_producto)
+        producto?.let { prod ->
+            if (prod.imagenUrl.isNotEmpty()) {
+                TutorialManager.showProductoTutorialIfNeededConUrl(this, prod.nombre, prod.imagenUrl)
+            } else {
+                TutorialManager.showProductoTutorialIfNeeded(this, prod.nombre, R.drawable.placeholder_producto)
+            }
+        }
     }
 
     private fun initializeViews() {
@@ -76,7 +81,7 @@ class ProductoDetalleActivity : AppCompatActivity() {
         ivImagenProducto = findViewById(R.id.ivImagenProducto)
         tvNombreProducto = findViewById(R.id.tvNombreProducto)
         tvDescripcionProducto = findViewById(R.id.tvDescripcionProducto)
-        
+
         // Configurar botón de ayuda
         setupHelpButton()
     }
@@ -86,7 +91,7 @@ class ProductoDetalleActivity : AppCompatActivity() {
             tvNombreProducto.text = prod.nombre
             tvDescripcionProducto.text = prod.descripcion
             textPrecioPuntos.text = "${prod.precioPuntos} pts"
-            
+
             // Cargar imagen
             if (prod.imagenUrl.isNotEmpty()) {
                 Glide.with(this)
@@ -132,15 +137,21 @@ class ProductoDetalleActivity : AppCompatActivity() {
             finish()
         }
     }
-    
+
     /**
      * Configura el botón de ayuda para mostrar el tutorial
      */
     private fun setupHelpButton() {
         btnQuestion.setOnClickListener {
-            // Mostrar tutorial manualmente
+            // Mostrar tutorial manualmente con la imagen actual del producto
             producto?.let { prod ->
-                TutorialManager.showProductoTutorial(this, prod.nombre, R.drawable.placeholder_producto)
+                if (prod.imagenUrl.isNotEmpty()) {
+                    // Si tiene URL, usar el método con URL
+                    TutorialManager.showProductoTutorialConUrl(this, prod.nombre, prod.imagenUrl)
+                } else {
+                    // Si no tiene URL, usar el método con recurso
+                    TutorialManager.showProductoTutorial(this, prod.nombre, R.drawable.placeholder_producto)
+                }
             }
         }
     }
@@ -153,9 +164,9 @@ class ProductoDetalleActivity : AppCompatActivity() {
                     // MEJORADO: Manejo seguro de puntos con logs
                     val puntosObj = snapshot.child("usuario_puntos").value
                     var puntos = 0
-                    
+
                     Log.d("ProductoDetalleActivity", "Datos de puntos recibidos: $puntosObj (tipo: ${puntosObj?.javaClass?.simpleName ?: "null"})")
-                    
+
                     puntos = when (puntosObj) {
                         is Int -> {
                             Log.d("ProductoDetalleActivity", "Puntos como Int: $puntosObj")
@@ -185,25 +196,25 @@ class ProductoDetalleActivity : AppCompatActivity() {
                             0
                         }
                     }
-                    
+
                     val puntosNecesarios = producto?.precioPuntos ?: 0
-                    
+
                     // Actualizar puntos disponibles
                     textViewProgreso.text = "$puntos pts"
-                    
+
                     // Actualizar progreso detallado
                     textProgresoDetallado.text = "$puntos/$puntosNecesarios"
-                    
+
                     // Actualizar barra de progreso
                     val progreso = if (puntosNecesarios > 0) minOf((puntos * 100) / puntosNecesarios, 100) else 0
                     progressBar.progress = progreso
-                    
+
                     // Habilitar/deshabilitar botón de canje
                     btnCanjear.isEnabled = puntos >= puntosNecesarios
-                    
+
                     // Configurar el botón de canjear
                     setupCanjearButton(puntos, uid)
-                    
+
                     Log.d("ProductoDetalleActivity", "UI actualizada - Puntos mostrados: $puntos, Progreso: $progreso%")
                 } else {
                     Log.w("ProductoDetalleActivity", "No se encontraron datos para el usuario: $uid")
@@ -220,7 +231,7 @@ class ProductoDetalleActivity : AppCompatActivity() {
         btnCanjear.setOnClickListener {
             val puntosNecesarios = producto?.precioPuntos ?: 0
             val nombreProducto = producto?.nombre ?: "producto"
-            
+
             if (puntos >= puntosNecesarios) {
                 AlertDialog.Builder(this)
                     .setTitle("Confirmar Canje")

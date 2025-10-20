@@ -27,7 +27,7 @@
                 android:id="@+id/iconoProducto"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:src="@drawable/comida"
+                android:src="@drawable/cafesito1"
                 android:contentDescription="Icono de producto"
                 android:layout_marginEnd="16dp" />
 

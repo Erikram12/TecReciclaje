@@ -310,28 +310,36 @@ class GestionProductosActivity : AppCompatActivity() {
     }
 
     private fun confirmarEliminarProducto(producto: Producto) {
-        CustomAlertDialog.createConfirmationDialog(
+        CustomAlertDialog.createDeleteProductDialog(
             this,
-            "Eliminar Producto",
-            "¿Estás seguro de que deseas eliminar el producto '${producto.nombre}'?",
-            "Eliminar",
-            "Cancelar",
+            producto.nombre,
             {
                 lifecycleScope.launch {
                     try {
                         val success = productoRepository.eliminarProducto(producto.id)
                         if (success) {
-                            Toast.makeText(this@GestionProductosActivity, "Producto eliminado exitosamente", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@GestionProductosActivity,
+                                "Producto eliminado exitosamente",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         } else {
-                            Toast.makeText(this@GestionProductosActivity, "Error al eliminar el producto", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                this@GestionProductosActivity,
+                                "Error al eliminar el producto",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     } catch (e: Exception) {
                         Log.e("GestionProductos", "Error eliminando producto", e)
-                        Toast.makeText(this@GestionProductosActivity, "Error al eliminar el producto", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            this@GestionProductosActivity,
+                            "Error al eliminar el producto",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
-            },
-            null
+            }
         ).show()
     }
 }

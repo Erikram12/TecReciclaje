@@ -141,16 +141,14 @@ class EstadoContenedoresActivity : AppCompatActivity() {
     }
 
     private fun mostrarDialogoActualizarEstado(tipoContenedor: String, nombreContenedor: String) {
-        AlertDialog.Builder(this)
-            .setTitle("Vaciar Contenedor - $nombreContenedor")
-            .setMessage("¿Confirmas que el contenedor ha sido vaciado?")
-            .setPositiveButton("Sí, Vaciar") { _, _ ->
+        com.example.tecreciclaje.utils.CustomAlertDialog.createVaciarContenedorDialog(
+            this,
+            nombreContenedor,
+            {
                 Log.d("CONTENEDORES", "Contenedor vaciado: $nombreContenedor")
                 actualizarEstadoContenedor(tipoContenedor, "Vacío")
             }
-            .setNegativeButton("Cancelar", null)
-            .setCancelable(true)
-            .show()
+        ).show()
     }
 
     private fun actualizarEstadoContenedor(tipoContenedor: String, nuevoEstado: String) {
