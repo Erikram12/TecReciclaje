@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EcoRecompensa</string>
+    <string name="app_name">TecReciclaje</string>
 
     <string-array name="filtro_estados">
         <item>Válido</item>
