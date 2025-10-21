@@ -42,6 +42,9 @@ class GestionProductosActivity : AppCompatActivity() {
     // Referencia al ImageView del diálogo (para previsualizar la imagen seleccionada)
     private var ivImagenDialog: ImageView? = null
 
+    private var loadingDialog: AlertDialog? = null
+
+
     // ✅ Photo Picker sin permisos
     private val pickImage = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
@@ -222,6 +225,27 @@ class GestionProductosActivity : AppCompatActivity() {
         return true
     }
 
+    // Agregar este método para mostrar el diálogo de carga
+    private fun showLoadingDialog(mensaje: String) {
+        val dialogView = layoutInflater.inflate(R.layout.dialog_loading_producto, null)
+        val tvMessage = dialogView.findViewById<TextView>(R.id.tvLoadingMessage)
+        tvMessage.text = mensaje
+
+        loadingDialog = AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+
+        loadingDialog?.show()
+    }
+
+    // Agregar este método para ocultar el diálogo de carga
+    private fun hideLoadingDialog() {
+        loadingDialog?.dismiss()
+        loadingDialog = null
+    }
+
+    // Modificar el método crearProducto
     private fun crearProducto(nombre: String, descripcion: String, precioPuntos: Int) {
         lifecycleScope.launch {
             try {
@@ -230,6 +254,9 @@ class GestionProductosActivity : AppCompatActivity() {
                     Toast.makeText(this@GestionProductosActivity, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
                     return@launch
                 }
+
+                // ✅ Mostrar diálogo de carga
+                showLoadingDialog("Creando producto...")
 
                 var imagenUrl = ""
                 if (imageUri != null) {
@@ -245,6 +272,9 @@ class GestionProductosActivity : AppCompatActivity() {
 
                 val productoId = productoRepository.crearProducto(nuevoProducto)
 
+                // ✅ Ocultar diálogo de carga
+                hideLoadingDialog()
+
                 if (productoId.isNotEmpty()) {
                     Toast.makeText(this@GestionProductosActivity, "Producto creado exitosamente", Toast.LENGTH_SHORT).show()
                 } else {
@@ -256,15 +286,22 @@ class GestionProductosActivity : AppCompatActivity() {
                 ivImagenDialog = null
 
             } catch (e: Exception) {
+                // ✅ Ocultar diálogo de carga en caso de error
+                hideLoadingDialog()
+
                 Log.e("GestionProductos", "Error creando producto", e)
                 Toast.makeText(this@GestionProductosActivity, "Error al crear el producto", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    // Modificar el método actualizarProducto
     private fun actualizarProducto(producto: Producto, nombre: String, descripcion: String, precioPuntos: Int) {
         lifecycleScope.launch {
             try {
+                // ✅ Mostrar diálogo de carga
+                showLoadingDialog("Actualizando producto...")
+
                 var imagenUrl = producto.imagenUrl
                 if (imageUri != null) {
                     imagenUrl = subirImagen(imageUri!!, nombre)
@@ -279,6 +316,9 @@ class GestionProductosActivity : AppCompatActivity() {
 
                 val success = productoRepository.actualizarProducto(productoActualizado)
 
+                // ✅ Ocultar diálogo de carga
+                hideLoadingDialog()
+
                 if (success) {
                     Toast.makeText(this@GestionProductosActivity, "Producto actualizado exitosamente", Toast.LENGTH_SHORT).show()
                 } else {
@@ -289,12 +329,20 @@ class GestionProductosActivity : AppCompatActivity() {
                 ivImagenDialog = null
 
             } catch (e: Exception) {
+                // ✅ Ocultar diálogo de carga en caso de error
+                hideLoadingDialog()
+
                 Log.e("GestionProductos", "Error actualizando producto", e)
                 Toast.makeText(this@GestionProductosActivity, "Error al actualizar el producto", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    // Agregar esto al final del onCreate para limpiar el diálogo si existe
+    override fun onDestroy() {
+        super.onDestroy()
+        hideLoadingDialog()
+    }
     private suspend fun subirImagen(imageUri: Uri, nombreProducto: String): String {
         return withContext(Dispatchers.IO) {
             try {
