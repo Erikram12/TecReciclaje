@@ -161,7 +161,7 @@ class ProductoDetalleActivity : AppCompatActivity() {
         userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    // MEJORADO: Manejo seguro de puntos con logs
+                    // Manejo seguro de puntos con logs
                     val puntosObj = snapshot.child("usuario_puntos").value
                     var puntos = 0
 

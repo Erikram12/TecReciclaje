@@ -139,7 +139,7 @@
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
-                    app:startIconDrawable="@drawable/baseline_person_24"
+                    app:startIconDrawable="@drawable/id_card_24dp_000000_fill0_wght400_grad0_opsz24"
                     app:startIconTint="@color/verde_principal">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -168,7 +168,7 @@
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
-                    app:startIconDrawable="@drawable/baseline_person_24"
+                    app:startIconDrawable="@drawable/id_card_24dp_000000_fill0_wght400_grad0_opsz24"
                     app:startIconTint="@color/verde_principal">
 
                     <com.google.android.material.textfield.TextInputEditText

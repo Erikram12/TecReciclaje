@@ -19,7 +19,7 @@ class ProductosUserAdapter(
 
     private var productos = listOf<Producto>()
 
-    // Opciones de Glide reutilizables para mejor rendimiento
+    // Opciones de Glide
     private val glideOptions = RequestOptions()
         .diskCacheStrategy(DiskCacheStrategy.ALL) // Cachea tanto la imagen original como las transformadas
         .placeholder(R.drawable.placeholder_producto)
@@ -75,7 +75,7 @@ class ProductosUserAdapter(
                 Glide.with(itemView.context)
                     .load(producto.imagenUrl)
                     .apply(glideOptions)
-                    .thumbnail(0.1f) // Carga una miniatura al 10% primero
+                    .thumbnail(0.1f) // Carga una miniatura
                     .into(ivImagen)
             } else {
                 // Cancelar cualquier carga pendiente y establecer placeholder
