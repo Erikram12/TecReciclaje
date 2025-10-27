@@ -7,6 +7,9 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.tecreciclaje.R
 import com.example.tecreciclaje.domain.model.Producto
 
@@ -14,26 +17,26 @@ class ProductosAdapter(
     private val onEditClick: (Producto) -> Unit,
     private val onDeleteClick: (Producto) -> Unit
 ) : RecyclerView.Adapter<ProductosAdapter.ProductoViewHolder>() {
-    
+
     private var productos = listOf<Producto>()
-    
+
     fun updateProductos(newProductos: List<Producto>) {
         productos = newProductos
         notifyDataSetChanged()
     }
-    
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductoViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_producto_admin, parent, false)
         return ProductoViewHolder(view)
     }
-    
+
     override fun onBindViewHolder(holder: ProductoViewHolder, position: Int) {
         holder.bind(productos[position])
     }
-    
+
     override fun getItemCount() = productos.size
-    
+
     inner class ProductoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val ivImagen: ImageView = itemView.findViewById(R.id.ivImagenProducto)
         private val tvNombre: TextView = itemView.findViewById(R.id.tvNombreProducto)
@@ -41,27 +44,29 @@ class ProductosAdapter(
         private val tvPrecioPuntos: TextView = itemView.findViewById(R.id.tvPrecioPuntos)
         private val btnEditar: View = itemView.findViewById(R.id.btnEditarProducto)
         private val btnEliminar: View = itemView.findViewById(R.id.btnEliminarProducto)
-        
+
         fun bind(producto: Producto) {
             tvNombre.text = producto.nombre
             tvDescripcion.text = producto.descripcion
             tvPrecioPuntos.text = "${producto.precioPuntos} pts"
-            
-            // Cargar imagen con Glide
+
+            // ✅ Cargar imagen con Glide optimizado
             if (producto.imagenUrl.isNotEmpty()) {
                 Glide.with(itemView.context)
                     .load(producto.imagenUrl)
+                    .transform(CenterCrop(), RoundedCorners(24)) // Bordes redondeados de 24dp
                     .placeholder(R.drawable.placeholder_producto)
                     .error(R.drawable.placeholder_producto)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL) // Cachear para mejor rendimiento
                     .into(ivImagen)
             } else {
                 ivImagen.setImageResource(R.drawable.placeholder_producto)
             }
-            
+
             btnEditar.setOnClickListener {
                 onEditClick(producto)
             }
-            
+
             btnEliminar.setOnClickListener {
                 onDeleteClick(producto)
             }

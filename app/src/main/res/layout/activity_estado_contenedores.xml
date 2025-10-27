@@ -20,297 +20,549 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-    <!-- Header -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="24dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Estado de Contenedores"
-            android:textColor="@color/verde_principal"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-light"
-            android:layout_marginBottom="8dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Monitoreo en tiempo real del estado de los contenedores de reciclaje"
-            android:textColor="@color/dark_gray"
-            android:textSize="16sp"
-            android:alpha="0.8" />
-    </LinearLayout>
-
-    <!-- Contenedor de Plástico -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardPlastico"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
-        app:cardUseCompatPadding="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="20dp"
-            android:gravity="center_vertical">
-
-            <!-- Icono -->
+            <!-- Header -->
             <LinearLayout
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="@drawable/circle_white_bg"
-                android:gravity="center"
-                android:layout_marginEnd="16dp">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/resicle"
-                    app:tint="@color/verde_principal" />
-            </LinearLayout>
-
-            <!-- Información -->
-            <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_marginBottom="24dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Contenedor de Plástico"
+                    android:text="Estado de Contenedores"
                     android:textColor="@color/verde_principal"
-                    android:textSize="18sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     android:fontFamily="sans-serif-light"
                     android:layout_marginBottom="8dp" />
 
                 <TextView
-                    android:id="@+id/tvEstadoPlastico"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Cargando..."
-                    android:textColor="@color/verde_principal"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="4dp" />
-
-                <TextView
-                    android:id="@+id/tvUltimaActualizacionPlastico"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Actualizando..."
+                    android:text="Monitoreo en tiempo real del estado de los contenedores de reciclaje"
                     android:textColor="@color/dark_gray"
-                    android:textSize="10sp"
-                    android:alpha="0.7" />
-
-                <Button
-                    android:id="@+id/btnActualizarPlastico"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Vaciar"
-                    android:textSize="12sp"
-                    android:textAllCaps="false"
-                    android:background="@drawable/green_button_background"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="8dp"
-                    android:padding="8dp" />
+                    android:textSize="16sp"
+                    android:alpha="0.8" />
             </LinearLayout>
 
-            <!-- Indicador de estado -->
-            <View
-                android:layout_width="8dp"
-                android:layout_height="60dp"
-                android:background="@color/verde_principal"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
-
-    <!-- Contenedor de Aluminio -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardAluminio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="8dp"
-        app:cardUseCompatPadding="true">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="20dp"
-            android:gravity="center_vertical">
-
-            <!-- Icono -->
-            <LinearLayout
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="@drawable/circle_white_bg"
-                android:gravity="center"
-                android:layout_marginEnd="16dp">
-
-                <ImageView
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:src="@drawable/resicle"
-                    app:tint="@color/dark_gray" />
-            </LinearLayout>
-
-            <!-- Información -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- Contenedor de Plástico -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardPlastico"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:cardUseCompatPadding="true">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Contenedor de Aluminio"
-                    android:textColor="@color/dark_gray"
-                    android:textSize="17sp"
-                    android:textStyle="bold"
-                    android:fontFamily="sans-serif-light"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/tvEstadoAluminio"
-                    android:layout_width="wrap_content"
+                    <!-- Icono -->
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:background="@drawable/circle_white_bg"
+                        android:gravity="center"
+                        android:layout_marginEnd="16dp">
+
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/resicle"
+                            app:tint="@color/verde_principal" />
+                    </LinearLayout>
+
+                    <!-- Información -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Contenedor de Plástico"
+                            android:textColor="@color/verde_principal"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-light"
+                            android:layout_marginBottom="8dp" />
+
+                        <TextView
+                            android:id="@+id/tvEstadoPlastico"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cargando..."
+                            android:textColor="@color/verde_principal"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="4dp" />
+
+                        <TextView
+                            android:id="@+id/tvUltimaActualizacionPlastico"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Actualizando..."
+                            android:textColor="@color/dark_gray"
+                            android:textSize="10sp"
+                            android:alpha="0.7" />
+
+                        <Button
+                            android:id="@+id/btnActualizarPlastico"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Vaciar"
+                            android:textSize="12sp"
+                            android:textAllCaps="false"
+                            android:background="@drawable/green_button_background"
+                            android:textColor="@color/white"
+                            android:layout_marginTop="8dp"
+                            android:padding="8dp" />
+                    </LinearLayout>
+
+                    <!-- Indicador de estado -->
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="60dp"
+                        android:background="@color/verde_principal"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Contenedor de Aluminio -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardAluminio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Cargando..."
-                    android:textColor="@color/dark_gray"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="4dp" />
+                    android:orientation="horizontal"
+                    android:padding="20dp"
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/tvUltimaActualizacionAluminio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Actualizando..."
-                    android:textColor="@color/dark_gray"
-                    android:textSize="10sp"
-                    android:alpha="0.7" />
+                    <!-- Icono -->
+                    <LinearLayout
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:background="@drawable/circle_white_bg"
+                        android:gravity="center"
+                        android:layout_marginEnd="16dp">
 
-                <Button
-                    android:id="@+id/btnActualizarAluminio"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Vaciar"
-                    android:textSize="12sp"
-                    android:textAllCaps="false"
-                    android:background="@drawable/green_button_background"
-                    android:textColor="@color/white"
-                    android:layout_marginTop="8dp"
-                    android:padding="8dp" />
-            </LinearLayout>
+                        <ImageView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:src="@drawable/resicle"
+                            app:tint="@color/dark_gray" />
+                    </LinearLayout>
 
-            <!-- Indicador de estado -->
-            <View
-                android:layout_width="8dp"
-                android:layout_height="60dp"
-                android:background="@color/dark_gray"
-                android:layout_marginStart="8dp" />
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                    <!-- Información -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-    <!-- Información adicional -->
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
-        app:cardUseCompatPadding="true">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Contenedor de Aluminio"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="17sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-light"
+                            android:layout_marginBottom="8dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:padding="16dp">
+                        <TextView
+                            android:id="@+id/tvEstadoAluminio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Cargando..."
+                            android:textColor="@color/dark_gray"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="4dp" />
 
+                        <TextView
+                            android:id="@+id/tvUltimaActualizacionAluminio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Actualizando..."
+                            android:textColor="@color/dark_gray"
+                            android:textSize="10sp"
+                            android:alpha="0.7" />
+
+                        <Button
+                            android:id="@+id/btnActualizarAluminio"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Vaciar"
+                            android:textSize="12sp"
+                            android:textAllCaps="false"
+                            android:background="@drawable/green_button_background"
+                            android:textColor="@color/white"
+                            android:layout_marginTop="8dp"
+                            android:padding="8dp" />
+                    </LinearLayout>
+
+                    <!-- Indicador de estado -->
+                    <View
+                        android:layout_width="8dp"
+                        android:layout_height="60dp"
+                        android:background="@color/dark_gray"
+                        android:layout_marginStart="8dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Sección Centros de Acopio -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Leyenda de Estados"
+                android:text="Centros de Acopio"
                 android:textColor="@color/verde_principal"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 android:fontFamily="sans-serif-light"
-                android:layout_marginBottom="12dp" />
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp" />
 
-            <LinearLayout
+            <!-- Centro de Acopio 1 -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardCentroAcopio1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp"
+                app:cardUseCompatPadding="true">
 
-                <View
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:background="@color/verde_principal"
-                    android:layout_marginEnd="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Vacío - Listo para recibir material"
-                    android:textColor="@color/dark_gray"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <LinearLayout
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/resicle"
+                            app:tint="@color/verde_principal"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:id="@+id/tvNombreCentro1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Centro de Acopio Norte"
+                            android:textColor="@color/verde_principal"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-light" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvDireccionCentro1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📍 Av. Principal #123, Col. Centro"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvHorarioCentro1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🕐 Lunes a Viernes: 8:00 AM - 6:00 PM"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvTelefonoCentro1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📞 (555) 123-4567"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvMaterialesCentro1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="♻️ Materiales: Plástico, Aluminio, Papel, Cartón"
+                        android:textColor="@color/verde_principal"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Centro de Acopio 2 -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardCentroAcopio2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp"
+                app:cardUseCompatPadding="true">
 
-                <View
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:background="@color/naranja"
-                    android:layout_marginEnd="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Medio - Contenedor parcialmente lleno"
-                    android:textColor="@color/dark_gray"
-                    android:textSize="14sp" />
-            </LinearLayout>
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-            <LinearLayout
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/resicle"
+                            app:tint="@color/verde_principal"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:id="@+id/tvNombreCentro2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Centro de Acopio Sur"
+                            android:textColor="@color/verde_principal"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-light" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvDireccionCentro2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📍 Calle Secundaria #456, Col. Industrial"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvHorarioCentro2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🕐 Lunes a Sábado: 7:00 AM - 7:00 PM"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvTelefonoCentro2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📞 (555) 765-4321"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvMaterialesCentro2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="♻️ Materiales: Plástico, Vidrio, Metales, Electrónicos"
+                        android:textColor="@color/verde_principal"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Centro de Acopio 3 -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardCentroAcopio3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="6dp"
+                app:cardUseCompatPadding="true">
 
-                <View
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:background="@color/rojo"
-                    android:layout_marginEnd="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Lleno - Requiere vaciado"
-                    android:textColor="@color/dark_gray"
-                    android:textSize="14sp" />
-            </LinearLayout>
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="12dp">
+
+                        <ImageView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@drawable/resicle"
+                            app:tint="@color/verde_principal"
+                            android:layout_marginEnd="12dp" />
+
+                        <TextView
+                            android:id="@+id/tvNombreCentro3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Centro de Acopio Este"
+                            android:textColor="@color/verde_principal"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:fontFamily="sans-serif-light" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvDireccionCentro3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📍 Blvd. Ecológico #789, Col. Jardines"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvHorarioCentro3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="🕐 Martes a Domingo: 9:00 AM - 5:00 PM"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvTelefonoCentro3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="📞 (555) 987-6543"
+                        android:textColor="@color/dark_gray"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvMaterialesCentro3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="♻️ Materiales: Todo tipo de reciclables"
+                        android:textColor="@color/verde_principal"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Información adicional -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="4dp"
+                app:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Leyenda de Estados"
+                        android:textColor="@color/verde_principal"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-light"
+                        android:layout_marginBottom="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@color/verde_principal"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Vacío - Listo para recibir material"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@color/naranja"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Medio - Contenedor parcialmente lleno"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <View
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:background="@color/rojo"
+                            android:layout_marginEnd="8dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Lleno - Requiere vaciado"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

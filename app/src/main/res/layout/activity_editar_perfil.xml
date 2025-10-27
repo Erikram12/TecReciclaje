@@ -95,7 +95,7 @@
                     android:textSize="16sp"
                     android:letterSpacing="0.05"
                     android:background="@drawable/green_button_background"
-                    android:drawableStart="@drawable/baseline_person_24"
+                    android:drawableStart="@drawable/id_card_24dp_000000_fill0_wght400_grad0_opsz24"
                     android:drawablePadding="12dp"
                     android:elevation="4dp"
                     android:stateListAnimator="@null" />

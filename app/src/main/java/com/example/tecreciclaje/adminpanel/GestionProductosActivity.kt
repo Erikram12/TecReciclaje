@@ -17,6 +17,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.CircleCrop
+import com.canhub.cropper.CropImageContract
+import com.canhub.cropper.CropImageContractOptions
+import com.canhub.cropper.CropImageOptions
+import com.canhub.cropper.CropImageView
 import com.example.tecreciclaje.R
 import com.example.tecreciclaje.domain.model.Producto
 import com.example.tecreciclaje.domain.repository.ProductoRepositoryImpl
@@ -44,25 +48,38 @@ class GestionProductosActivity : AppCompatActivity() {
 
     private var loadingDialog: AlertDialog? = null
 
-
-    // ✅ Photo Picker sin permisos
+    // ✅ Photo Picker - ahora abre el crop después de seleccionar
     private val pickImage = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
         if (uri != null) {
-            imageUri = uri
-            Toast.makeText(this, "Imagen seleccionada", Toast.LENGTH_SHORT).show()
+            // En lugar de usar la imagen directamente, abrimos el crop
+            startCrop(uri)
+        } else {
+            Toast.makeText(this, "No se seleccionó ninguna imagen", Toast.LENGTH_SHORT).show()
+        }
+    }
 
-            // Previsualizar la imagen seleccionada en el diálogo (circular)
+    // ✅ Resultado del crop usando Android-Image-Cropper
+    private val cropImage = registerForActivityResult(CropImageContract()) { result ->
+        if (result.isSuccessful) {
+            // Obtener la URI de la imagen recortada
+            val croppedUri = result.uriContent
+            imageUri = croppedUri
+            Toast.makeText(this, "Imagen recortada correctamente", Toast.LENGTH_SHORT).show()
+
+            // Previsualizar la imagen recortada en el diálogo (circular)
             ivImagenDialog?.let {
                 Glide.with(this)
-                    .load(uri)
+                    .load(croppedUri)
                     .transform(CenterCrop(), CircleCrop())
                     .placeholder(R.drawable.placeholder_producto)
                     .into(it)
             }
         } else {
-            Toast.makeText(this, "No se seleccionó ninguna imagen", Toast.LENGTH_SHORT).show()
+            // Error al recortar
+            val exception = result.error
+            Toast.makeText(this, "Error al recortar: ${exception?.message}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -131,6 +148,31 @@ class GestionProductosActivity : AppCompatActivity() {
         }
     }
 
+    // ✅ Nueva función para iniciar el recorte de imagen con Android-Image-Cropper
+    private fun startCrop(sourceUri: Uri) {
+        val cropOptions = CropImageOptions().apply {
+            guidelines = CropImageView.Guidelines.ON
+            aspectRatioX = 1 // ✅ Aspecto cuadrado 1:1
+            aspectRatioY = 1
+            fixAspectRatio = true // Mantener aspecto fijo
+            cropShape = CropImageView.CropShape.OVAL // ✅ Recorte circular
+            maxZoom = 4
+            autoZoomEnabled = true
+            multiTouchEnabled = true
+            centerMoveEnabled = true
+            showCropOverlay = true
+            showProgressBar = true
+            cropMenuCropButtonTitle = "Recortar"
+            outputCompressFormat = android.graphics.Bitmap.CompressFormat.JPEG
+            outputCompressQuality = 90
+            outputRequestWidth = 1080 // ✅ Tamaño máximo 1080x1080
+            outputRequestHeight = 1080
+        }
+
+        val cropImageContractOptions = CropImageContractOptions(sourceUri, cropOptions)
+        cropImage.launch(cropImageContractOptions)
+    }
+
     private fun showProductoDialog(producto: Producto? = null) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_producto_form, null)
 
@@ -160,7 +202,7 @@ class GestionProductosActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Abrir Photo Picker
+        // ✅ Abrir Photo Picker (que luego abrirá el crop)
         btnSeleccionarImagen.setOnClickListener {
             pickImage.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -225,7 +267,6 @@ class GestionProductosActivity : AppCompatActivity() {
         return true
     }
 
-    // Agregar este método para mostrar el diálogo de carga
     private fun showLoadingDialog(mensaje: String) {
         val dialogView = layoutInflater.inflate(R.layout.dialog_loading_producto, null)
         val tvMessage = dialogView.findViewById<TextView>(R.id.tvLoadingMessage)
@@ -239,13 +280,11 @@ class GestionProductosActivity : AppCompatActivity() {
         loadingDialog?.show()
     }
 
-    // Agregar este método para ocultar el diálogo de carga
     private fun hideLoadingDialog() {
         loadingDialog?.dismiss()
         loadingDialog = null
     }
 
-    // Modificar el método crearProducto
     private fun crearProducto(nombre: String, descripcion: String, precioPuntos: Int) {
         lifecycleScope.launch {
             try {
@@ -255,7 +294,6 @@ class GestionProductosActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                // ✅ Mostrar diálogo de carga
                 showLoadingDialog("Creando producto...")
 
                 var imagenUrl = ""
@@ -272,7 +310,6 @@ class GestionProductosActivity : AppCompatActivity() {
 
                 val productoId = productoRepository.crearProducto(nuevoProducto)
 
-                // ✅ Ocultar diálogo de carga
                 hideLoadingDialog()
 
                 if (productoId.isNotEmpty()) {
@@ -286,20 +323,16 @@ class GestionProductosActivity : AppCompatActivity() {
                 ivImagenDialog = null
 
             } catch (e: Exception) {
-                // ✅ Ocultar diálogo de carga en caso de error
                 hideLoadingDialog()
-
                 Log.e("GestionProductos", "Error creando producto", e)
                 Toast.makeText(this@GestionProductosActivity, "Error al crear el producto", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    // Modificar el método actualizarProducto
     private fun actualizarProducto(producto: Producto, nombre: String, descripcion: String, precioPuntos: Int) {
         lifecycleScope.launch {
             try {
-                // ✅ Mostrar diálogo de carga
                 showLoadingDialog("Actualizando producto...")
 
                 var imagenUrl = producto.imagenUrl
@@ -316,7 +349,6 @@ class GestionProductosActivity : AppCompatActivity() {
 
                 val success = productoRepository.actualizarProducto(productoActualizado)
 
-                // ✅ Ocultar diálogo de carga
                 hideLoadingDialog()
 
                 if (success) {
@@ -329,20 +361,18 @@ class GestionProductosActivity : AppCompatActivity() {
                 ivImagenDialog = null
 
             } catch (e: Exception) {
-                // ✅ Ocultar diálogo de carga en caso de error
                 hideLoadingDialog()
-
                 Log.e("GestionProductos", "Error actualizando producto", e)
                 Toast.makeText(this@GestionProductosActivity, "Error al actualizar el producto", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    // Agregar esto al final del onCreate para limpiar el diálogo si existe
     override fun onDestroy() {
         super.onDestroy()
         hideLoadingDialog()
     }
+
     private suspend fun subirImagen(imageUri: Uri, nombreProducto: String): String {
         return withContext(Dispatchers.IO) {
             try {
