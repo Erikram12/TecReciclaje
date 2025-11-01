@@ -59,6 +59,15 @@ class ProductosUserAdapter(
                 ivImagen.setImageResource(R.drawable.placeholder_producto)
             }
 
+            // Agregar efecto ripple programáticamente
+            val outValue = android.util.TypedValue()
+            itemView.context.theme.resolveAttribute(
+                android.R.attr.selectableItemBackground,
+                outValue,
+                true
+            )
+            itemView.foreground = itemView.context.getDrawable(outValue.resourceId)
+
             // Click en toda la tarjeta
             itemView.setOnClickListener {
                 onProductoClick(producto)
