@@ -69,7 +69,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="100 pts"
-            android:textSize="14sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/white"
             android:background="@drawable/green_button_background"
