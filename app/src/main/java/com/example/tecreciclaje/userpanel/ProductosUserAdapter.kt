@@ -46,14 +46,14 @@ class ProductosUserAdapter(
             tvDescripcion.text = producto.descripcion
             tvPrecioPuntos.text = "${producto.precioPuntos} pts"
 
-            // ✅ Cargar imagen circular con Glide optimizado
+            // Cargar imagen circular con Glide optimizado
             if (producto.imagenUrl.isNotEmpty()) {
                 Glide.with(itemView.context)
                     .load(producto.imagenUrl)
-                    .transform(CenterCrop()) // Solo CenterCrop, el CardView ya es circular
+                    .transform(CenterCrop())
                     .placeholder(R.drawable.placeholder_producto)
                     .error(R.drawable.placeholder_producto)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL) // Cachear para mejor rendimiento
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(ivImagen)
             } else {
                 ivImagen.setImageResource(R.drawable.placeholder_producto)

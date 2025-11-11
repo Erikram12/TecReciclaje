@@ -48,7 +48,6 @@ class GestionProductosActivity : AppCompatActivity() {
 
     private var loadingDialog: AlertDialog? = null
 
-    // ✅ Photo Picker - ahora abre el crop después de seleccionar
     private val pickImage = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri: Uri? ->
@@ -60,7 +59,6 @@ class GestionProductosActivity : AppCompatActivity() {
         }
     }
 
-    // ✅ Resultado del crop usando Android-Image-Cropper
     private val cropImage = registerForActivityResult(CropImageContract()) { result ->
         if (result.isSuccessful) {
             // Obtener la URI de la imagen recortada
@@ -148,7 +146,7 @@ class GestionProductosActivity : AppCompatActivity() {
         }
     }
 
-    // ✅ Nueva función para iniciar el recorte de imagen con Android-Image-Cropper
+
     private fun startCrop(sourceUri: Uri) {
         val cropOptions = CropImageOptions().apply {
             guidelines = CropImageView.Guidelines.ON
@@ -202,7 +200,6 @@ class GestionProductosActivity : AppCompatActivity() {
             }
         }
 
-        // ✅ Abrir Photo Picker (que luego abrirá el crop)
         btnSeleccionarImagen.setOnClickListener {
             pickImage.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -214,7 +211,7 @@ class GestionProductosActivity : AppCompatActivity() {
             .setCancelable(false)
             .create()
 
-        // ✅ Botón Guardar
+
         btnGuardar.setOnClickListener {
             val nombre = etNombre.text.toString().trim()
             val descripcion = etDescripcion.text.toString().trim()

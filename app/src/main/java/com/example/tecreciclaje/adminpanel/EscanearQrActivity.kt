@@ -59,63 +59,53 @@ class EscanearQrActivity : AppCompatActivity() {
     }
 
     private fun extraerValeId(qrContent: String?): String? {
-        println("DEBUG: Contenido del QR: $qrContent")
-        
-        // El formato del QR es: "VALE_[valeId]_[userId]"
-        // Ejemplo: "VALE_-OXkK1QU5xbSAv-aztK2_D45OSMp1V9cGaecHbFBmTYg1rvk2"
+        println("Contenido del QR: $qrContent")
         
         if (!qrContent.isNullOrEmpty() && qrContent.startsWith("VALE_")) {
             val parts = qrContent.split("_")
-            println("DEBUG: Partes del QR: ${parts.size}")
+            println("Partes del QR: ${parts.size}")
             for (i in parts.indices) {
-                println("DEBUG: Parte $i: ${parts[i]}")
+                println("Parte $i: ${parts[i]}")
             }
             
             if (parts.size >= 3) {
-                // parts[0] = "VALE"
-                // parts[1] = valeId
-                // parts[2] = userId
                 val valeId = parts[1]
-                println("DEBUG: ValeId extraído: $valeId")
+                println("ValeId extraído: $valeId")
                 return valeId
             } else {
-                println("DEBUG: Formato de QR inválido - no hay suficientes partes")
+                println("Formato de QR inválido - no hay suficientes partes")
             }
         } else {
-            println("DEBUG: QR no comienza con 'VALE_' o es null")
+            println("QR no comienza con 'VALE_' o es null")
         }
         return null
     }
 
     private fun marcarComoReclamado(valeId: String) {
-        println("DEBUG: Intentando marcar vale como reclamado. ValeId: $valeId")
-        
-        // MEJORADO: Buscar en múltiples ubicaciones posibles
+        println("Intentando marcar vale como reclamado. ValeId: $valeId")
         buscarValeEnDiferentesUbicaciones(valeId)
     }
     
     private fun buscarValeEnDiferentesUbicaciones(valeId: String) {
-        println("DEBUG: Buscando vale en diferentes ubicaciones...")
+        println("Buscando vale en diferentes ubicaciones...")
         
-        // 1. Buscar en /vales/{valeId} (ubicación principal)
         val valeRef = FirebaseDatabase.getInstance().getReference("vales").child(valeId)
         valeRef.get().addOnSuccessListener { snapshot ->
             if (snapshot.exists()) {
-                println("DEBUG: Vale encontrado en /vales/$valeId")
+                println("Vale encontrado en /vales/$valeId")
                 procesarValeEncontrado(valeRef, snapshot)
             } else {
-                println("DEBUG: Vale no encontrado en /vales/, buscando en usuarios...")
-                // 2. Buscar en usuarios/{userId}/vales/{valeId}
+                println("Vale no encontrado en /vales/, buscando en usuarios...")
                 buscarEnUsuarios(valeId)
             }
         }.addOnFailureListener { e ->
-            println("DEBUG: Error buscando en /vales/: ${e.message}")
+            println("Error buscando en /vales/: ${e.message}")
             buscarEnUsuarios(valeId)
         }
     }
     
     private fun buscarEnUsuarios(valeId: String) {
-        println("DEBUG: Buscando vale en estructura de usuarios...")
+        println("Buscando vale en estructura de usuarios...")
         
         // Buscar en todos los usuarios
         val usuariosRef = FirebaseDatabase.getInstance().getReference("usuarios")
@@ -142,7 +132,7 @@ class EscanearQrActivity : AppCompatActivity() {
                 }
                 
                 if (!encontrado) {
-                    println("DEBUG: Vale no encontrado en ninguna ubicación")
+                    println("Vale no encontrado en ninguna ubicación")
                     mostrarErrorValeNoEncontrado(valeId)
                 }
             }

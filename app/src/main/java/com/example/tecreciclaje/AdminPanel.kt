@@ -45,7 +45,7 @@ class AdminPanel : AppCompatActivity() {
 
         // Precios por pieza (ajusta a tu necesidad)
         private const val PRECIO_POR_BOTELLA_PLASTICO = 0.5 // 20 botellas = $10 -> $0.5 c/u
-        private const val PRECIO_POR_LATA_ALUMINIO = 1.0 // ejemplo
+        private const val PRECIO_POR_LATA_ALUMINIO = 1.0 //
     }
 
     private lateinit var tvAdminName: TextView
