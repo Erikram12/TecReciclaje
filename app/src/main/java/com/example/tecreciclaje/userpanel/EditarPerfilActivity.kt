@@ -20,6 +20,7 @@ import com.google.android.gms.ads.AdView
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.AdListener
 import android.util.Log
+import com.example.tecreciclaje.utils.AppLogger
 import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -71,7 +72,7 @@ class EditarPerfilActivity : AppCompatActivity() {
                 imageUri = uriContent
                 imageViewProfile.setImageURI(imageUri)
             } else {
-                Toast.makeText(this, "Error al recortar imagen.", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error al recortar imagen")
             }
         }
 
@@ -205,7 +206,7 @@ class EditarPerfilActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@EditarPerfilActivity, "Error al cargar datos: ${error.message}", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error al cargar datos del perfil: ${error.message}")
             }
         })
     }
@@ -236,7 +237,7 @@ class EditarPerfilActivity : AppCompatActivity() {
 
         // Validaciones básicas
         if (nombre.isEmpty() || apellido.isEmpty() || numControl.isEmpty() || carrera.isEmpty()) {
-            Toast.makeText(this, "Por favor completa todos los campos obligatorios", Toast.LENGTH_SHORT).show()
+            AppLogger.d("Validación fallida: Campos obligatorios incompletos")
             return
         }
 
@@ -264,7 +265,7 @@ class EditarPerfilActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 loadingDialog.dismiss()
-                Toast.makeText(this, "Error al subir imagen: ${e.message}", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error al subir imagen: ${e.message}")
             }
     }
 
@@ -285,12 +286,12 @@ class EditarPerfilActivity : AppCompatActivity() {
         userRef.updateChildren(updates)
             .addOnSuccessListener {
                 loadingDialog.dismiss()
-                Toast.makeText(this, "Perfil actualizado exitosamente", Toast.LENGTH_SHORT).show()
+                AppLogger.d("Perfil actualizado exitosamente")
                 finish()
             }
             .addOnFailureListener { e ->
                 loadingDialog.dismiss()
-                Toast.makeText(this, "Error al actualizar perfil: ${e.message}", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error al actualizar perfil: ${e.message}")
             }
     }
 

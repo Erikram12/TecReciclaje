@@ -6,7 +6,7 @@ import android.content.IntentFilter
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
-import android.util.Log
+// Logs eliminados para producción
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tecreciclaje.MainActivity
@@ -107,7 +107,7 @@ class NFCActivity : AppCompatActivity() {
                                     // La Cloud Function se activará pero no creará historial para valor 0
                                     db.child("usuarios").child(authUid).child("usuario_puntos").setValue(0)
                                         .addOnSuccessListener {
-                                            Log.d("NFC_ACTIVITY", "usuario_puntos guardado correctamente - Cloud Function activada")
+                                            // Log de depuración eliminado
                                             
                                             Toast.makeText(this, "Registro completo con NFC", Toast.LENGTH_SHORT).show()
                                             // Redirige a MainActivity
@@ -116,7 +116,7 @@ class NFCActivity : AppCompatActivity() {
                                             startActivity(intent)
                                         }
                                         .addOnFailureListener { e ->
-                                            Log.e("NFC_ACTIVITY", "Error guardando usuario_puntos: ${e.message}")
+                                            // Log de error eliminado
                                         }
                                 }
                                 .addOnFailureListener { e ->

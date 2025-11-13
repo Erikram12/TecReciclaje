@@ -15,6 +15,7 @@ import com.example.tecreciclaje.Model.LogrosAdapter
 import com.example.tecreciclaje.R
 import com.example.tecreciclaje.domain.model.Historial
 import com.example.tecreciclaje.domain.model.Logro
+import com.example.tecreciclaje.utils.AppLogger
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.DataSnapshot
@@ -187,16 +188,16 @@ class LogrosActivity : AppCompatActivity(), LogrosAdapter.OnLogroClickListener {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@LogrosActivity, "Error al cargar logros: ${error.message}", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error al cargar logros: ${error.message}")
             }
         })
     }
 
     override fun onLogroClick(logro: Logro) {
         if (logro.desbloqueado) {
-            Toast.makeText(this, "¡Logro desbloqueado: ${logro.titulo}!", Toast.LENGTH_SHORT).show()
+            AppLogger.d("Logro desbloqueado: ${logro.titulo}")
         } else {
-            Toast.makeText(this, "Progreso: ${logro.textoProgreso}", Toast.LENGTH_SHORT).show()
+            AppLogger.d("Progreso: ${logro.textoProgreso}")
         }
     }
 
@@ -225,7 +226,7 @@ class LogrosActivity : AppCompatActivity(), LogrosAdapter.OnLogroClickListener {
             // Actualizar la UI
             logrosAdapter.notifyDataSetChanged()
             
-            Toast.makeText(this, "🎁 ¡Puntos reclamados! +${logro.recompensa} pts", Toast.LENGTH_SHORT).show()
+            AppLogger.d("Puntos reclamados: +${logro.recompensa} pts")
         }
     }
 
@@ -299,7 +300,7 @@ class LogrosActivity : AppCompatActivity(), LogrosAdapter.OnLogroClickListener {
                         logrosRef.child(logro.id).child("desbloqueado").setValue(true)
                         android.util.Log.d("LogrosActivity", "¡Logro desbloqueado: ${logro.titulo}!")
                         
-                        Toast.makeText(this@LogrosActivity, "🏆 ¡Logro desbloqueado: ${logro.titulo}! Reclama tus puntos", Toast.LENGTH_SHORT).show()
+                        AppLogger.d("¡Logro desbloqueado: ${logro.titulo}! Reclama tus puntos")
                     }
                 }
                 
@@ -316,7 +317,7 @@ class LogrosActivity : AppCompatActivity(), LogrosAdapter.OnLogroClickListener {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@LogrosActivity, "Error al verificar logros: ${error.message}", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error al verificar logros: ${error.message}")
             }
         })
     }

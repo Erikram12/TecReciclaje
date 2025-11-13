@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
-import android.util.Log
+import com.example.tecreciclaje.utils.AppLogger
 import android.widget.*
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -55,7 +55,7 @@ class GestionProductosActivity : AppCompatActivity() {
             // En lugar de usar la imagen directamente, abrimos el crop
             startCrop(uri)
         } else {
-            Toast.makeText(this, "No se seleccionó ninguna imagen", Toast.LENGTH_SHORT).show()
+            AppLogger.d("No se seleccionó ninguna imagen")
         }
     }
 
@@ -64,7 +64,7 @@ class GestionProductosActivity : AppCompatActivity() {
             // Obtener la URI de la imagen recortada
             val croppedUri = result.uriContent
             imageUri = croppedUri
-            Toast.makeText(this, "Imagen recortada correctamente", Toast.LENGTH_SHORT).show()
+            AppLogger.d("Imagen recortada correctamente")
 
             // Previsualizar la imagen recortada en el diálogo (circular)
             ivImagenDialog?.let {
@@ -77,7 +77,7 @@ class GestionProductosActivity : AppCompatActivity() {
         } else {
             // Error al recortar
             val exception = result.error
-            Toast.makeText(this, "Error al recortar: ${exception?.message}", Toast.LENGTH_SHORT).show()
+            AppLogger.e("Error al recortar imagen", exception)
         }
     }
 
@@ -241,23 +241,23 @@ class GestionProductosActivity : AppCompatActivity() {
     private fun validarCampos(nombre: String, descripcion: String, precio: String): Boolean {
         when {
             TextUtils.isEmpty(nombre) -> {
-                Toast.makeText(this, "El nombre es requerido", Toast.LENGTH_SHORT).show()
+                AppLogger.e("El nombre es requerido")
                 return false
             }
             TextUtils.isEmpty(descripcion) -> {
-                Toast.makeText(this, "La descripción es requerida", Toast.LENGTH_SHORT).show()
+                AppLogger.e("La descripción es requerida")
                 return false
             }
             TextUtils.isEmpty(precio) -> {
-                Toast.makeText(this, "El precio en puntos es requerido", Toast.LENGTH_SHORT).show()
+                AppLogger.e("El precio en puntos es requerido")
                 return false
             }
             !precio.matches("\\d+".toRegex()) -> {
-                Toast.makeText(this, "El precio debe ser un número válido", Toast.LENGTH_SHORT).show()
+                AppLogger.e("El precio debe ser un número válido")
                 return false
             }
             precio.toInt() <= 0 -> {
-                Toast.makeText(this, "El precio debe ser mayor a 0", Toast.LENGTH_SHORT).show()
+                AppLogger.e("El precio debe ser mayor a 0")
                 return false
             }
         }
@@ -287,7 +287,7 @@ class GestionProductosActivity : AppCompatActivity() {
             try {
                 val currentUser = FirebaseAuth.getInstance().currentUser
                 if (currentUser == null) {
-                    Toast.makeText(this@GestionProductosActivity, "Usuario no autenticado", Toast.LENGTH_SHORT).show()
+                    AppLogger.e("Usuario no autenticado")
                     return@launch
                 }
 
@@ -310,9 +310,9 @@ class GestionProductosActivity : AppCompatActivity() {
                 hideLoadingDialog()
 
                 if (productoId.isNotEmpty()) {
-                    Toast.makeText(this@GestionProductosActivity, "Producto creado exitosamente", Toast.LENGTH_SHORT).show()
+                    AppLogger.d("Producto creado exitosamente")
                 } else {
-                    Toast.makeText(this@GestionProductosActivity, "Error al crear el producto", Toast.LENGTH_SHORT).show()
+                    AppLogger.e("Error al crear el producto")
                 }
 
                 // Limpiar datos
@@ -321,8 +321,7 @@ class GestionProductosActivity : AppCompatActivity() {
 
             } catch (e: Exception) {
                 hideLoadingDialog()
-                Log.e("GestionProductos", "Error creando producto", e)
-                Toast.makeText(this@GestionProductosActivity, "Error al crear el producto", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error creando producto", e)
             }
         }
     }
@@ -349,9 +348,9 @@ class GestionProductosActivity : AppCompatActivity() {
                 hideLoadingDialog()
 
                 if (success) {
-                    Toast.makeText(this@GestionProductosActivity, "Producto actualizado exitosamente", Toast.LENGTH_SHORT).show()
+                    AppLogger.d("Producto actualizado exitosamente")
                 } else {
-                    Toast.makeText(this@GestionProductosActivity, "Error al actualizar el producto", Toast.LENGTH_SHORT).show()
+                    AppLogger.e("Error al actualizar el producto")
                 }
 
                 imageUri = null
@@ -359,8 +358,7 @@ class GestionProductosActivity : AppCompatActivity() {
 
             } catch (e: Exception) {
                 hideLoadingDialog()
-                Log.e("GestionProductos", "Error actualizando producto", e)
-                Toast.makeText(this@GestionProductosActivity, "Error al actualizar el producto", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error actualizando producto", e)
             }
         }
     }
@@ -378,7 +376,7 @@ class GestionProductosActivity : AppCompatActivity() {
                 imageRef.putFile(imageUri).await()
                 imageRef.downloadUrl.await().toString()
             } catch (e: Exception) {
-                Log.e("GestionProductos", "Error subiendo imagen", e)
+                AppLogger.e("Error subiendo imagen", e)
                 ""
             }
         }
@@ -393,25 +391,12 @@ class GestionProductosActivity : AppCompatActivity() {
                     try {
                         val success = productoRepository.eliminarProducto(producto.id)
                         if (success) {
-                            Toast.makeText(
-                                this@GestionProductosActivity,
-                                "Producto eliminado exitosamente",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            AppLogger.d("Producto eliminado exitosamente")
                         } else {
-                            Toast.makeText(
-                                this@GestionProductosActivity,
-                                "Error al eliminar el producto",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            AppLogger.e("Error al eliminar el producto")
                         }
                     } catch (e: Exception) {
-                        Log.e("GestionProductos", "Error eliminando producto", e)
-                        Toast.makeText(
-                            this@GestionProductosActivity,
-                            "Error al eliminar el producto",
-                            Toast.LENGTH_SHORT
-                        ).show()
+                        AppLogger.e("Error eliminando producto", e)
                     }
                 }
             }

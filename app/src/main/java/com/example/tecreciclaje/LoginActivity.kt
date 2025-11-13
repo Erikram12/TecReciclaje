@@ -4,7 +4,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
-import android.util.Log
 import android.util.Patterns
 import android.view.MotionEvent
 import android.view.View
@@ -39,6 +38,7 @@ class LoginActivity : AppCompatActivity() {
     companion object {
         private const val RC_SIGN_IN = 9001
         private const val TAG = "LoginActivity"
+        private const val DEBUG = false // Cambiar a true solo en desarrollo
     }
 
     private lateinit var loginEmail: EditText
@@ -125,13 +125,13 @@ class LoginActivity : AppCompatActivity() {
                 if (currentUser != null) {
                     checkUserRole(currentUser.uid)
                 } else {
-                    showError("No se pudo obtener el usuario actual.")
+                    logError("No se pudo obtener el usuario actual.")
                     showLoading(false)
                 }
             }
             .addOnFailureListener { e ->
-                showError("Error de inicio de sesión: ${e.message}")
-                showLoading(false)
+                logError("Error de inicio de sesión: ${e.message}")
+                showLoadingError()
             }
     }
 
@@ -148,12 +148,10 @@ class LoginActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-                Log.d(TAG, "firebaseAuthWithGoogle:${account?.id}")
                 firebaseAuthWithGoogle(account?.idToken)
             } catch (e: ApiException) {
-                Log.w(TAG, "Google sign in failed", e)
-                showError("Falló el inicio de sesión con Google: ${e.message}")
-                showLoading(false)
+                logError("Error en Google Sign In: ${e.message}")
+                showLoadingError()
             }
         }
     }
@@ -163,15 +161,13 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "signInWithCredential:success")
                     val user = auth.currentUser
                     if (user != null) {
                         checkIfUserExistsInDatabase(user)
                     }
                 } else {
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
-                    showError("Falló la autenticación con Google.")
-                    showLoading(false)
+                    logError("Falló la autenticación con Google.")
+                    showLoadingError()
                 }
             }
     }
@@ -180,17 +176,15 @@ class LoginActivity : AppCompatActivity() {
         userRef.child(user.uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    // Usuario existe, proceder con el login normal
                     checkUserRole(user.uid)
                 } else {
-                    // Usuario no existe, mostrar alerta y cerrar sesión
                     showUserNotRegisteredAlert()
                     signOutGoogleUser()
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                showError("Error al verificar usuario en base de datos.")
+                logError("Error al verificar usuario en base de datos: ${error.message}")
                 signOutGoogleUser()
             }
         })
@@ -206,7 +200,6 @@ class LoginActivity : AppCompatActivity() {
             "Ir al Registro",
             "Cancelar",
             {
-                // Redirigir a la actividad de registro
                 startActivity(Intent(this, RegistroActivity::class.java))
             },
             null
@@ -214,7 +207,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun signOutGoogleUser() {
-        // LIMPIEZA COMPLETA DE SESIÓN
         SessionManager.clearCompleteSession(this)
         showLoading(false)
     }
@@ -244,25 +236,23 @@ class LoginActivity : AppCompatActivity() {
                 showLoading(false)
 
                 if (snapshot.exists()) {
-                    // ACTUALIZAR TOKEN FCM DESPUÉS DE LOGIN EXITOSO
                     FCMTokenManager.updateTokenForCurrentUser()
-                    
-                    // Usar token FCM pendiente si existe
                     FCMTokenManager.checkAndUsePendingToken(this@LoginActivity)
-                    
+
                     val role = snapshot.child("usuario_role").getValue(String::class.java)
                     when (role) {
                         "admin" -> goTo(AdminPanel::class.java)
                         else -> goTo(UserPanelDynamic::class.java)
                     }
                 } else {
-                    showError("Datos de usuario no encontrados en la base de datos.")
+                    logError("Datos de usuario no encontrados en la base de datos.")
+                    showLoadingError()
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
-                showError("Error al obtener datos del usuario.")
-                showLoading(false)
+                logError("Error al obtener datos del usuario: ${error.message}")
+                showLoadingError()
             }
         })
     }
@@ -281,16 +271,23 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun showError(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+    private fun showLoadingError() {
+        showLoading(false)
+        // Solo mostrar alerta genérica sin detalles técnicos
+    }
+
+    private fun logError(message: String) {
+        // Solo registrar en LogCat si DEBUG está habilitado
+        if (DEBUG) {
+            android.util.Log.e(TAG, message)
+        }
     }
 
     private fun togglePasswordVisibility() {
         val currentInputType = loginPassword.inputType
         val isPasswordVisible = currentInputType == (InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
-        
+
         if (isPasswordVisible) {
-            // Mostrar contraseña
             loginPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
             loginPassword.setCompoundDrawablesWithIntrinsicBounds(
                 getDrawable(R.drawable.baseline_lock_24),
@@ -299,7 +296,6 @@ class LoginActivity : AppCompatActivity() {
                 null
             )
         } else {
-            // Ocultar contraseña
             loginPassword.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             loginPassword.setCompoundDrawablesWithIntrinsicBounds(
                 getDrawable(R.drawable.baseline_lock_24),
@@ -308,7 +304,6 @@ class LoginActivity : AppCompatActivity() {
                 null
             )
         }
-        // Mover el cursor al final del texto
         loginPassword.setSelection(loginPassword.text.length)
     }
 }

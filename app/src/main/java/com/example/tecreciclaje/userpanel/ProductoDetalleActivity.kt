@@ -11,6 +11,7 @@ import com.example.tecreciclaje.LoginActivity
 import com.example.tecreciclaje.R
 import com.example.tecreciclaje.UserPanelDynamic
 import com.example.tecreciclaje.domain.model.Producto
+import com.example.tecreciclaje.utils.AppLogger
 import com.example.tecreciclaje.utils.TutorialManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -50,7 +51,7 @@ class ProductoDetalleActivity : AppCompatActivity() {
         // Obtener producto del intent
         producto = intent.getSerializableExtra("producto") as? Producto
         if (producto == null) {
-            Toast.makeText(this, "Error: Producto no encontrado", Toast.LENGTH_SHORT).show()
+            AppLogger.e("Error: Producto no encontrado")
             finish()
             return
         }

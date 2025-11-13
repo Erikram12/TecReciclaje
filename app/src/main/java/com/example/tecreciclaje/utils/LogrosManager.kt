@@ -136,7 +136,7 @@ class LogrosManager private constructor(context: Context) {
     }
     
     private fun showLogroUnlocked(logro: Logro) {
-        Toast.makeText(context, "🏆 ¡Logro desbloqueado: ${logro.titulo}!", Toast.LENGTH_LONG).show()
+        AppLogger.d("¡Logro desbloqueado: ${logro.titulo}!")
         
         // Aquí podrías agregar una notificación push o una animación
         // También podrías agregar los puntos de recompensa al usuario
@@ -184,7 +184,7 @@ class LogrosManager private constructor(context: Context) {
                 
                 // Mostrar mensaje específico según el material
                 val materialName = if (materialType == "plastico") "plástico" else "aluminio"
-                Toast.makeText(context, "♻️ Reciclaje de $materialName completado (+$puntosGanados pts)", Toast.LENGTH_SHORT).show()
+                AppLogger.d("Reciclaje de $materialName completado (+$puntosGanados pts)")
             }
         }
     }

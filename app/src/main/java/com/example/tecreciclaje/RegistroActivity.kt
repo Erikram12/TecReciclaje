@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
 import android.util.Log
+import com.example.tecreciclaje.utils.AppLogger
 import android.util.Patterns
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -34,6 +35,7 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
     companion object {
         private const val RC_SIGN_IN = 9001
         private const val TAG = "RegistroActivity"
+        private const val DEBUG = false // Cambiar a true solo en desarrollo
     }
 
     private lateinit var nombreEditText: EditText
@@ -135,39 +137,84 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
         val perfil = "https://firebasestorage.googleapis.com/v0/b/resiclaje-39011.firebasestorage.app/o/user.png?alt=media&token=745bbda5-2229-4d42-af3f-16dd6ec8db23"
 
         val roleMessage = if (role == "admin") "Registro como Administrador (@tecnm.mx)" else "Registro como Usuario"
-        Toast.makeText(this, roleMessage, Toast.LENGTH_SHORT).show()
+        logInfo(roleMessage)
 
         if (role == "admin") {
-            // Admin: igual que antes
-            registerAdminDirectly(nombre, apellido, numControl, carrera, email, password, perfil)
-        } else {
-            // ★ Usuario: PRIMERO crear cuenta de Firebase (auth != null) y LUEGO abrir el BottomSheet NFC
-            showLoading(true)
-            mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener {
-                    showLoading(false)
-                    FCMTokenManager.checkAndUsePendingToken(this)
-                    val sheet = NfcBottomSheetDialogFragment.newInstance(
-                        nombre, apellido, numControl, carrera, email, password, role, perfil, false
+            // Admin: verificar si existe en BD
+            checkIfUserExistsInDatabase(email) { exists ->
+                if (exists) {
+                    mostrarDialogoError(
+                        "Usuario Ya Registrado",
+                        "Este correo electrónico ya está registrado en el sistema.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión."
                     )
-                    sheet.setOnRegistrationCancelledListener(this)
-                    sheet.show(supportFragmentManager, "NFC_SHEET")
+                } else {
+                    registerAdminDirectly(nombre, apellido, numControl, carrera, email, password, perfil)
                 }
-                .addOnFailureListener { e ->
-                    showLoading(false)
-                    if (e is FirebaseAuthUserCollisionException) {
-                        mostrarDialogoError(
-                            "Correo Ya Registrado",
-                            "Este correo electrónico ya está en uso.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión."
-                        )
-                    } else {
-                        mostrarDialogoError(
-                            "Error de Registro",
-                            e.message ?: "No se pudo completar el registro."
-                        )
-                    }
+            }
+        } else {
+            // Usuario: verificar si existe en BD ANTES de crear en Auth
+            checkIfUserExistsInDatabase(email) { exists ->
+                if (exists) {
+                    mostrarDialogoError(
+                        "Usuario Ya Registrado",
+                        "Este correo electrónico ya está registrado en el sistema.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión."
+                    )
+                } else {
+                    createUserAndShowNFC(nombre, apellido, numControl, carrera, email, password, perfil)
                 }
+            }
         }
+    }
+
+    private fun checkIfUserExistsInDatabase(email: String, callback: (Boolean) -> Unit) {
+        val db = FirebaseDatabase.getInstance().reference
+        db.child("usuarios").orderByChild("usuario_email").equalTo(email)
+            .get()
+            .addOnSuccessListener { snapshot ->
+                callback(snapshot.exists())
+            }
+            .addOnFailureListener { e ->
+                logError("Error al verificar usuario en BD: ${e.message}")
+                // En caso de error, permitir continuar (mejor experiencia)
+                callback(false)
+            }
+    }
+
+    private fun createUserAndShowNFC(
+        nombre: String,
+        apellido: String,
+        numControl: String,
+        carrera: String,
+        email: String,
+        password: String,
+        perfil: String
+    ) {
+        showLoading(true)
+        mAuth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener {
+                showLoading(false)
+                FCMTokenManager.checkAndUsePendingToken(this)
+                val sheet = NfcBottomSheetDialogFragment.newInstance(
+                    nombre, apellido, numControl, carrera, email, password, "user", perfil, false
+                )
+                sheet.setOnRegistrationCancelledListener(this)
+                sheet.show(supportFragmentManager, "NFC_SHEET")
+            }
+            .addOnFailureListener { e ->
+                showLoading(false)
+                if (e is FirebaseAuthUserCollisionException) {
+                    mostrarDialogoError(
+                        "Correo Ya Registrado",
+                        "Este correo electrónico ya está en uso.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión."
+                    )
+                } else {
+                    mostrarDialogoError(
+                        "Error de Registro",
+                        "No se pudo completar el registro. Por favor, intenta nuevamente."
+                    )
+                    logError("Error al crear usuario: ${e.message}")
+                }
+            }
     }
 
     private fun validarCampos(
@@ -240,19 +287,36 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
             val apellido = if (nameParts.size > 1) nameParts[1] else ""
             val role = determineUserRole(email)
 
-            val roleMessage = if (role == "admin") "Registro como Administrador (@tecnm.mx)" else "Registro como Usuario"
-            Toast.makeText(this, roleMessage, Toast.LENGTH_SHORT).show()
+            val roleMessage = if (role == "admin") "Intento de Registro como Administrador (@tecnm.mx)" else "Intento de Registro como Usuario"
+            logInfo(roleMessage)
 
             FCMTokenManager.checkAndUsePendingToken(this)
 
-            if (role == "admin") {
-                registerAdminDirectly(nombre, apellido, "", "", email ?: "", "", photoUrl)
-            } else {
-                val sheet = NfcBottomSheetDialogFragment.newInstance(
-                    nombre, apellido, "", "", email ?: "", "", role, photoUrl, true
-                )
-                sheet.setOnRegistrationCancelledListener(this)
-                sheet.show(supportFragmentManager, "NFC_SHEET")
+            // Verificar si ya existe en BD ANTES de proceder
+            if (email != null) {
+                checkIfUserExistsInDatabase(email) { exists ->
+                    if (exists) {
+                        // Usuario ya existe, cerrar sesión de Google y mostrar error
+                        mGoogleSignInClient.signOut().addOnCompleteListener {
+                            mAuth.signOut()
+                            mostrarDialogoError(
+                                "Usuario Ya Registrado",
+                                "Este correo electrónico ya está registrado en el sistema.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión."
+                            )
+                        }
+                    } else {
+                        // Usuario no existe, proceder con el registro
+                        if (role == "admin") {
+                            registerAdminDirectly(nombre, apellido, "", "", email, "", photoUrl)
+                        } else {
+                            val sheet = NfcBottomSheetDialogFragment.newInstance(
+                                nombre, apellido, "", "", email, "", role, photoUrl, true
+                            )
+                            sheet.setOnRegistrationCancelledListener(this)
+                            sheet.show(supportFragmentManager, "NFC_SHEET")
+                        }
+                    }
+                }
             }
         }
     }
@@ -262,10 +326,10 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
         mAuth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Log.d(TAG, "signInWithCredential:success")
+                    logInfo("Autenticación con Google exitosa")
                     handleGoogleSignInSuccess(mAuth.currentUser)
                 } else {
-                    Log.w(TAG, "signInWithCredential:failure", task.exception)
+                    logError("Error en autenticación con Google: ${task.exception?.message}")
                     mostrarDialogoError(
                         "Error de Autenticación",
                         "No se pudo autenticar con Google. Por favor, intenta nuevamente."
@@ -280,18 +344,18 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-                Log.d(TAG, "firebaseAuthWithGoogle:${account?.id}")
+                logInfo("Google Sign In exitoso")
                 firebaseAuthWithGoogle(account?.idToken)
             } catch (e: ApiException) {
-                Log.w(TAG, "Google sign in failed", e)
+                logError("Error en Google Sign In: ${e.message}")
                 if (e.statusCode == GoogleSignInStatusCodes.SIGN_IN_CANCELLED) {
                     mGoogleSignInClient.signOut().addOnCompleteListener {
-                        Toast.makeText(this, "Registro cancelado", Toast.LENGTH_SHORT).show()
+                        logInfo("Registro cancelado")
                     }
                 } else {
                     mostrarDialogoError(
                         "Error de Google Sign-In",
-                        "No se pudo completar el registro con Google.\n\nCódigo de error: ${e.statusCode}"
+                        "No se pudo completar el registro con Google.\n\nPor favor, intenta nuevamente."
                     )
                 }
             }
@@ -343,7 +407,8 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
                         if (task.exception is FirebaseAuthUserCollisionException) {
                             mostrarDialogoError("Correo Ya Registrado","Este correo electrónico ya está en uso.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión.")
                         } else {
-                            mostrarDialogoError("Error de Registro", task.exception?.message ?: "No se pudo completar el registro.")
+                            mostrarDialogoError("Error de Registro", "No se pudo completar el registro. Por favor, intenta nuevamente.")
+                            logError("Error al crear usuario admin: ${task.exception?.message}")
                         }
                     }
                 }
@@ -359,6 +424,7 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
                 if (!tokenTask.isSuccessful) {
                     showLoading(false)
                     mostrarDialogoError("Error de Configuración","No se pudo obtener el token de notificaciones.")
+                    logError("Error al obtener token FCM")
                     return@addOnCompleteListener
                 }
                 val token = tokenTask.result
@@ -377,21 +443,22 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
                 db.child("usuarios").child(authUid).setValue(adminMap)
                     .addOnSuccessListener {
                         showLoading(false)
-                        Toast.makeText(this, "Administrador registrado exitosamente", Toast.LENGTH_SHORT).show()
+                        logInfo("Administrador registrado exitosamente")
                         val intent = Intent(this, AdminPanel::class.java)
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                     }
                     .addOnFailureListener { e ->
                         showLoading(false)
-                        mostrarDialogoError("Error al Guardar","No se pudieron guardar los datos: ${e.message}")
+                        mostrarDialogoError("Error al Guardar","No se pudieron guardar los datos. Por favor, intenta nuevamente.")
+                        logError("Error al guardar admin en BD: ${e.message}")
                     }
             }
     }
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading) {
-            Toast.makeText(this, "Registrando...", Toast.LENGTH_SHORT).show()
+            logInfo("Registrando usuario...")
         }
     }
 
@@ -401,17 +468,29 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
             if (currentUser != null) {
                 currentUser.delete().addOnCompleteListener { deleteTask ->
                     if (deleteTask.isSuccessful) {
-                        Log.d(TAG, "Cuenta eliminada exitosamente")
+                        logInfo("Cuenta eliminada exitosamente")
                     } else {
-                        Log.e(TAG, "Error al eliminar cuenta: ${deleteTask.exception?.message}")
+                        logError("Error al eliminar cuenta: ${deleteTask.exception?.message}")
                     }
                     mAuth.signOut()
-                    Toast.makeText(this, "Sesión cerrada. Puedes intentar con otra cuenta.", Toast.LENGTH_SHORT).show()
+                    logInfo("Sesión cerrada. Usuario puede intentar con otra cuenta.")
                 }
             } else {
                 mAuth.signOut()
-                Toast.makeText(this, "Sesión cerrada. Puedes intentar con otra cuenta.", Toast.LENGTH_SHORT).show()
+                logInfo("Sesión cerrada. Usuario puede intentar con otra cuenta.")
             }
+        }
+    }
+
+    private fun logInfo(message: String) {
+        if (DEBUG) {
+            Log.i(TAG, message)
+        }
+    }
+
+    private fun logError(message: String) {
+        if (DEBUG) {
+            Log.e(TAG, message)
         }
     }
 }

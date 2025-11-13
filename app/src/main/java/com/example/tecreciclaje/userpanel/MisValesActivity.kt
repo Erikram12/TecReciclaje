@@ -14,6 +14,7 @@ import com.example.tecreciclaje.R
 import com.example.tecreciclaje.domain.model.Vale
 import com.example.tecreciclaje.Model.ValesAdapter
 import com.example.tecreciclaje.UserPanelDynamic
+import com.example.tecreciclaje.utils.AppLogger
 import com.example.tecreciclaje.utils.TutorialManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -267,8 +268,7 @@ class MisValesActivity : AppCompatActivity() {
 
                 override fun onCancelled(error: DatabaseError) {
                     println("Error al obtener vales: ${error.message}")
-                    Toast.makeText(this@MisValesActivity, 
-                        "Error al obtener vales: ${error.message}", Toast.LENGTH_SHORT).show()
+                    AppLogger.e("Error al obtener vales: ${error.message}")
                 }
             })
     }
@@ -307,8 +307,7 @@ class MisValesActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MisValesActivity, 
-                    "Error al buscar vales alternativo: ${error.message}", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error al buscar vales alternativo: ${error.message}")
             }
         })
     }
@@ -399,7 +398,7 @@ class MisValesActivity : AppCompatActivity() {
             dialog.show()
 
         } catch (e: Exception) {
-            Toast.makeText(this, "Error al generar QR", Toast.LENGTH_SHORT).show()
+            AppLogger.e("Error al generar QR")
         }
     }
 }

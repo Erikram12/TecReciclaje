@@ -14,6 +14,7 @@ import com.example.tecreciclaje.utils.FCMTokenManager
 import com.example.tecreciclaje.utils.TutorialManager
 import com.example.tecreciclaje.Model.UpdateNfcBottomSheetDialogFragment
 import com.example.tecreciclaje.UserPanelDynamic
+import com.example.tecreciclaje.utils.AppLogger
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -170,7 +171,7 @@ class PerfilActivity : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@PerfilActivity, "Error al cargar datos: ${error.message}", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error al cargar datos del perfil: ${error.message}")
             }
         })
     }

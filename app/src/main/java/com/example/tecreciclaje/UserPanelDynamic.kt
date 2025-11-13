@@ -2,7 +2,7 @@ package com.example.tecreciclaje
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import com.example.tecreciclaje.utils.AppLogger
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
@@ -100,8 +100,7 @@ class UserPanelDynamic : AppCompatActivity() {
                     }
                 }
             } catch (e: Exception) {
-                Log.e("UserPanelDynamic", "Error cargando productos", e)
-                Toast.makeText(this@UserPanelDynamic, "Error cargando productos", Toast.LENGTH_SHORT).show()
+                AppLogger.e("Error cargando productos", e)
             }
         }
     }
@@ -164,34 +163,34 @@ class UserPanelDynamic : AppCompatActivity() {
                     val puntosObj = snapshot.child("usuario_puntos").value
                     var puntos: Int = 0
                     
-                    Log.d("UserPanelDynamic", "Datos de puntos recibidos: $puntosObj (tipo: ${puntosObj?.javaClass?.simpleName ?: "null"})")
+                    AppLogger.d("Datos de puntos recibidos: $puntosObj (tipo: ${puntosObj?.javaClass?.simpleName ?: "null"})")
                     
                     puntos = when (puntosObj) {
                         is Int -> {
-                            Log.d("UserPanelDynamic", "Puntos como Int: $puntosObj")
+                            AppLogger.d("Puntos como Int: $puntosObj")
                             puntosObj
                         }
                         is String -> {
                             try {
                                 val parsed = puntosObj.toInt()
-                                Log.d("UserPanelDynamic", "Puntos como String convertido: $parsed")
+                                AppLogger.d("Puntos como String convertido: $parsed")
                                 parsed
                             } catch (e: NumberFormatException) {
-                                Log.w("UserPanelDynamic", "Error parsing puntos: $puntosObj", e)
+                                AppLogger.w("Error parsing puntos: $puntosObj", e)
                                 0
                             }
                         }
                         is Long -> {
                             val converted = puntosObj.toInt()
-                            Log.d("UserPanelDynamic", "Puntos como Long convertido: $converted")
+                            AppLogger.d("Puntos como Long convertido: $converted")
                             converted
                         }
                         null -> {
-                            Log.w("UserPanelDynamic", "Puntos es null, estableciendo en 0")
+                            AppLogger.w("Puntos es null, estableciendo en 0")
                             0
                         }
                         else -> {
-                            Log.w("UserPanelDynamic", "Tipo de puntos no reconocido: ${puntosObj.javaClass.simpleName}")
+                            AppLogger.w("Tipo de puntos no reconocido: ${puntosObj.javaClass.simpleName}")
                             0
                         }
                     }
@@ -217,8 +216,8 @@ class UserPanelDynamic : AppCompatActivity() {
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("UserPanelDynamic", "Error obteniendo datos del usuario: ${error.message}")
-                Toast.makeText(this@UserPanelDynamic, "Error obteniendo datos del usuario", Toast.LENGTH_SHORT).show()
+                // Solo registrar el error en LogCat sin mostrar al usuario
+                AppLogger.e("Error obteniendo datos del usuario: ${error.message}")
             }
         })
     }
