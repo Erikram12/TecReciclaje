@@ -10,6 +10,7 @@
 
     <!-- Desde Android 10+ estos permisos ya están deprecados,
          si usas lectura de almacenamiento pide MANAGE_EXTERNAL_STORAGE o Storage Access Framework -->
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"

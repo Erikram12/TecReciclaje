@@ -132,6 +132,7 @@ class NfcBottomSheetDialogFragment : BottomSheetDialogFragment() {
         btnCancelar = view.findViewById(R.id.btnCancelar)
         btnCancelar.setOnClickListener {
             registroCancelado = true
+            nfcAdapter?.disableReaderMode(requireActivity())
             context?.let { ctx -> Toast.makeText(ctx, "Registro cancelado", Toast.LENGTH_SHORT).show() }
             cancellationListener?.onRegistrationCancelled()
             dismiss()

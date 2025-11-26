@@ -34,18 +34,26 @@ class AdminPanel : AppCompatActivity() {
 
     // Puntos por pieza
     companion object {
-        private const val PUNTOS_PLASTICO = 20
-        private const val PUNTOS_ALUMINIO = 30
+        private const val PUNTOS_PLASTICO = 3
+        private const val PUNTOS_ALUMINIO = 4
 
         // Rango para interpretar "1 registro = 1 pieza"
-        private const val RANGO_MIN_PLAST = 20
-        private const val RANGO_MAX_PLAST = 29
-        private const val RANGO_MIN_ALUM = 30
-        private const val RANGO_MAX_ALUM = 39
+        private const val RANGO_MIN_PLAST = 3
+        private const val RANGO_MAX_PLAST = 3
+        private const val RANGO_MIN_ALUM = 4
+        private const val RANGO_MAX_ALUM = 4
 
-        // Precios por pieza (ajusta a tu necesidad)
-        private const val PRECIO_POR_BOTELLA_PLASTICO = 0.5 // 20 botellas = $10 -> $0.5 c/u
-        private const val PRECIO_POR_LATA_ALUMINIO = 1.0 //
+        // Precios por kilo (pesos MX)
+        private const val PRECIO_POR_KILO_PLASTICO = 7.0
+        private const val PRECIO_POR_KILO_ALUMINIO = 19.0
+        
+        // Peso promedio por pieza (en gramos)
+        private const val PESO_BOTELLA_PLASTICO_GRAMOS = 30.0 // ~30g por botella PET
+        private const val PESO_LATA_ALUMINIO_GRAMOS = 15.0 // ~15g por lata
+        
+        // Precio por pieza calculado desde precio por kilo
+        private const val PRECIO_POR_BOTELLA_PLASTICO = (PRECIO_POR_KILO_PLASTICO / (1000.0 / PESO_BOTELLA_PLASTICO_GRAMOS))
+        private const val PRECIO_POR_LATA_ALUMINIO = (PRECIO_POR_KILO_ALUMINIO / (1000.0 / PESO_LATA_ALUMINIO_GRAMOS))
     }
 
     private lateinit var tvAdminName: TextView

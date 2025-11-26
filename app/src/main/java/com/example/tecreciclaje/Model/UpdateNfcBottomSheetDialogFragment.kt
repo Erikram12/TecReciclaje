@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.annotation.Nullable
@@ -25,7 +26,13 @@ class UpdateNfcBottomSheetDialogFragment : BottomSheetDialogFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.activity_nfc, container, false)
+        val view = inflater.inflate(R.layout.activity_nfc, container, false)
+        val btnCancelar = view.findViewById<Button>(R.id.btnCancelar)
+        btnCancelar.setOnClickListener {
+            nfcAdapter?.disableReaderMode(requireActivity())
+            dismiss()
+        }
+        return view
     }
 
     override fun onResume() {
@@ -42,6 +49,11 @@ class UpdateNfcBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
     override fun onPause() {
         super.onPause()
+        nfcAdapter?.disableReaderMode(requireActivity())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
         nfcAdapter?.disableReaderMode(requireActivity())
     }
 

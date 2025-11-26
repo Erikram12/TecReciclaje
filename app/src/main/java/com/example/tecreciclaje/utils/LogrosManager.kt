@@ -63,23 +63,23 @@ class LogrosManager private constructor(context: Context) {
     
     private fun createDefaultLogros() {
         val defaultLogros = listOf(
-            // Logros basados en reciclajes (cada reciclaje = 20-30 puntos)
-            Logro("primer_reciclaje", "Primer Reciclaje", "Completa tu primer reciclaje", "primer_reciclaje", 1, 10, "reciclajes"),
-            Logro("reciclador_novato", "Reciclador Novato", "Completa 3 reciclajes", "reciclaje", 3, 25, "reciclajes"),
-            Logro("reciclador_experimentado", "Reciclador Experimentado", "Completa 5 reciclajes", "reciclaje", 5, 50, "reciclajes"),
-            Logro("reciclador_experto", "Reciclador Experto", "Completa 10 reciclajes", "reciclador_experto", 10, 100, "reciclajes"),
-            Logro("reciclador_maestro", "Reciclador Maestro", "Completa 20 reciclajes", "reciclador_maestro", 20, 200, "reciclajes"),
+            // Logros basados en reciclajes (cada reciclaje = 3-4 puntos)
+            Logro("primer_reciclaje", "Primer Reciclaje", "Completa tu primer reciclaje", "primer_reciclaje", 1, 2, "reciclajes"),
+            Logro("reciclador_novato", "Reciclador Novato", "Completa 3 reciclajes", "reciclaje", 3, 3, "reciclajes"),
+            Logro("reciclador_experimentado", "Reciclador Experimentado", "Completa 5 reciclajes", "reciclaje", 5, 5, "reciclajes"),
+            Logro("reciclador_experto", "Reciclador Experto", "Completa 10 reciclajes", "reciclador_experto", 10, 7, "reciclajes"),
+            Logro("reciclador_maestro", "Reciclador Maestro", "Completa 20 reciclajes", "reciclador_maestro", 20, 10, "reciclajes"),
             
-            // Logros basados en puntos acumulados (20 pts plástico, 30 pts aluminio)
-            Logro("puntos_60", "Acumulador de Puntos", "Acumula 60 puntos (3 plásticos)", "puntos", 60, 20, "puntos"),
-            Logro("puntos_150", "Gran Acumulador", "Acumula 150 puntos (5 plásticos)", "puntos", 150, 50, "puntos"),
-            Logro("puntos_300", "Maestro Acumulador", "Acumula 300 puntos (10 plásticos)", "puntos", 300, 100, "puntos"),
-            Logro("puntos_600", "Experto Acumulador", "Acumula 600 puntos (20 plásticos)", "puntos", 600, 150, "puntos"),
-            Logro("puntos_1000", "Leyenda Acumulador", "Acumula 1000 puntos", "puntos", 1000, 200, "puntos"),
+            // Logros basados en puntos acumulados (3 pts plástico, 4 pts aluminio)
+            Logro("puntos_60", "Acumulador de Puntos", "Acumula 60 puntos (20 plásticos)", "puntos", 60, 3, "puntos"),
+            Logro("puntos_150", "Gran Acumulador", "Acumula 150 puntos (50 plásticos)", "puntos", 150, 5, "puntos"),
+            Logro("puntos_300", "Maestro Acumulador", "Acumula 300 puntos (100 plásticos)", "puntos", 300, 7, "puntos"),
+            Logro("puntos_600", "Experto Acumulador", "Acumula 600 puntos (200 plásticos)", "puntos", 600, 8, "puntos"),
+            Logro("puntos_1000", "Leyenda Acumulador", "Acumula 1000 puntos", "puntos", 1000, 10, "puntos"),
             
             // Logros de consistencia
-            Logro("dias_3", "Constante", "Recicla durante 3 días consecutivos", "dias_consecutivos", 3, 30, "dias_consecutivos"),
-            Logro("dias_7", "Perseverante", "Recicla durante 7 días consecutivos", "dias_consecutivos", 7, 75, "dias_consecutivos")
+            Logro("dias_3", "Constante", "Recicla durante 3 días consecutivos", "dias_consecutivos", 3, 4, "dias_consecutivos"),
+            Logro("dias_7", "Perseverante", "Recicla durante 7 días consecutivos", "dias_consecutivos", 7, 10, "dias_consecutivos")
         )
         
         defaultLogros.forEach { logro ->

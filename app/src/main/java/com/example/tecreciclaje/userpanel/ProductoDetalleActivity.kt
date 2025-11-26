@@ -25,7 +25,6 @@ class ProductoDetalleActivity : AppCompatActivity() {
     private lateinit var textPrecioPuntos: TextView
     private lateinit var textProgresoDetallado: TextView
     private lateinit var btnCanjear: Button
-    private lateinit var btnBack: ImageButton
     private lateinit var btnQuestion: ImageButton
     private lateinit var progressBar: ProgressBar
     private lateinit var ivImagenProducto: ImageView
@@ -59,7 +58,6 @@ class ProductoDetalleActivity : AppCompatActivity() {
         setupProductInfo()
         getUserData(currentUser.uid)
         setupNavigation()
-        setupBackButton()
 
         // MOSTRAR TUTORIAL SI ES NECESARIO
         producto?.let { prod ->
@@ -76,7 +74,6 @@ class ProductoDetalleActivity : AppCompatActivity() {
         textPrecioPuntos = findViewById(R.id.textPrecioPuntos)
         textProgresoDetallado = findViewById(R.id.textProgresoDetallado)
         btnCanjear = findViewById(R.id.btnCanjear)
-        btnBack = findViewById(R.id.btnBack)
         btnQuestion = findViewById(R.id.btnQuestion)
         progressBar = findViewById(R.id.progressBar)
         ivImagenProducto = findViewById(R.id.ivImagenProducto)
@@ -130,12 +127,6 @@ class ProductoDetalleActivity : AppCompatActivity() {
                 }
                 else -> false
             }
-        }
-    }
-
-    private fun setupBackButton() {
-        btnBack.setOnClickListener {
-            finish()
         }
     }
 

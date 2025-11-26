@@ -1,13 +1,17 @@
 package com.example.tecreciclaje.userpanel
 
 import android.app.Dialog
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.CropImageContractOptions
 import com.canhub.cropper.CropImageOptions
@@ -60,9 +64,8 @@ class EditarPerfilActivity : AppCompatActivity() {
     private var adView: AdView? = null
 
     companion object {
-        // Use test ad unit ID for development
         private const val AD_UNIT_ID = "ca-app-pub-3940256099942544/6300978111" // Test banner ID
-        // private const val AD_UNIT_ID = "ca-app-pub-5372308920488383/2713952653" // Your real ID
+        private const val CAMERA_PERMISSION_CODE = 100
     }
 
     private val cropImage: ActivityResultLauncher<CropImageContractOptions> =
@@ -73,6 +76,19 @@ class EditarPerfilActivity : AppCompatActivity() {
                 imageViewProfile.setImageURI(imageUri)
             } else {
                 AppLogger.e("Error al recortar imagen")
+            }
+        }
+
+    // Registrar el resultado del permiso
+    private val requestPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permiso concedido, proceder con la selección de imagen
+                launchImagePicker()
+            } else {
+                // Permiso denegado
+                AppLogger.d("Permiso de cámara denegado")
+                Toast.makeText(this, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -97,8 +113,7 @@ class EditarPerfilActivity : AppCompatActivity() {
         userRef = FirebaseDatabase.getInstance().getReference("usuarios").child(currentUser.uid)
         loadUserData()
         setupClickListeners()
-        
-        // Initialize MobileAds SDK
+
         MobileAds.initialize(this) { initializationStatus ->
             Log.d("AdMob", "MobileAds initialized")
             initializeAdMob()
@@ -131,25 +146,21 @@ class EditarPerfilActivity : AppCompatActivity() {
             "Ingeniería Administracion"
         )
 
-        // Crear un adapter personalizado para mejor visualización
         val adapter = ArrayAdapter(this, android.R.layout.simple_dropdown_item_1line, carreras)
-        
+
         editTextCarrera.setAdapter(adapter)
-        editTextCarrera.threshold = 1 // Mostrar dropdown con 1 carácter
-        
-        // Configurar para que muestre el dropdown al hacer clic
+        editTextCarrera.threshold = 1
+
         editTextCarrera.setOnClickListener {
             editTextCarrera.showDropDown()
         }
-        
-        // Configurar para que muestre el dropdown al obtener el foco
+
         editTextCarrera.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 editTextCarrera.showDropDown()
             }
         }
-        
-        // Configurar para que muestre el dropdown al tocar
+
         editTextCarrera.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 editTextCarrera.showDropDown()
@@ -158,8 +169,7 @@ class EditarPerfilActivity : AppCompatActivity() {
                 false
             }
         }
-        
-        // Configurar el icono final para que también abra el dropdown
+
         val textInputLayout = findViewById<TextInputLayout>(R.id.textInputLayoutCarrera)
         textInputLayout?.setEndIconOnClickListener {
             editTextCarrera.showDropDown()
@@ -176,7 +186,6 @@ class EditarPerfilActivity : AppCompatActivity() {
         userRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    // Cargar información personal
                     val nombre = snapshot.child("usuario_nombre").getValue(String::class.java)
                     val apellido = snapshot.child("usuario_apellido").getValue(String::class.java)
                     val numControl = snapshot.child("usuario_numControl").getValue(String::class.java)
@@ -192,7 +201,6 @@ class EditarPerfilActivity : AppCompatActivity() {
                     editTextCorreo.setText(email ?: "")
                     editTextEdad.setText(edad ?: "")
 
-                    // Cargar imagen de perfil
                     if (!imageUrl.isNullOrEmpty()) {
                         imageUrlActual = imageUrl
                         Picasso.get()
@@ -218,6 +226,17 @@ class EditarPerfilActivity : AppCompatActivity() {
     }
 
     private fun selectImage() {
+        // Verificar si tenemos permiso de cámara
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+            // Permiso ya concedido
+            launchImagePicker()
+        } else {
+            // Solicitar permiso
+            requestPermissionLauncher.launch(android.Manifest.permission.CAMERA)
+        }
+    }
+
+    private fun launchImagePicker() {
         val cropOptions = CropImageContractOptions(null, CropImageOptions())
             .setGuidelines(CropImageView.Guidelines.ON)
             .setRequestedSize(400, 400)
@@ -235,7 +254,6 @@ class EditarPerfilActivity : AppCompatActivity() {
         val email = editTextCorreo.text.toString().trim()
         val edad = editTextEdad.text.toString().trim()
 
-        // Validaciones básicas
         if (nombre.isEmpty() || apellido.isEmpty() || numControl.isEmpty() || carrera.isEmpty()) {
             AppLogger.d("Validación fallida: Campos obligatorios incompletos")
             return
@@ -243,11 +261,9 @@ class EditarPerfilActivity : AppCompatActivity() {
 
         loadingDialog.show()
 
-        // Si hay una nueva imagen, subirla primero
         if (imageUri != null) {
             uploadImageAndSaveData(nombre, apellido, numControl, carrera, email, edad)
         } else {
-            // Solo guardar datos sin cambiar imagen
             saveUserData(nombre, apellido, numControl, carrera, email, edad, imageUrlActual)
         }
     }
@@ -278,7 +294,7 @@ class EditarPerfilActivity : AppCompatActivity() {
             "usuario_email" to email,
             "usuario_edad" to edad
         )
-        
+
         if (imageUrl != null) {
             updates["usuario_perfil"] = imageUrl
         }
@@ -298,19 +314,16 @@ class EditarPerfilActivity : AppCompatActivity() {
     private fun initializeAdMob() {
         try {
             Log.d("AdMob", "Initializing AdMob banner")
-            
-            // Create a new ad view.
+
             adView = AdView(this)
             adView?.adUnitId = AD_UNIT_ID
-            // Request an anchored adaptive banner with a width of 360.
             adView?.setAdSize(AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, 360))
 
-            // Add AdListener for debugging
             adView?.adListener = object : AdListener() {
                 override fun onAdLoaded() {
                     Log.d("AdMob", "✅ Ad loaded successfully with ID: $AD_UNIT_ID")
                 }
-                
+
                 override fun onAdFailedToLoad(adError: com.google.android.gms.ads.LoadAdError) {
                     Log.e("AdMob", "❌ Ad failed to load:")
                     Log.e("AdMob", "   Error Code: ${adError.code}")
@@ -318,30 +331,24 @@ class EditarPerfilActivity : AppCompatActivity() {
                     Log.e("AdMob", "   Ad Unit ID: $AD_UNIT_ID")
                     Log.e("AdMob", "   Domain: ${adError.domain}")
                 }
-                
+
                 override fun onAdOpened() {
                     Log.d("AdMob", "Ad opened")
                 }
-                
+
                 override fun onAdClosed() {
                     Log.d("AdMob", "Ad closed")
                 }
             }
 
-            // Replace ad container with new ad view.
             adViewContainer.removeAllViews()
             adView?.let { adView ->
                 adViewContainer.addView(adView)
-                
-                // Make sure the container is visible
                 adViewContainer.visibility = View.VISIBLE
                 Log.d("AdMob", "Ad container visibility: ${adViewContainer.visibility}")
-                
-                // Create an ad request
+
                 val adRequest = AdRequest.Builder().build()
-                
                 Log.d("AdMob", "Loading ad with unit ID: $AD_UNIT_ID")
-                // Start loading the ad.
                 adView.loadAd(adRequest)
             }
         } catch (e: Exception) {

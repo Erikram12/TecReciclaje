@@ -3,6 +3,7 @@ package com.example.tecreciclaje.Model
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
@@ -49,24 +50,31 @@ class HistorialAdapter(private val historialList: List<Historial>) :
 
         // CORREGIDO: Configurar icono y tipo según el tipo de transacción
         val tipo = item.getTipo
+        holder.iconoHistorial.visibility = View.VISIBLE
+        holder.iconoHistorial.clearColorFilter() // Limpiar filtro anterior
+        
         when (tipo.lowercase()) {
             "canjeado" -> {
-                holder.iconoHistorial.text = "🛒"
+                holder.iconoHistorial.setImageResource(R.drawable.ic_shopping_cart_24)
+                holder.iconoHistorial.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.orange1))
                 holder.txtTipo.text = "Canjeado"
                 holder.txtCantidad.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.orange1))
             }
             "ganado" -> {
-                holder.iconoHistorial.text = "💰"
+                holder.iconoHistorial.setImageResource(R.drawable.ic_points)
+                holder.iconoHistorial.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.verde_principal))
                 holder.txtTipo.text = "Ganado"
                 holder.txtCantidad.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.verde_principal))
             }
             "recompensa" -> {
-                holder.iconoHistorial.text = "🏆"
+                holder.iconoHistorial.setImageResource(R.drawable.ic_trophy_24)
+                holder.iconoHistorial.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.verde_principal))
                 holder.txtTipo.text = "Recompensa"
                 holder.txtCantidad.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.verde_principal))
             }
             else -> {
-                holder.iconoHistorial.text = "❓"
+                holder.iconoHistorial.setImageResource(R.drawable.question_mark_24dp_000000_fill0_wght400_grad0_opsz24)
+                holder.iconoHistorial.setColorFilter(ContextCompat.getColor(holder.itemView.context, R.color.verde_principal))
                 holder.txtTipo.text = "Desconocido"
                 holder.txtCantidad.setTextColor(ContextCompat.getColor(holder.itemView.context, R.color.verde_principal))
             }
@@ -88,6 +96,6 @@ class HistorialAdapter(private val historialList: List<Historial>) :
         val txtFecha: TextView = itemView.findViewById(R.id.txtFecha)
         val txtProducto: TextView = itemView.findViewById(R.id.txtProducto)
         val txtTipo: TextView = itemView.findViewById(R.id.txtTipo)
-        val iconoHistorial: TextView = itemView.findViewById(R.id.iconoHistorial)
+        val iconoHistorial: ImageView = itemView.findViewById(R.id.iconoHistorial)
     }
 }
