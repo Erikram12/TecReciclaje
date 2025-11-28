@@ -4,6 +4,7 @@ import android.content.Intent
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -144,6 +145,18 @@ class NfcBottomSheetDialogFragment : BottomSheetDialogFragment() {
         super.onResume()
         val act = requireActivity()
         nfcAdapter = NfcAdapter.getDefaultAdapter(act)
+        
+        // Verificar si el NFC está habilitado
+        if (nfcAdapter == null) {
+            mostrarDialogoNfcNoDisponible()
+            return
+        }
+        
+        if (!nfcAdapter!!.isEnabled) {
+            mostrarDialogoNfcNoHabilitado()
+            return
+        }
+        
         nfcAdapter?.enableReaderMode(
             act,
             this::onTagDiscovered,
@@ -395,6 +408,71 @@ class NfcBottomSheetDialogFragment : BottomSheetDialogFragment() {
                     }
                 }
                 Toast.makeText(ctx, "❌ Registro cancelado", Toast.LENGTH_SHORT).show()
+                dismiss()
+            }
+
+            dialog.show()
+        }
+    }
+
+    private fun mostrarDialogoNfcNoHabilitado() {
+        context?.let { ctx ->
+            val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_nfc_no_habilitado, null)
+            val builder = android.app.AlertDialog.Builder(ctx).setView(dialogView).setCancelable(false)
+            val dialog = builder.create()
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            val btnConfiguracion = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnConfiguracionNfc)
+            btnConfiguracion.setOnClickListener {
+                dialog.dismiss()
+                // Abrir configuración de NFC
+                val intent = Intent(Settings.ACTION_NFC_SETTINGS)
+                startActivity(intent)
+                dismiss()
+            }
+
+            val btnCancelar = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnCancelarNfc)
+            btnCancelar.setOnClickListener {
+                dialog.dismiss()
+                registroCancelado = true
+                if (isGoogleSignIn) {
+                    val currentUser = FirebaseAuth.getInstance().currentUser
+                    currentUser?.delete()?.addOnCompleteListener {
+                        cancellationListener?.onRegistrationCancelled()
+                    }
+                }
+                dismiss()
+            }
+
+            dialog.show()
+        }
+    }
+
+    private fun mostrarDialogoNfcNoDisponible() {
+        context?.let { ctx ->
+            val dialogView = LayoutInflater.from(ctx).inflate(R.layout.dialog_nfc_no_habilitado, null)
+            val builder = android.app.AlertDialog.Builder(ctx).setView(dialogView).setCancelable(false)
+            val dialog = builder.create()
+            dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+            // Cambiar el mensaje para indicar que el dispositivo no soporta NFC
+            val txtMensaje = dialogView.findViewById<android.widget.TextView>(R.id.txtMensajeNfc)
+            txtMensaje.text = "Este dispositivo no soporta NFC"
+
+            val btnConfiguracion = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnConfiguracionNfc)
+            btnConfiguracion.visibility = android.view.View.GONE
+
+            val btnCancelar = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnCancelarNfc)
+            btnCancelar.layoutParams.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT
+            btnCancelar.setOnClickListener {
+                dialog.dismiss()
+                registroCancelado = true
+                if (isGoogleSignIn) {
+                    val currentUser = FirebaseAuth.getInstance().currentUser
+                    currentUser?.delete()?.addOnCompleteListener {
+                        cancellationListener?.onRegistrationCancelled()
+                    }
+                }
                 dismiss()
             }
 

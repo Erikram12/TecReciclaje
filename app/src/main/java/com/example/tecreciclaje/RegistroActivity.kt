@@ -1,7 +1,9 @@
 package com.example.tecreciclaje
 
 import android.content.Intent
+import android.nfc.NfcAdapter
 import android.os.Bundle
+import android.provider.Settings
 import android.text.InputType
 import android.util.Log
 import com.example.tecreciclaje.utils.AppLogger
@@ -18,6 +20,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tecreciclaje.Model.NfcBottomSheetDialogFragment
 import com.example.tecreciclaje.utils.FCMTokenManager
+import com.example.tecreciclaje.utils.SessionManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -54,14 +57,124 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
     // Google Sign In
     private lateinit var mGoogleSignInClient: GoogleSignInClient
 
+    private var loadingDialog: android.app.AlertDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registro)
 
+        // Mostrar pantalla de carga mientras se limpia todo
+        mostrarPantallaCarga()
+        
+        // Limpiar todo de forma agresiva en un hilo separado
+        limpiarTodoYContinuar()
+    }
+
+    private fun mostrarPantallaCarga() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_loading_registro, null)
+        val tvMensaje = dialogView.findViewById<TextView>(R.id.tvLoadingMessage)
+        tvMensaje.text = "Por favor espere...\nLimpiando sesiones y caché"
+        
+        loadingDialog = android.app.AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setCancelable(false)
+            .create()
+        
+        loadingDialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
+        loadingDialog?.show()
+    }
+
+    private fun ocultarPantallaCarga() {
+        loadingDialog?.dismiss()
+        loadingDialog = null
+    }
+
+    private fun limpiarTodoYContinuar() {
+        // Ejecutar limpieza en un hilo separado para no bloquear la UI
+        Thread {
+            try {
+                // 1. Limpiar sesión completa usando SessionManager
+                SessionManager.clearCompleteSession(this@RegistroActivity)
+                
+                // 2. Esperar un momento para que se complete
+                Thread.sleep(800)
+                
+                // 3. Limpieza adicional agresiva
+                runOnUiThread {
+                    limpiarSesionesAdicionales()
+                }
+                
+                Thread.sleep(500)
+                
+                // 4. Inicializar la actividad
+                runOnUiThread {
+                    inicializarActividad()
+                }
+                
+            } catch (e: Exception) {
+                logError("Error durante la limpieza: ${e.message}")
+                runOnUiThread {
+                    inicializarActividad()
+                }
+            }
+        }.start()
+    }
+
+    private fun limpiarSesionesAdicionales() {
+        logInfo("Iniciando limpieza adicional de sesiones")
+        
+        // Limpiar Firebase Auth de forma más agresiva
+        try {
+            val auth = FirebaseAuth.getInstance()
+            val currentUser = auth.currentUser
+            if (currentUser != null) {
+                logInfo("Forzando cierre de sesión para: ${currentUser.email}")
+                // Intentar eliminar el usuario si es necesario (solo para casos extremos)
+                auth.signOut()
+            }
+            // Forzar signOut múltiples veces
+            auth.signOut()
+        } catch (e: Exception) {
+            logError("Error en limpieza adicional de Firebase Auth: ${e.message}")
+        }
+        
+        // Limpiar Google Sign-In
+        try {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+            val googleSignInClient = GoogleSignIn.getClient(this, gso)
+            googleSignInClient.signOut()
+            googleSignInClient.revokeAccess()
+        } catch (e: Exception) {
+            logError("Error en limpieza adicional de Google: ${e.message}")
+        }
+        
+        // Limpiar SharedPreferences de forma más agresiva
+        try {
+            val prefs = getSharedPreferences("TecReciclajePrefs", MODE_PRIVATE)
+            prefs.edit().clear().commit()
+            
+            val fcmPrefs = getSharedPreferences("FCM_PREFS", MODE_PRIVATE)
+            fcmPrefs.edit().clear().commit()
+            
+            val defaultPrefs = getSharedPreferences("default", MODE_PRIVATE)
+            defaultPrefs.edit().clear().commit()
+        } catch (e: Exception) {
+            logError("Error limpiando SharedPreferences: ${e.message}")
+        }
+    }
+
+    private fun inicializarActividad() {
+        ocultarPantallaCarga()
+        
         initializeViews()
         setupFirebaseAuth()
         setupGoogleSignIn()
         setupClickListeners()
+        
+        logInfo("Actividad de registro inicializada correctamente")
     }
 
     private fun initializeViews() {
@@ -83,6 +196,47 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
 
     private fun setupFirebaseAuth() {
         mAuth = FirebaseAuth.getInstance()
+    }
+
+    /**
+     * Cierra cualquier sesión previa de Firebase Auth y Google Sign-In
+     * Esto asegura que no haya conflictos al intentar registrar un nuevo usuario
+     */
+    private fun cerrarSesionesPrevias() {
+        logInfo("Iniciando limpieza de sesiones previas")
+        
+        // Cerrar sesión de Firebase Auth de forma forzada
+        try {
+            val currentUser = mAuth.currentUser
+            if (currentUser != null) {
+                logInfo("Cerrando sesión previa de Firebase Auth para usuario: ${currentUser.email}")
+                mAuth.signOut()
+                // Esperar un momento para asegurar que se complete
+                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                    logInfo("Sesión de Firebase Auth cerrada")
+                }, 300)
+            }
+        } catch (e: Exception) {
+            logError("Error cerrando sesión de Firebase Auth: ${e.message}")
+        }
+        
+        // Cerrar sesión de Google Sign-In
+        try {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build()
+            val googleSignInClient = GoogleSignIn.getClient(this, gso)
+            googleSignInClient.signOut().addOnCompleteListener {
+                logInfo("Sesión de Google Sign-In cerrada")
+            }
+            // También revocar acceso para asegurar limpieza completa
+            googleSignInClient.revokeAccess().addOnCompleteListener {
+                logInfo("Acceso de Google revocado")
+            }
+        } catch (e: Exception) {
+            logError("Error cerrando sesión de Google: ${e.message}")
+        }
     }
 
     private fun setupGoogleSignIn() {
@@ -140,8 +294,8 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
         logInfo(roleMessage)
 
         if (role == "admin") {
-            // Admin: verificar si existe en BD
-            checkIfUserExistsInDatabase(email) { exists ->
+            // Admin: verificar si existe en Firebase Auth Y en BD
+            verificarUsuarioCompleto(email) { exists ->
                 if (exists) {
                     mostrarDialogoError(
                         "Usuario Ya Registrado",
@@ -152,9 +306,9 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
                 }
             }
         } else {
-            // Usuario: verificar si existe en BD ANTES de crear en Auth
-            checkIfUserExistsInDatabase(email) { exists ->
-                if (exists) {
+            // Usuario: verificar si existe en Firebase Auth Y en BD ANTES de crear
+            verificarUsuarioCompleto(email) { existe ->
+                if (existe) {
                     mostrarDialogoError(
                         "Usuario Ya Registrado",
                         "Este correo electrónico ya está registrado en el sistema.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión."
@@ -180,6 +334,70 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
             }
     }
 
+    /**
+     * Verifica si el usuario existe tanto en Firebase Auth como en la base de datos
+     * Si existe en Auth pero no en BD, intenta limpiarlo
+     */
+    private fun verificarUsuarioCompleto(email: String, callback: (Boolean) -> Unit) {
+        // Primero verificar en Firebase Auth
+        mAuth.fetchSignInMethodsForEmail(email)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val signInMethods = task.result?.signInMethods
+                    val existeEnAuth = signInMethods != null && signInMethods.isNotEmpty()
+                    
+                    if (existeEnAuth) {
+                        logInfo("Usuario encontrado en Firebase Auth, verificando en BD...")
+                        // Verificar si también existe en la BD
+                        checkIfUserExistsInDatabase(email) { existeEnBD ->
+                            if (existeEnBD) {
+                                // Existe en ambos, usuario completamente registrado
+                                logInfo("Usuario encontrado en Auth y BD - registro completo")
+                                callback(true)
+                            } else {
+                                // Existe en Auth pero NO en BD - registro incompleto
+                                logInfo("Usuario existe en Auth pero NO en BD - registro incompleto, intentando limpiar...")
+                                intentarLimpiarUsuarioIncompleto(email) { limpiado ->
+                                    if (limpiado) {
+                                        logInfo("Usuario incompleto limpiado exitosamente")
+                                        callback(false) // Permitir registro
+                                    } else {
+                                        logInfo("No se pudo limpiar usuario incompleto")
+                                        callback(true) // Bloquear registro
+                                    }
+                                }
+                            }
+                        }
+                    } else {
+                        // Si no existe en Auth, verificar en la base de datos
+                        logInfo("Usuario NO encontrado en Firebase Auth, verificando en BD...")
+                        checkIfUserExistsInDatabase(email) { existeEnBD ->
+                            callback(existeEnBD)
+                        }
+                    }
+                } else {
+                    logError("Error al verificar en Firebase Auth: ${task.exception?.message}")
+                    // En caso de error, verificar en BD como respaldo
+                    checkIfUserExistsInDatabase(email) { existeEnBD ->
+                        callback(existeEnBD)
+                    }
+                }
+            }
+    }
+
+    /**
+     * Intenta limpiar un usuario que existe en Firebase Auth pero no en la BD
+     * Esto puede pasar si el registro no se completó
+     * En este caso, permitimos que intente crear el usuario de todas formas
+     * y manejamos el error de forma más inteligente en crearUsuarioConEmail
+     */
+    private fun intentarLimpiarUsuarioIncompleto(email: String, callback: (Boolean) -> Unit) {
+        logInfo("Usuario incompleto detectado - permitiendo intento de registro")
+        // Permitir que intente crear el usuario
+        // Si falla, lo manejaremos en crearUsuarioConEmail con un mensaje más claro
+        callback(false) // false = permitir registro
+    }
+
     private fun createUserAndShowNFC(
         nombre: String,
         apellido: String,
@@ -189,7 +407,114 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
         password: String,
         perfil: String
     ) {
+        // Verificar NFC antes de crear el usuario
+        if (!verificarNfcHabilitado()) {
+            return
+        }
+        
+        // Asegurarse de que no hay sesión activa antes de crear un nuevo usuario
+        if (mAuth.currentUser != null) {
+            logInfo("Cerrando sesión previa antes de crear nuevo usuario")
+            mAuth.signOut()
+            // Esperar un momento para que se complete el signOut
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                crearUsuarioConEmail(nombre, apellido, numControl, carrera, email, password, perfil)
+            }, 500)
+        } else {
+            crearUsuarioConEmail(nombre, apellido, numControl, carrera, email, password, perfil)
+        }
+    }
+
+    private fun crearUsuarioConEmail(
+        nombre: String,
+        apellido: String,
+        numControl: String,
+        carrera: String,
+        email: String,
+        password: String,
+        perfil: String
+    ) {
+        // Asegurarse de que no hay sesión activa - forzar múltiples veces
+        if (mAuth.currentUser != null) {
+            logInfo("Forzando cierre de sesión antes de crear usuario")
+            mAuth.signOut()
+            // Esperar un momento para que se complete
+            android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                // Verificar nuevamente después de esperar
+                if (mAuth.currentUser != null) {
+                    logInfo("Aún hay sesión activa, forzando nuevamente...")
+                    mAuth.signOut()
+                    android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                        crearUsuarioConEmailForzado(nombre, apellido, numControl, carrera, email, password, perfil)
+                    }, 500)
+                } else {
+                    crearUsuarioConEmailForzado(nombre, apellido, numControl, carrera, email, password, perfil)
+                }
+            }, 500)
+        } else {
+            crearUsuarioConEmailForzado(nombre, apellido, numControl, carrera, email, password, perfil)
+        }
+    }
+
+    private fun crearUsuarioConEmailForzado(
+        nombre: String,
+        apellido: String,
+        numControl: String,
+        carrera: String,
+        email: String,
+        password: String,
+        perfil: String
+    ) {
         showLoading(true)
+        
+        // Verificar una última vez antes de crear
+        mAuth.fetchSignInMethodsForEmail(email)
+            .addOnCompleteListener { verifyTask ->
+                if (verifyTask.isSuccessful) {
+                    val signInMethods = verifyTask.result?.signInMethods
+                    val existeEnAuth = signInMethods != null && signInMethods.isNotEmpty()
+                    
+                    if (existeEnAuth) {
+                        // Existe en Auth, verificar si existe en BD
+                        checkIfUserExistsInDatabase(email) { existeEnBD ->
+                            if (existeEnBD) {
+                                showLoading(false)
+                                mostrarDialogoError(
+                                    "Usuario Ya Registrado",
+                                    "Este correo electrónico ya está completamente registrado en el sistema.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión."
+                                )
+                            } else {
+                                // Existe en Auth pero NO en BD - registro incompleto
+                                showLoading(false)
+                                mostrarDialogoError(
+                                    "Registro Incompleto",
+                                    "Este correo electrónico tiene un registro incompleto.\n\n" +
+                                    "Por favor, intenta iniciar sesión con tu contraseña o usa la opción '¿Olvidaste tu contraseña?' para recuperarla.\n\n" +
+                                    "Si no recuerdas tu contraseña, contacta al administrador."
+                                )
+                            }
+                        }
+                    } else {
+                        // No existe en Auth, proceder con el registro
+                        procederConRegistro(nombre, apellido, numControl, carrera, email, password, perfil)
+                    }
+                } else {
+                    // Error al verificar, proceder de todas formas
+                    logError("Error al verificar correo antes de crear: ${verifyTask.exception?.message}")
+                    procederConRegistro(nombre, apellido, numControl, carrera, email, password, perfil)
+                }
+            }
+    }
+
+    private fun procederConRegistro(
+        nombre: String,
+        apellido: String,
+        numControl: String,
+        carrera: String,
+        email: String,
+        password: String,
+        perfil: String
+    ) {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 showLoading(false)
@@ -202,17 +527,34 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
             }
             .addOnFailureListener { e ->
                 showLoading(false)
+                // Cerrar sesión si hay alguna activa
+                if (mAuth.currentUser != null) {
+                    mAuth.signOut()
+                }
+                
                 if (e is FirebaseAuthUserCollisionException) {
-                    mostrarDialogoError(
-                        "Correo Ya Registrado",
-                        "Este correo electrónico ya está en uso.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión."
-                    )
+                    logError("Correo ya registrado en Firebase Auth: ${e.message}")
+                    // Verificar si existe en BD para dar un mensaje más preciso
+                    checkIfUserExistsInDatabase(email) { existeEnBD ->
+                        if (existeEnBD) {
+                            mostrarDialogoError(
+                                "Usuario Ya Registrado",
+                                "Este correo electrónico ya está completamente registrado.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión."
+                            )
+                        } else {
+                            mostrarDialogoError(
+                                "Registro Incompleto",
+                                "Este correo electrónico tiene un registro incompleto.\n\n" +
+                                "Por favor, intenta iniciar sesión o recupera tu contraseña usando la opción '¿Olvidaste tu contraseña?'"
+                            )
+                        }
+                    }
                 } else {
+                    logError("Error al crear usuario: ${e.message}")
                     mostrarDialogoError(
                         "Error de Registro",
-                        "No se pudo completar el registro. Por favor, intenta nuevamente."
+                        "No se pudo completar el registro. Por favor, intenta nuevamente.\n\nError: ${e.message}"
                     )
-                    logError("Error al crear usuario: ${e.message}")
                 }
             }
     }
@@ -271,8 +613,18 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
     }
 
     private fun signInWithGoogle() {
-        val signInIntent = mGoogleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        // Asegurarse de que no hay sesión activa antes de iniciar el registro con Google
+        if (mAuth.currentUser != null) {
+            logInfo("Cerrando sesión previa antes de registro con Google")
+            mAuth.signOut()
+        }
+        
+        // Cerrar sesión de Google Sign-In también
+        mGoogleSignInClient.signOut().addOnCompleteListener {
+            logInfo("Sesión de Google Sign-In cerrada antes de nuevo registro")
+            val signInIntent = mGoogleSignInClient.signInIntent
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
     }
 
     private fun handleGoogleSignInSuccess(user: FirebaseUser?) {
@@ -292,9 +644,9 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
 
             FCMTokenManager.checkAndUsePendingToken(this)
 
-            // Verificar si ya existe en BD ANTES de proceder
+            // Verificar si ya existe en Firebase Auth Y en BD ANTES de proceder
             if (email != null) {
-                checkIfUserExistsInDatabase(email) { exists ->
+                verificarUsuarioCompleto(email) { exists ->
                     if (exists) {
                         // Usuario ya existe, cerrar sesión de Google y mostrar error
                         mGoogleSignInClient.signOut().addOnCompleteListener {
@@ -309,6 +661,10 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
                         if (role == "admin") {
                             registerAdminDirectly(nombre, apellido, "", "", email, "", photoUrl)
                         } else {
+                            // Verificar NFC antes de mostrar el bottom sheet
+                            if (!verificarNfcHabilitado()) {
+                                return@verificarUsuarioCompleto
+                            }
                             val sheet = NfcBottomSheetDialogFragment.newInstance(
                                 nombre, apellido, "", "", email, "", role, photoUrl, true
                             )
@@ -387,6 +743,12 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
         nombre: String, apellido: String, numControl: String, carrera: String,
         email: String, password: String, perfil: String
     ) {
+        // Asegurarse de que no hay sesión activa
+        if (mAuth.currentUser != null) {
+            logInfo("Cerrando sesión activa antes de registrar admin")
+            mAuth.signOut()
+        }
+        
         showLoading(true)
         if (mAuth.currentUser != null) {
             val authUid = mAuth.currentUser!!.uid
@@ -404,11 +766,17 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
                         saveAdminToDatabase(nombre, apellido, numControl, carrera, email, "admin", perfil, authUid)
                     } else {
                         showLoading(false)
+                        // Cerrar sesión si hay alguna activa
+                        if (mAuth.currentUser != null) {
+                            mAuth.signOut()
+                        }
+                        
                         if (task.exception is FirebaseAuthUserCollisionException) {
-                            mostrarDialogoError("Correo Ya Registrado","Este correo electrónico ya está en uso.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión.")
+                            logError("Correo ya registrado en Firebase Auth para admin: ${task.exception?.message}")
+                            mostrarDialogoError("Correo Ya Registrado","Este correo electrónico ya está registrado en el sistema.\n\n¿Ya tienes una cuenta? Intenta iniciar sesión.")
                         } else {
-                            mostrarDialogoError("Error de Registro", "No se pudo completar el registro. Por favor, intenta nuevamente.")
                             logError("Error al crear usuario admin: ${task.exception?.message}")
+                            mostrarDialogoError("Error de Registro", "No se pudo completar el registro. Por favor, intenta nuevamente.\n\nError: ${task.exception?.message}")
                         }
                     }
                 }
@@ -492,5 +860,67 @@ class RegistroActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnReg
         if (DEBUG) {
             Log.e(TAG, message)
         }
+    }
+
+    private fun verificarNfcHabilitado(): Boolean {
+        val nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        
+        if (nfcAdapter == null) {
+            mostrarDialogoNfcNoDisponible()
+            return false
+        }
+        
+        if (!nfcAdapter.isEnabled) {
+            mostrarDialogoNfcNoHabilitado()
+            return false
+        }
+        
+        return true
+    }
+
+    private fun mostrarDialogoNfcNoHabilitado() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_nfc_no_habilitado, null)
+        val builder = android.app.AlertDialog.Builder(this).setView(dialogView).setCancelable(false)
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val btnConfiguracion = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnConfiguracionNfc)
+        btnConfiguracion.setOnClickListener {
+            dialog.dismiss()
+            // Abrir configuración de NFC
+            val intent = Intent(Settings.ACTION_NFC_SETTINGS)
+            startActivity(intent)
+        }
+
+        val btnCancelar = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnCancelarNfc)
+        btnCancelar.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
+    }
+
+    private fun mostrarDialogoNfcNoDisponible() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_nfc_no_habilitado, null)
+        val builder = android.app.AlertDialog.Builder(this).setView(dialogView).setCancelable(false)
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        // Cambiar el mensaje para indicar que el dispositivo no soporta NFC
+        val txtMensaje = dialogView.findViewById<TextView>(R.id.txtMensajeNfc)
+        txtMensaje.text = "Este dispositivo no soporta NFC"
+
+        val btnConfiguracion = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnConfiguracionNfc)
+        btnConfiguracion.visibility = android.view.View.GONE
+
+        val btnCancelar = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnCancelarNfc)
+        val layoutParams = btnCancelar.layoutParams
+        layoutParams.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT
+        btnCancelar.layoutParams = layoutParams
+        btnCancelar.setOnClickListener {
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 }

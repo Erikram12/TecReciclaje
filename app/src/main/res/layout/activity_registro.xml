@@ -119,7 +119,7 @@
                     android:background="@drawable/custom_edittext"
                     android:drawableLeft="@drawable/id_card_24dp_000000_fill0_wght400_grad0_opsz24"
                     android:drawablePadding="8dp"
-                    android:hint="Nombre"
+                    android:hint="Nombres"
                     android:textColorHint="@color/black"
                     android:padding="8dp"
                     android:textColor="@color/black" />
@@ -131,7 +131,7 @@
                     android:background="@drawable/custom_edittext"
                     android:layout_marginTop="10dp"
                     android:padding="8dp"
-                    android:hint="Apellido"
+                    android:hint="Apellidos"
                     android:textColorHint="@color/black"
                     android:drawableLeft="@drawable/id_card_24dp_000000_fill0_wght400_grad0_opsz24"
                     android:drawablePadding="8dp"

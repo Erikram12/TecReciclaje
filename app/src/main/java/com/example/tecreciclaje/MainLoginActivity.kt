@@ -1,7 +1,10 @@
 package com.example.tecreciclaje
 
 import android.content.Intent
+import android.nfc.NfcAdapter
 import android.os.Bundle
+import android.provider.Settings
+import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -178,6 +181,11 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
                 "Registro como Usuario"
             Toast.makeText(this, roleMessage, Toast.LENGTH_SHORT).show()
             
+            // Verificar NFC antes de mostrar el bottom sheet
+            if (!verificarNfcHabilitado()) {
+                return
+            }
+            
             // Mostrar NFC BottomSheet para completar el registro
             val nfcDialog = NfcBottomSheetDialogFragment.newInstance(
                 nombre, apellido, numControl, carrera, email, "", role, perfil, true // true = es Google Sign-In
@@ -229,5 +237,77 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
     private fun goTo(activityClass: Class<*>) {
         startActivity(Intent(this, activityClass))
         finish()
+    }
+
+    private fun verificarNfcHabilitado(): Boolean {
+        val nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        
+        if (nfcAdapter == null) {
+            mostrarDialogoNfcNoDisponible()
+            return false
+        }
+        
+        if (!nfcAdapter.isEnabled) {
+            mostrarDialogoNfcNoHabilitado()
+            return false
+        }
+        
+        return true
+    }
+
+    private fun mostrarDialogoNfcNoHabilitado() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_nfc_no_habilitado, null)
+        val builder = android.app.AlertDialog.Builder(this).setView(dialogView).setCancelable(false)
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        val btnConfiguracion = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnConfiguracionNfc)
+        btnConfiguracion.setOnClickListener {
+            dialog.dismiss()
+            // Abrir configuración de NFC
+            val intent = Intent(Settings.ACTION_NFC_SETTINGS)
+            startActivity(intent)
+        }
+
+        val btnCancelar = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnCancelarNfc)
+        btnCancelar.setOnClickListener {
+            dialog.dismiss()
+            // Cerrar sesión si se cancela
+            mGoogleSignInClient.signOut().addOnCompleteListener {
+                auth.signOut()
+                currentGoogleUser = null
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun mostrarDialogoNfcNoDisponible() {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_nfc_no_habilitado, null)
+        val builder = android.app.AlertDialog.Builder(this).setView(dialogView).setCancelable(false)
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        // Cambiar el mensaje para indicar que el dispositivo no soporta NFC
+        val txtMensaje = dialogView.findViewById<TextView>(R.id.txtMensajeNfc)
+        txtMensaje.text = "Este dispositivo no soporta NFC"
+
+        val btnConfiguracion = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnConfiguracionNfc)
+        btnConfiguracion.visibility = android.view.View.GONE
+
+        val btnCancelar = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnCancelarNfc)
+        val layoutParams = btnCancelar.layoutParams
+        layoutParams.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT
+        btnCancelar.layoutParams = layoutParams
+        btnCancelar.setOnClickListener {
+            dialog.dismiss()
+            // Cerrar sesión si se cancela
+            mGoogleSignInClient.signOut().addOnCompleteListener {
+                auth.signOut()
+                currentGoogleUser = null
+            }
+        }
+
+        dialog.show()
     }
 }

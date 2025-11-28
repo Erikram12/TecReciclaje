@@ -89,22 +89,22 @@
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:layout_gravity="center_horizontal"
-                app:cardCornerRadius="140dp"
+                app:cardCornerRadius="85dp"
                 app:cardElevation="5dp"
                 android:layout_marginBottom="22dp"
-                app:cardBackgroundColor="@color/light_gray">
+                app:cardBackgroundColor="@color/light_gray"
+                android:clipToPadding="true"
+                android:clipChildren="true">
 
                 <!-- Imagen del producto -->
                 <ImageView
                     android:id="@+id/ivImagenProducto"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    app:cardCornerRadius="45dp"
-                    app:cardElevation="2dp"
-                    android:layout_gravity="center_horizontal"
-                    android:scaleType="centerCrop"
-                    android:background="@drawable/circle_light_bg"
-                    android:layout_marginBottom="24dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerInside"
+                    android:adjustViewBounds="true"
+                    android:contentDescription="Imagen del producto" />
 
             </com.google.android.material.card.MaterialCardView>
 

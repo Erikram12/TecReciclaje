@@ -7,6 +7,9 @@ import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.example.tecreciclaje.LoginActivity
 import com.example.tecreciclaje.R
 import com.example.tecreciclaje.UserPanelDynamic
@@ -90,12 +93,13 @@ class ProductoDetalleActivity : AppCompatActivity() {
             tvDescripcionProducto.text = prod.descripcion
             textPrecioPuntos.text = "${prod.precioPuntos} pts"
 
-            // Cargar imagen
+            // Cargar imagen con transformación circular
             if (prod.imagenUrl.isNotEmpty()) {
                 Glide.with(this)
                     .load(prod.imagenUrl)
                     .placeholder(R.drawable.placeholder_producto)
                     .error(R.drawable.placeholder_producto)
+                    .apply(RequestOptions().transform(CenterCrop(), RoundedCorners(85)))
                     .into(ivImagenProducto)
             } else {
                 ivImagenProducto.setImageResource(R.drawable.placeholder_producto)
