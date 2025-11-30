@@ -15,6 +15,7 @@ import androidx.annotation.Nullable
 import com.example.tecreciclaje.MainActivity
 import com.example.tecreciclaje.R
 import com.example.tecreciclaje.domain.model.Usuario
+import com.example.tecreciclaje.utils.NipGenerator
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -463,7 +464,16 @@ class NfcBottomSheetDialogFragment : BottomSheetDialogFragment() {
             btnConfiguracion.visibility = android.view.View.GONE
 
             val btnCancelar = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnCancelarNfc)
-            btnCancelar.layoutParams.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT
+            val layoutParams = btnCancelar.layoutParams
+            layoutParams.width = 0
+            btnCancelar.layoutParams = layoutParams
+
+            val btnContinuarSinLlavero = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnContinuarSinLlavero)
+            btnContinuarSinLlavero.visibility = android.view.View.VISIBLE
+            val layoutParamsContinuar = btnContinuarSinLlavero.layoutParams
+            layoutParamsContinuar.width = 0
+            btnContinuarSinLlavero.layoutParams = layoutParamsContinuar
+
             btnCancelar.setOnClickListener {
                 dialog.dismiss()
                 registroCancelado = true
@@ -476,7 +486,82 @@ class NfcBottomSheetDialogFragment : BottomSheetDialogFragment() {
                 dismiss()
             }
 
+            btnContinuarSinLlavero.setOnClickListener {
+                dialog.dismiss()
+                // Continuar registro sin NFC, generando NIP
+                registrarUsuarioSinNfc()
+            }
+
             dialog.show()
         }
+    }
+
+    private fun registrarUsuarioSinNfc() {
+        if (registroCancelado) return
+        Log.d(TAG, "Iniciando registro sin NFC, generando NIP")
+
+        val nip = NipGenerator.generateNip()
+        Log.d(TAG, "NIP generado: $nip")
+
+        withAuthUser(onReady = { currentUser ->
+            val authUid = currentUser.uid
+            Log.d(TAG, "Usuario autenticado con UID: $authUid")
+
+            FirebaseMessaging.getInstance().token
+                .addOnCompleteListener { tokenTask ->
+                    if (registroCancelado) return@addOnCompleteListener
+                    if (!tokenTask.isSuccessful) {
+                        Log.e(TAG, "Error obteniendo token FCM")
+                        context?.let { ctx -> Toast.makeText(ctx, "Error obteniendo token FCM", Toast.LENGTH_SHORT).show() }
+                        return@addOnCompleteListener
+                    }
+                    val token = tokenTask.result
+                    val db = FirebaseDatabase.getInstance().reference
+                    
+                    val usuario = if (isGoogleSignIn) {
+                        Usuario(authUid, nombre, apellido, numControl, carrera, email, role, perfil, "").apply {
+                            usuario_tokenFCM = token
+                            usuario_provider = "google"
+                            usuario_nip = nip
+                        }
+                    } else {
+                        Usuario(authUid, nombre, apellido, numControl, carrera, email, role, perfil, "").apply {
+                            usuario_puntos = 0
+                            usuario_tokenFCM = token
+                            usuario_provider = "email"
+                            usuario_nip = nip
+                        }
+                    }
+
+                    db.child("usuarios").child(authUid).setValue(usuario)
+                        .addOnSuccessListener {
+                            db.child("usuarios").child(authUid).child("usuario_puntos").setValue(0)
+                                .addOnSuccessListener {
+                                    Log.d(TAG, "Registro completado exitosamente sin NFC con NIP: $nip")
+                                    context?.let { ctx ->
+                                        Toast.makeText(ctx, "Registro completo. Tu NIP es: $nip", Toast.LENGTH_LONG).show()
+                                    }
+                                    val intent = Intent(requireContext(), MainActivity::class.java)
+                                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                    startActivity(intent)
+                                    dismiss()
+                                }
+                                .addOnFailureListener { e ->
+                                    Log.e(TAG, "Error guardando puntos: ${e.message}")
+                                    context?.let { ctx ->
+                                        Toast.makeText(ctx, "Error guardando puntos: ${e.message}", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e(TAG, "Error guardando datos: ${e.message}")
+                            context?.let { ctx ->
+                                Toast.makeText(ctx, "Error guardando datos: ${e.message}", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                }
+        }, onError = { e ->
+            context?.let { ctx -> Toast.makeText(ctx, "Error de autenticación: ${e.message}", Toast.LENGTH_SHORT).show() }
+        })
     }
 }

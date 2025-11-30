@@ -1,6 +1,9 @@
 package com.example.tecreciclaje
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.nfc.NfcAdapter
 import android.os.Bundle
 import android.provider.Settings
@@ -11,6 +14,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tecreciclaje.Model.NfcBottomSheetDialogFragment
 import com.example.tecreciclaje.utils.FCMTokenManager
+import com.example.tecreciclaje.utils.LocaleHelper
 import com.example.tecreciclaje.UserPanelDynamic
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -27,6 +31,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import java.util.Locale
 
 class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRegistrationCancelledListener {
 
@@ -38,26 +43,42 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
     private lateinit var btnGoogle: RelativeLayout
     private lateinit var btnEmail: RelativeLayout
     private lateinit var cancelButton: TextView
+    private lateinit var btnCambiarIdioma: TextView
 
     private lateinit var auth: FirebaseAuth
     private lateinit var userRef: DatabaseReference
     private lateinit var mGoogleSignInClient: GoogleSignInClient
     private var currentGoogleUser: GoogleSignInAccount? = null
+    
+    private lateinit var sharedPreferences: SharedPreferences
+    private val PREFS_NAME = "TecReciclajePrefs"
+    private val KEY_IDIOMA = "idioma_seleccionado"
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.attachBaseContext(newBase))
+    }
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        // Aplicar idioma guardado
+        sharedPreferences = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        aplicarIdioma()
+        
         setContentView(R.layout.activity_main_login)
 
         initViews()
         initFirebase()
         setupGoogleSignIn()
         setListeners()
+        actualizarTextoIdioma()
     }
 
     private fun initViews() {
         btnGoogle = findViewById(R.id.btnGoogle)
         btnEmail = findViewById(R.id.btnEmail)
         cancelButton = findViewById(R.id.cancelButton)
+        btnCambiarIdioma = findViewById(R.id.btnCambiarIdioma)
     }
 
     private fun initFirebase() {
@@ -78,6 +99,31 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
         btnGoogle.setOnClickListener { signInWithGoogle() }
         btnEmail.setOnClickListener { openEmailLogin() }
         cancelButton.setOnClickListener { finish() }
+        btnCambiarIdioma.setOnClickListener { cambiarIdioma() }
+    }
+    
+    private fun cambiarIdioma() {
+        val idiomaActual = LocaleHelper.getCurrentLanguage(this)
+        val nuevoIdioma = if (idiomaActual == "es") "zap" else "es"
+        
+        LocaleHelper.saveLanguage(this, nuevoIdioma)
+        
+        // Recargar la actividad para aplicar el nuevo idioma
+        recreate()
+    }
+    
+    private fun aplicarIdioma() {
+        // El idioma ya se aplicó en attachBaseContext
+        // Esta función se mantiene por compatibilidad pero ya no es necesaria
+    }
+    
+    private fun actualizarTextoIdioma() {
+        val idiomaActual = sharedPreferences.getString(KEY_IDIOMA, "es") ?: "es"
+        if (idiomaActual == "zap") {
+            btnCambiarIdioma.text = "Zapoteco / Español"
+        } else {
+            btnCambiarIdioma.text = "Español / Zapoteco"
+        }
     }
 
     private fun signInWithGoogle() {
@@ -92,51 +138,104 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        android.util.Log.d(TAG, "onActivityResult llamado: requestCode=$requestCode, resultCode=$resultCode")
+        
         if (requestCode == RC_SIGN_IN) {
+            android.util.Log.d(TAG, "Procesando resultado de Google Sign-In")
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 val account = task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account?.idToken)
+                android.util.Log.d(TAG, "Cuenta de Google obtenida: ${account?.email}, idToken: ${if (account?.idToken != null) "presente" else "null"}")
+                if (account?.idToken != null) {
+                    firebaseAuthWithGoogle(account.idToken)
+                } else {
+                    android.util.Log.e(TAG, "Error: No se pudo obtener el token de Google")
+                    Toast.makeText(this, "Error: No se pudo obtener el token de Google", Toast.LENGTH_LONG).show()
+                }
             } catch (e: ApiException) {
-                // Error en el login de Google
+                android.util.Log.e(TAG, "Error en Google Sign-In: statusCode=${e.statusCode}, message=${e.message}")
+                // Manejar diferentes tipos de errores
+                val errorMessage = when (e.statusCode) {
+                    com.google.android.gms.common.api.CommonStatusCodes.NETWORK_ERROR -> 
+                        "Error de conexión. Verifica tu internet e intenta nuevamente."
+                    com.google.android.gms.common.api.CommonStatusCodes.SIGN_IN_REQUIRED -> 
+                        "Se requiere iniciar sesión. Intenta nuevamente."
+                    com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.SIGN_IN_CANCELLED -> 
+                        "Inicio de sesión cancelado."
+                    com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes.SIGN_IN_FAILED -> 
+                        "Error al iniciar sesión con Google. Intenta nuevamente."
+                    else -> "Error desconocido: ${e.message}"
+                }
+                Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show()
+            } catch (e: Exception) {
+                android.util.Log.e(TAG, "Error inesperado en onActivityResult: ${e.message}", e)
+                Toast.makeText(this, "Error inesperado: ${e.message}", Toast.LENGTH_LONG).show()
             }
+        } else {
+            android.util.Log.d(TAG, "Request code no coincide: $requestCode != $RC_SIGN_IN")
         }
     }
 
     private fun firebaseAuthWithGoogle(idToken: String?) {
+        if (idToken == null) {
+            android.util.Log.e(TAG, "Error: Token de Google inválido")
+            Toast.makeText(this, "Error: Token de Google inválido", Toast.LENGTH_LONG).show()
+            return
+        }
+        
+        android.util.Log.d(TAG, "Autenticando con Firebase usando token de Google")
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    android.util.Log.d(TAG, "Autenticación con Firebase exitosa")
                     val user = auth.currentUser
                     if (user != null) {
+                        android.util.Log.d(TAG, "Usuario de Firebase obtenido: ${user.uid}, email: ${user.email}")
                         // Almacenar la información del usuario de Google
                         currentGoogleUser = GoogleSignIn.getLastSignedInAccount(this)
+                        android.util.Log.d(TAG, "Usuario de Google almacenado: ${currentGoogleUser?.email}")
                         checkUserRole(user.uid)
+                    } else {
+                        android.util.Log.e(TAG, "Error: No se pudo obtener el usuario de Firebase")
+                        Toast.makeText(this, "Error: No se pudo obtener el usuario", Toast.LENGTH_LONG).show()
                     }
                 } else {
-                    Toast.makeText(this, "Error en la autenticación con Google", Toast.LENGTH_SHORT).show()
+                    val errorMessage = task.exception?.message ?: "Error desconocido en la autenticación"
+                    android.util.Log.e(TAG, "Error en autenticación con Firebase: $errorMessage", task.exception)
+                    Toast.makeText(this, "Error en la autenticación: $errorMessage", Toast.LENGTH_LONG).show()
                 }
             }
     }
 
     private fun checkUserRole(uid: String) {
+        android.util.Log.d(TAG, "Verificando rol del usuario: $uid")
         userRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
+                android.util.Log.d(TAG, "Datos recibidos del usuario. Existe: ${snapshot.exists()}")
                 if (snapshot.exists()) {
                     // Usuario existe, proceder con el login normal
                     FCMTokenManager.updateTokenForCurrentUser()
                     FCMTokenManager.checkAndUsePendingToken(this@MainLoginActivity)
                     
                     val role = snapshot.child("usuario_role").getValue(String::class.java)
+                    android.util.Log.d(TAG, "Rol del usuario: $role")
                     when (role) {
-                        "admin" -> goTo(AdminPanel::class.java)
-                        else -> goTo(UserPanelDynamic::class.java)
+                        "admin" -> {
+                            android.util.Log.d(TAG, "Navegando a AdminPanel")
+                            goTo(AdminPanel::class.java)
+                        }
+                        else -> {
+                            android.util.Log.d(TAG, "Navegando a UserPanelDynamic")
+                            goTo(UserPanelDynamic::class.java)
+                        }
                     }
                 } else {
+                    android.util.Log.d(TAG, "Usuario no encontrado en la base de datos")
                     // Usuario no encontrado en la base de datos
                     // Si es un usuario de Google, mostrar NFC dialog para registro
                     if (currentGoogleUser != null) {
+                        android.util.Log.d(TAG, "Mostrando diálogo de registro NFC")
                         showNfcRegistrationDialog()
                     } else {
                         Toast.makeText(this@MainLoginActivity, "Usuario no registrado", Toast.LENGTH_SHORT).show()
@@ -147,7 +246,8 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Toast.makeText(this@MainLoginActivity, "Error al verificar usuario", Toast.LENGTH_SHORT).show()
+                android.util.Log.e(TAG, "Error al verificar usuario: ${error.message}")
+                Toast.makeText(this@MainLoginActivity, "Error al verificar usuario: ${error.message}", Toast.LENGTH_LONG).show()
             }
         })
     }
@@ -235,8 +335,17 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
     }
 
     private fun goTo(activityClass: Class<*>) {
-        startActivity(Intent(this, activityClass))
-        finish()
+        try {
+            android.util.Log.d(TAG, "Intentando navegar a: ${activityClass.simpleName}")
+            val intent = Intent(this, activityClass)
+            startActivity(intent)
+            android.util.Log.d(TAG, "Navegación exitosa a: ${activityClass.simpleName}")
+            finish()
+        } catch (e: Exception) {
+            android.util.Log.e(TAG, "Error al navegar a ${activityClass.simpleName}: ${e.message}", e)
+            e.printStackTrace()
+            Toast.makeText(this, "Error al iniciar sesión: ${e.message}", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun verificarNfcHabilitado(): Boolean {

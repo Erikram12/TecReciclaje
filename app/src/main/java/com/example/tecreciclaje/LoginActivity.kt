@@ -1,6 +1,7 @@
 package com.example.tecreciclaje
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.lottie.LottieAnimationView
 import com.example.tecreciclaje.utils.CustomAlertDialog
 import com.example.tecreciclaje.utils.FCMTokenManager
+import com.example.tecreciclaje.utils.LocaleHelper
 import com.example.tecreciclaje.UserPanelDynamic
 import com.example.tecreciclaje.utils.SessionManager
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -53,6 +55,10 @@ class LoginActivity : AppCompatActivity() {
 
     // Google Sign In
     private lateinit var mGoogleSignInClient: GoogleSignInClient
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.attachBaseContext(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -258,8 +264,16 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun goTo(activityClass: Class<*>) {
-        startActivity(Intent(this, activityClass))
-        finish()
+        try {
+            val intent = Intent(this, activityClass)
+            startActivity(intent)
+            finish()
+        } catch (e: Exception) {
+            logError("Error al navegar a ${activityClass.simpleName}: ${e.message}")
+            e.printStackTrace()
+            showLoading(false)
+            Toast.makeText(this, "Error al iniciar sesión. Intenta nuevamente.", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun showLoading(isLoading: Boolean) {

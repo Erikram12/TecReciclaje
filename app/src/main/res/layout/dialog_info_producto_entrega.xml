@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="@android:color/white">
+
+    <!-- Icono de información -->
+    <ImageView
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/check_circle_24dp_000000_fill0_wght400_grad0_opsz24"
+        android:tint="#1B396A" />
+
+    <!-- Título -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Información del Vale"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#1B396A"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Mensaje del producto -->
+    <TextView
+        android:id="@+id/tvProducto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Producto a entregar"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#616161"
+        android:gravity="center"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Nombre del producto -->
+    <TextView
+        android:id="@+id/tvNombreProducto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nombre del producto"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#1B396A"
+        android:gravity="center"
+        android:layout_marginBottom="24dp" />
+
+    <!-- Botón OK -->
+    <Button
+        android:id="@+id/btnOK"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        android:textColor="#1B396A"
+        android:background="@drawable/btnproductos"
+        android:textStyle="bold"
+        android:textSize="16sp" />
+
+</LinearLayout>
+

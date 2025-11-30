@@ -10,6 +10,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.tecreciclaje.AdminPanel
 import com.example.tecreciclaje.R
+import com.example.tecreciclaje.utils.CustomAlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.*
 import com.journeyapps.barcodescanner.BarcodeCallback
@@ -59,24 +60,30 @@ class EscanearQrActivity : AppCompatActivity() {
     }
 
     private fun extraerValeId(qrContent: String?): String? {
-        println("Contenido del QR: $qrContent")
+        println("DEBUG: Contenido completo del QR: $qrContent")
         
         if (!qrContent.isNullOrEmpty() && qrContent.startsWith("VALE_")) {
-            val parts = qrContent.split("_")
-            println("Partes del QR: ${parts.size}")
-            for (i in parts.indices) {
-                println("Parte $i: ${parts[i]}")
-            }
+            // Remover el prefijo "VALE_"
+            val sinPrefijo = qrContent.removePrefix("VALE_")
+            println("DEBUG: Contenido sin prefijo 'VALE_': $sinPrefijo")
             
-            if (parts.size >= 3) {
-                val valeId = parts[1]
-                println("ValeId extraído: $valeId")
+            // Encontrar el último "_" que separa el valeId del userId
+            // El userId está al final después del último "_"
+            val lastUnderscoreIndex = sinPrefijo.lastIndexOf("_")
+            println("DEBUG: Índice del último '_': $lastUnderscoreIndex")
+            
+            if (lastUnderscoreIndex > 0) {
+                // Extraer todo lo que está antes del último "_" (el valeId completo)
+                val valeId = sinPrefijo.substring(0, lastUnderscoreIndex)
+                val userId = sinPrefijo.substring(lastUnderscoreIndex + 1)
+                println("DEBUG: ValeId extraído (completo): $valeId")
+                println("DEBUG: UserId extraído: $userId")
                 return valeId
             } else {
-                println("Formato de QR inválido - no hay suficientes partes")
+                println("ERROR: Formato de QR inválido - no se encontró separador para userId")
             }
         } else {
-            println("QR no comienza con 'VALE_' o es null")
+            println("ERROR: QR no comienza con 'VALE_' o es null")
         }
         return null
     }
@@ -87,41 +94,49 @@ class EscanearQrActivity : AppCompatActivity() {
     }
     
     private fun buscarValeEnDiferentesUbicaciones(valeId: String) {
-        println("Buscando vale en diferentes ubicaciones...")
+        println("DEBUG: Buscando vale con ID: '$valeId' en diferentes ubicaciones...")
         
-        val valeRef = FirebaseDatabase.getInstance().getReference("vales").child(valeId)
+        // Limpiar el valeId por si tiene algún prefijo (ej: "vales-")
+        val valeIdLimpio = valeId.removePrefix("vales-").removePrefix("VALE_")
+        println("DEBUG: ValeId limpio: '$valeIdLimpio'")
+        
+        val valeRef = FirebaseDatabase.getInstance().getReference("vales").child(valeIdLimpio)
+        println("DEBUG: Buscando en ruta: /vales/$valeIdLimpio")
         valeRef.get().addOnSuccessListener { snapshot ->
             if (snapshot.exists()) {
-                println("Vale encontrado en /vales/$valeId")
+                println("DEBUG: ✅ Vale encontrado en /vales/$valeIdLimpio")
                 procesarValeEncontrado(valeRef, snapshot)
             } else {
-                println("Vale no encontrado en /vales/, buscando en usuarios...")
-                buscarEnUsuarios(valeId)
+                println("DEBUG: Vale no encontrado en /vales/$valeIdLimpio, buscando en usuarios...")
+                buscarEnUsuarios(valeIdLimpio)
             }
         }.addOnFailureListener { e ->
-            println("Error buscando en /vales/: ${e.message}")
-            buscarEnUsuarios(valeId)
+            println("DEBUG: Error buscando en /vales/: ${e.message}")
+            buscarEnUsuarios(valeIdLimpio)
         }
     }
     
     private fun buscarEnUsuarios(valeId: String) {
-        println("Buscando vale en estructura de usuarios...")
+        println("DEBUG: Buscando vale '$valeId' en estructura de usuarios...")
         
         // Buscar en todos los usuarios
         val usuariosRef = FirebaseDatabase.getInstance().getReference("usuarios")
         usuariosRef.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var encontrado = false
+                var usuariosRevisados = 0
                 
                 for (userSnap in snapshot.children) {
                     val userId = userSnap.key
                     if (userId != null) {
+                        usuariosRevisados++
                         val valesSnap = userSnap.child("vales")
                         
                         if (valesSnap.exists()) {
+                            println("DEBUG: Revisando usuario $userId, buscando vale '$valeId'")
                             val valeSnap = valesSnap.child(valeId)
                             if (valeSnap.exists()) {
-                                println("DEBUG: Vale encontrado en usuarios/$userId/vales/$valeId")
+                                println("DEBUG: ✅ Vale encontrado en usuarios/$userId/vales/$valeId")
                                 val valeRef = usuariosRef.child(userId).child("vales").child(valeId)
                                 procesarValeEncontrado(valeRef, valeSnap)
                                 encontrado = true
@@ -131,14 +146,15 @@ class EscanearQrActivity : AppCompatActivity() {
                     }
                 }
                 
+                println("DEBUG: Revisados $usuariosRevisados usuarios")
                 if (!encontrado) {
-                    println("Vale no encontrado en ninguna ubicación")
+                    println("DEBUG: ❌ Vale '$valeId' no encontrado en ninguna ubicación")
                     mostrarErrorValeNoEncontrado(valeId)
                 }
             }
             
             override fun onCancelled(error: DatabaseError) {
-                println("DEBUG: Error buscando en usuarios: ${error.message}")
+                println("DEBUG: ❌ Error buscando en usuarios: ${error.message}")
                 mostrarErrorValeNoEncontrado(valeId)
             }
         })
@@ -146,29 +162,44 @@ class EscanearQrActivity : AppCompatActivity() {
     
     private fun procesarValeEncontrado(valeRef: DatabaseReference, valeSnap: DataSnapshot) {
         val estadoActual = valeSnap.child("vale_estado").getValue(String::class.java)
-        val producto = valeSnap.child("vale_producto").getValue(String::class.java)
+        val producto = valeSnap.child("vale_producto").getValue(String::class.java) ?: "Producto no especificado"
         val usuarioId = valeSnap.child("vale_usuario_id").getValue(String::class.java)
         
         println("DEBUG: Vale encontrado - Estado: $estadoActual, Producto: $producto, Usuario: $usuarioId")
         
         if (estadoActual == "Válido") {
-            // Actualizar el estado a Reclamado
-            valeRef.child("vale_estado").setValue("Reclamado")
-                .addOnSuccessListener {
-                    println("DEBUG: Vale marcado como RECLAMADO exitosamente")
-                    Toast.makeText(this, "Vale marcado como RECLAMADO", Toast.LENGTH_SHORT).show()
-                    finish()
-                }
-                .addOnFailureListener { e ->
-                    println("DEBUG: Error al actualizar estado: ${e.message}")
-                    Toast.makeText(this, "Error al actualizar el vale: ${e.message}", Toast.LENGTH_SHORT).show()
-                    barcodeView.resume()
-                }
+            // Mostrar diálogo informativo con el producto y marcar como reclamado
+            mostrarDialogoInformacionProducto(producto, valeRef)
         } else {
             println("DEBUG: Vale ya no está válido. Estado: $estadoActual")
             Toast.makeText(this, "Este vale ya no está válido (Estado: $estadoActual)", Toast.LENGTH_LONG).show()
             barcodeView.resume()
         }
+    }
+    
+    private fun mostrarDialogoInformacionProducto(producto: String, valeRef: DatabaseReference) {
+        CustomAlertDialog.createInfoProductoEntregaDialog(
+            context = this,
+            nombreProducto = producto,
+            onOKClick = {
+                // Cuando se presiona OK, marcar como reclamado
+                marcarValeComoReclamado(valeRef)
+            }
+        ).show()
+    }
+    
+    private fun marcarValeComoReclamado(valeRef: DatabaseReference) {
+        valeRef.child("vale_estado").setValue("Reclamado")
+            .addOnSuccessListener {
+                println("DEBUG: Vale marcado como RECLAMADO exitosamente")
+                Toast.makeText(this, "Vale marcado como RECLAMADO", Toast.LENGTH_SHORT).show()
+                finish()
+            }
+            .addOnFailureListener { e ->
+                println("DEBUG: Error al actualizar estado: ${e.message}")
+                Toast.makeText(this, "Error al actualizar el vale: ${e.message}", Toast.LENGTH_SHORT).show()
+                barcodeView.resume()
+            }
     }
     
     private fun mostrarErrorValeNoEncontrado(valeId: String) {

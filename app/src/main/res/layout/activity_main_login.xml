@@ -12,6 +12,23 @@
         android:layout_height="match_parent"
         android:background="@color/white" />
 
+    <!-- Botón Cambiar Idioma en la esquina superior izquierda -->
+    <TextView
+        android:id="@+id/btnCambiarIdioma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
+        android:text="Español / Zapoteco"
+        android:textColor="@color/dark_gray"
+        android:textSize="14sp"
+        android:padding="8dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true" />
+
     <!-- Botón Cancelar en la esquina superior derecha -->
     <TextView
         android:id="@+id/cancelButton"
@@ -174,10 +191,11 @@
                 android:contentDescription="Google Icon" />
 
             <TextView
+                android:id="@+id/tvContinuarGoogle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Continuar con Google"
+                android:text="@string/continuar_con_google"
                 android:textColor="#333333"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -196,10 +214,11 @@
             android:elevation="4dp">
 
             <TextView
+                android:id="@+id/tvContinuarEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="Continuar con Email"
+                android:text="@string/continuar_con_email"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"

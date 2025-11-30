@@ -29,6 +29,22 @@
     <string name="profile">Perfil</string>
     <string name="history">Historial</string>
     <string name="settings">Configuración</string>
+    
+    <!-- Botones de login -->
+    <string name="continuar_con_google">Continuar con Google</string>
+    <string name="continuar_con_email">Continuar con Email</string>
+
+    <!-- User Panel -->
+    <string name="bienvenido">¡Bienvenido!</string>
+    <string name="saldo_disponible">Saldo Disponible: </string>
+    <string name="productos_disponibles">Productos Disponibles</string>
+    <string name="canjea_tus_puntos">Canjea tus puntos</string>
+    <string name="mis_vales">Mis Vales</string>
+    <string name="ganados">Ganados</string>
+    <string name="canjeados">Canjeados</string>
+    <string name="perfil">Perfil</string>
+    <string name="informacion_personal">Información Personal</string>
+    <string name="no_hay_productos_disponibles">No hay productos disponibles</string>
 
     <!-- Firebase Google Sign-In -->
     <string name="default_web_client_id">129147203722-b32p85qb3hg0i0po8cqk2m6sj8bva29b.apps.googleusercontent.com</string>

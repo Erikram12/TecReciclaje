@@ -14,10 +14,11 @@ data class Usuario(
     var usuario_tokenFCM: String = "",
     var usuario_edad: String = "",
     var usuario_provider: String = "",
-    var usuario_authUid: String = ""
+    var usuario_authUid: String = "",
+    var usuario_nip: String = ""
 ) {
     // Constructor vacío necesario para Firebase
-    constructor() : this("", "", "", "", "", "", "", "", "", 0, "", "", "", "")
+    constructor() : this("", "", "", "", "", "", "", "", "", 0, "", "", "", "", "")
     
     // Constructor con parámetros principales
     constructor(
@@ -40,7 +41,8 @@ data class Usuario(
         usuario_role = role,
         usuario_perfil = perfil,
         usuario_nfcUid = nfcUid,
-        usuario_puntos = 0
+        usuario_puntos = 0,
+        usuario_nip = ""
     )
 
     // Propiedades computadas

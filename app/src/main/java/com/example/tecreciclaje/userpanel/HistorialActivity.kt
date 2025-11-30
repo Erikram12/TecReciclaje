@@ -41,10 +41,10 @@ class HistorialActivity : AppCompatActivity() {
     private fun setupTabs() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             if (position == 0) {
-                tab.text = "Ganados"
+                tab.text = getString(R.string.ganados)
                 tab.setIcon(R.drawable.ic_points_tab)
             } else {
-                tab.text = "Canjeados"
+                tab.text = getString(R.string.canjeados)
                 tab.setIcon(R.drawable.ic_shopping_cart_tab)
             }
         }.attach()

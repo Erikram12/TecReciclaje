@@ -135,7 +135,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="📋 Información Personal"
+                    android:text="@string/informacion_personal"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@color/verde_principal"
@@ -233,6 +233,60 @@
                             android:text="Cambiar llavero para reciclar"
                             android:textSize="14sp"
                             android:textColor="@color/dark_gray" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/baseline_arrow_back_24"
+                        android:rotation="180"
+                        app:tint="@color/dark_gray" />
+
+                </LinearLayout>
+
+                <!-- Opción: Ver NIP (solo para usuarios sin NFC) -->
+                <LinearLayout
+                    android:id="@+id/optionVerNip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/baseline_lock_24"
+                        app:tint="@color/verde_principal"
+                        android:layout_marginEnd="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mi NIP"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/black" />
+
+                        <TextView
+                            android:id="@+id/textViewNip"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="NIP: --------"
+                            android:textSize="14sp"
+                            android:textColor="@color/dark_gray"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 

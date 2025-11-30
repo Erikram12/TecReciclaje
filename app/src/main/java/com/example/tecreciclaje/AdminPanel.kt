@@ -1,5 +1,6 @@
 package com.example.tecreciclaje
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +15,7 @@ import com.example.tecreciclaje.adminpanel.EstadoContenedoresActivity
 import com.example.tecreciclaje.adminpanel.GestionProductosActivity
 import com.example.tecreciclaje.utils.CustomAlertDialog
 import com.example.tecreciclaje.utils.FCMTokenManager
+import com.example.tecreciclaje.utils.LocaleHelper
 import com.example.tecreciclaje.utils.SessionManager
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
@@ -32,6 +34,10 @@ import java.util.*
 
 class AdminPanel : AppCompatActivity() {
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.attachBaseContext(newBase))
+    }
+
     // Puntos por pieza
     companion object {
         private const val PUNTOS_PLASTICO = 3
@@ -43,17 +49,12 @@ class AdminPanel : AppCompatActivity() {
         private const val RANGO_MIN_ALUM = 4
         private const val RANGO_MAX_ALUM = 4
 
-        // Precios por kilo (pesos MX)
-        private const val PRECIO_POR_KILO_PLASTICO = 7.0
-        private const val PRECIO_POR_KILO_ALUMINIO = 19.0
+        // Valores exactos de equivalencias
+        // PET: 0.175 MXN por botella, 3 puntos, 0.05833 MXN por punto
+        private const val PRECIO_POR_BOTELLA_PLASTICO = 0.175
         
-        // Peso promedio por pieza (en gramos)
-        private const val PESO_BOTELLA_PLASTICO_GRAMOS = 30.0 // ~30g por botella PET
-        private const val PESO_LATA_ALUMINIO_GRAMOS = 15.0 // ~15g por lata
-        
-        // Precio por pieza calculado desde precio por kilo
-        private const val PRECIO_POR_BOTELLA_PLASTICO = (PRECIO_POR_KILO_PLASTICO / (1000.0 / PESO_BOTELLA_PLASTICO_GRAMOS))
-        private const val PRECIO_POR_LATA_ALUMINIO = (PRECIO_POR_KILO_ALUMINIO / (1000.0 / PESO_LATA_ALUMINIO_GRAMOS))
+        // Aluminio: 0.253 MXN por lata, 4 puntos, 0.06333 MXN por punto
+        private const val PRECIO_POR_LATA_ALUMINIO = 0.253
     }
 
     private lateinit var tvAdminName: TextView

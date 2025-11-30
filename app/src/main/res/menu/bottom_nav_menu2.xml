@@ -11,5 +11,5 @@
     <item
         android:id="@+id/nav_perfil"
         android:icon="@drawable/baseline_person_add_24"
-        android:title="Perfil" />
+        android:title="@string/perfil" />
 </menu>

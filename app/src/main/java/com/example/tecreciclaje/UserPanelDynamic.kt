@@ -1,5 +1,6 @@
 package com.example.tecreciclaje
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import com.example.tecreciclaje.utils.AppLogger
@@ -16,6 +17,7 @@ import com.example.tecreciclaje.domain.repository.ProductoRepositoryImpl
 import com.example.tecreciclaje.userpanel.*
 import com.example.tecreciclaje.utils.CustomAlertDialog
 import com.example.tecreciclaje.utils.FCMTokenManager
+import com.example.tecreciclaje.utils.LocaleHelper
 import com.example.tecreciclaje.utils.SessionManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -41,6 +43,10 @@ class UserPanelDynamic : AppCompatActivity() {
     private lateinit var productosAdapter: ProductosUserAdapter
     private lateinit var productoRepository: ProductoRepositoryImpl
 
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.attachBaseContext(newBase))
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_panel_dynamic)
@@ -58,6 +64,7 @@ class UserPanelDynamic : AppCompatActivity() {
         initializeViews()
         setupNavigation()
         setupLogoutButton()
+        setupLanguageButton()
         getUserData(currentUser!!.uid)
         setupProductosRecyclerView()
         loadProductos()
@@ -148,6 +155,23 @@ class UserPanelDynamic : AppCompatActivity() {
                 finish()
             }.show()
         }
+    }
+
+    private fun setupLanguageButton() {
+        val btnCambiarIdioma = findViewById<ImageButton>(R.id.btnCambiarIdioma)
+        btnCambiarIdioma.setOnClickListener {
+            cambiarIdioma()
+        }
+    }
+
+    private fun cambiarIdioma() {
+        val idiomaActual = LocaleHelper.getCurrentLanguage(this)
+        val nuevoIdioma = if (idiomaActual == "es") "zap" else "es"
+        
+        LocaleHelper.saveLanguage(this, nuevoIdioma)
+        
+        // Recargar la actividad para aplicar el nuevo idioma
+        recreate()
     }
 
     private fun getUserData(uid: String) {

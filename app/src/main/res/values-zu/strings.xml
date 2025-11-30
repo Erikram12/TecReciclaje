@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">RecompesaTEC</string>
+
+    <string-array name="filtro_estados">
+        <item>Raca baler</item>
+        <item>Ma udi di dxí</item>
+        <item>Guirá</item>
+    </string-array>
+    
+    <!-- Mensajes de carga -->
+    <string name="loading_app">Carga stiʼ aplicación...</string>
+    <string name="loading">Carga...</string>
+    
+    <!-- Descripción de la app -->
+    <string name="app_description">Sistema de reciclaje inteligente</string>
+    
+    <!-- Acciones comunes -->
+    <string name="ok">Ricaa</string>
+    <string name="cancel">runi cancelar</string>
+    <string name="save">Rapa</string>
+    <string name="delete">Runi eliminar</string>
+    <string name="edit">Rucaa</string>
+    <string name="back">Deche</string>
+    
+    <!-- Navegación -->
+    <string name="home">Ruzulú</string>
+    <string name="profile">Perfil</string>
+    <string name="history">Cá lu guichi</string>
+    <string name="settings">Configuración</string>
+    
+    <!-- Botones de login -->
+    <string name="continuar_con_google">Biiyaʼ né Google .</string>
+    <string name="continuar_con_email">Biiyaʼ né correu electrónicu .</string>
+
+    <!-- User Panel -->
+    <string name="bienvenido">Latiidi</string>
+    <string name="saldo_disponible">Saldo ni nuu</string>
+    <string name="productos_disponibles">Ca producto ni nuu</string>
+    <string name="canjea_tus_puntos">Biquiiñeʼ ca puntu stiluʼ.</string>
+    <string name="mis_vales">ca bono stinne</string>
+    <string name="ganados">Biʼniʼ ganar</string>
+    <string name="canjeados">Biʼniʼ rescatarbe</string>
+    <string name="perfil">Perfil</string>
+    <string name="informacion_personal">información personal</string>
+    <string name="no_hay_productos_disponibles">No hay productos disponibles</string>
+
+    <!-- Firebase Google Sign-In -->
+    <string name="default_web_client_id">129147203722-b32p85qb3hg0i0po8cqk2m6sj8bva29b.apps.googleusercontent.com</string>
+</resources>
+

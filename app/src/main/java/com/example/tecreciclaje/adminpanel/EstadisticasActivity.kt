@@ -42,17 +42,14 @@ class EstadisticasActivity : AppCompatActivity() {
         private const val RANGO_MIN_ALUM = 4
         private const val RANGO_MAX_ALUM = 4
         
-        // Precios por kilo (pesos MX)
-        private const val PRECIO_POR_KILO_PLASTICO = 7.0
-        private const val PRECIO_POR_KILO_ALUMINIO = 19.0
+        // Valores exactos de equivalencias
+        // PET: 0.175 MXN por botella, 3 puntos, 0.05833 MXN por punto
+        private const val PRECIO_POR_BOTELLA_PLASTICO = 0.175
+        private const val VALOR_POR_PUNTO_PLASTICO = 0.05833
         
-        // Peso promedio por pieza (en gramos)
-        private const val PESO_BOTELLA_PLASTICO_GRAMOS = 30.0 // ~30g por botella PET
-        private const val PESO_LATA_ALUMINIO_GRAMOS = 15.0 // ~15g por lata
-        
-        // Precio por pieza calculado desde precio por kilo
-        private const val PRECIO_POR_BOTELLA_PLASTICO = (PRECIO_POR_KILO_PLASTICO / (1000.0 / PESO_BOTELLA_PLASTICO_GRAMOS))
-        private const val PRECIO_POR_LATA_ALUMINIO = (PRECIO_POR_KILO_ALUMINIO / (1000.0 / PESO_LATA_ALUMINIO_GRAMOS))
+        // Aluminio: 0.253 MXN por lata, 4 puntos, 0.06333 MXN por punto
+        private const val PRECIO_POR_LATA_ALUMINIO = 0.253
+        private const val VALOR_POR_PUNTO_ALUMINIO = 0.06333
         
         private const val ITEMS_POR_PAGINA = 5
     }

@@ -589,6 +589,41 @@ object CustomAlertDialog {
     }
 
     /**
+     * Crea un AlertDialog para mostrar información del producto a entregar cuando se escanea un QR
+     */
+    fun createInfoProductoEntregaDialog(
+        context: Context,
+        nombreProducto: String,
+        onOKClick: (() -> Unit)?
+    ): AlertDialog {
+        // Crear el diálogo personalizado
+        val builder = AlertDialog.Builder(context, R.style.LogoutDialogStyle)
+        val dialog = builder.create()
+
+        // Inflar el layout personalizado
+        val dialogView = LayoutInflater.from(context).inflate(R.layout.dialog_info_producto_entrega, null)
+        dialog.setView(dialogView)
+
+        // Referencias a las vistas
+        val tvNombreProducto = dialogView.findViewById<TextView>(R.id.tvNombreProducto)
+        val btnOK = dialogView.findViewById<Button>(R.id.btnOK)
+
+        // Establecer el nombre del producto
+        tvNombreProducto.text = nombreProducto
+
+        // Configurar botón OK
+        btnOK.setOnClickListener {
+            onOKClick?.invoke()
+            dialog.dismiss()
+        }
+
+        // Hacer que no se pueda cerrar tocando fuera
+        dialog.setCancelable(false)
+
+        return dialog
+    }
+
+    /**
      * Crea un AlertDialog de puntos insuficientes
      */
     fun createPuntosInsuficientesDialog(

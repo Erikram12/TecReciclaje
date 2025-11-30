@@ -1,5 +1,8 @@
 package com.example.tecreciclaje.userpanel
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -38,6 +41,8 @@ class PerfilActivity : AppCompatActivity() {
     private lateinit var imageViewProfile2: ImageView
     private lateinit var optionEditProfile: View
     private lateinit var optionUpdateNfc: View
+    private lateinit var optionVerNip: View
+    private lateinit var textViewNip: TextView
     private lateinit var optionVerLogros: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +81,8 @@ class PerfilActivity : AppCompatActivity() {
         
         optionEditProfile = findViewById(R.id.optionEditProfile)
         optionUpdateNfc = findViewById(R.id.optionUpdateNfc)
+        optionVerNip = findViewById(R.id.optionVerNip)
+        textViewNip = findViewById(R.id.textViewNip)
         optionVerLogros = findViewById(R.id.optionVerLogros)
     }
 
@@ -126,6 +133,17 @@ class PerfilActivity : AppCompatActivity() {
             dialog.show(supportFragmentManager, "UpdateNfcDialog")
         }
 
+        // Opción: Ver NIP (copiar al portapapeles)
+        optionVerNip.setOnClickListener {
+            val nip = textViewNip.text.toString().replace("NIP: ", "")
+            if (nip.isNotEmpty() && nip != "--------") {
+                val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                val clip = ClipData.newPlainText("NIP", nip)
+                clipboard.setPrimaryClip(clip)
+                Toast.makeText(this, "NIP copiado al portapapeles", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         // Opción: Ver Logros
         optionVerLogros.setOnClickListener {
             val intent = Intent(this, LogrosActivity::class.java)
@@ -145,6 +163,8 @@ class PerfilActivity : AppCompatActivity() {
                     val carrera = snapshot.child("usuario_carrera").getValue(String::class.java)
                     val numControl = snapshot.child("usuario_numControl").getValue(String::class.java)
                     val edad = snapshot.child("usuario_edad").getValue(String::class.java)
+                    val nfcUid = snapshot.child("usuario_nfcUid").getValue(String::class.java) ?: ""
+                    val nip = snapshot.child("usuario_nip").getValue(String::class.java) ?: ""
 
                     // Actualizar UI
                     val nombreCompleto = "${nombre ?: ""} ${apellido ?: ""}".trim()
@@ -155,6 +175,22 @@ class PerfilActivity : AppCompatActivity() {
                     textViewUserCarrera.text = "Carrera: ${carrera ?: "No especificada"}"
                     textViewUserNumControl.text = "Número de Control: ${numControl ?: "No especificado"}"
                     textViewUserEdad.text = "Edad: ${if (edad != null) "$edad años" else "No especificada"}"
+
+                    // Mostrar/ocultar módulos según si tiene NFC o NIP
+                    if (nfcUid.isEmpty() && nip.isNotEmpty()) {
+                        // Usuario sin NFC pero con NIP - mostrar módulo NIP
+                        optionVerNip.visibility = View.VISIBLE
+                        optionUpdateNfc.visibility = View.GONE
+                        textViewNip.text = "NIP: $nip"
+                    } else if (nfcUid.isNotEmpty()) {
+                        // Usuario con NFC - mostrar módulo NFC, ocultar NIP
+                        optionVerNip.visibility = View.GONE
+                        optionUpdateNfc.visibility = View.VISIBLE
+                    } else {
+                        // Usuario sin NFC ni NIP - ocultar ambos
+                        optionVerNip.visibility = View.GONE
+                        optionUpdateNfc.visibility = View.GONE
+                    }
 
                     // Cargar imagen de perfil
                     if (!imageUrl.isNullOrEmpty()) {
