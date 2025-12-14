@@ -13,8 +13,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.tecreciclaje.Model.NfcBottomSheetDialogFragment
+import com.example.tecreciclaje.domain.model.Usuario
 import com.example.tecreciclaje.utils.FCMTokenManager
 import com.example.tecreciclaje.utils.LocaleHelper
+import com.example.tecreciclaje.utils.NipGenerator
 import com.example.tecreciclaje.UserPanelDynamic
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -31,6 +33,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.messaging.FirebaseMessaging
 import java.util.Locale
 
 class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRegistrationCancelledListener {
@@ -254,13 +257,14 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
 
     private fun showNfcRegistrationDialog() {
         val googleUser = currentGoogleUser
-        if (googleUser != null) {
+        val firebaseUser = auth.currentUser
+        if (googleUser != null && firebaseUser != null) {
             // Extraer información del usuario de Google
-            val email = googleUser.email ?: ""
-            val displayName = googleUser.displayName ?: ""
-            val nameParts = displayName.split(" ")
+            val email = googleUser.email ?: firebaseUser.email ?: ""
+            val displayName = googleUser.displayName ?: firebaseUser.displayName ?: ""
+            val nameParts = displayName.split(" ", limit = 2)
             val nombre = nameParts.getOrNull(0) ?: ""
-            val apellido = nameParts.drop(1).joinToString(" ")
+            val apellido = if (nameParts.size > 1) nameParts[1] else ""
             
             // Generar número de control basado en el email o usar un valor por defecto
             val numControl = generateNumControlFromEmail(email)
@@ -271,8 +275,10 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
             // Determinar rol basado en el email
             val role = determineUserRole(email)
             
-            // URL de perfil por defecto
-            val perfil = "https://firebasestorage.googleapis.com/v0/b/resiclaje-39011.firebasestorage.app/o/user.png?alt=media&token=745bbda5-2229-4d42-af3f-16dd6ec8db23"
+            // URL de perfil de Google o por defecto
+            val photoUrl = googleUser.photoUrl?.toString() 
+                ?: firebaseUser.photoUrl?.toString()
+                ?: "https://firebasestorage.googleapis.com/v0/b/resiclaje-39011.firebasestorage.app/o/user.png?alt=media&token=745bbda5-2229-4d42-af3f-16dd6ec8db23"
             
             // Mostrar mensaje informativo
             val roleMessage = if (role == "admin") 
@@ -282,13 +288,20 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
             Toast.makeText(this, roleMessage, Toast.LENGTH_SHORT).show()
             
             // Verificar NFC antes de mostrar el bottom sheet
-            if (!verificarNfcHabilitado()) {
+            val nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+            if (nfcAdapter == null) {
+                // No hay NFC disponible, mostrar diálogo para continuar sin llavero
+                mostrarDialogoNfcNoDisponibleGoogle(nombre, apellido, email, photoUrl)
+                return
+            }
+            if (!nfcAdapter.isEnabled) {
+                mostrarDialogoNfcNoHabilitado()
                 return
             }
             
             // Mostrar NFC BottomSheet para completar el registro
             val nfcDialog = NfcBottomSheetDialogFragment.newInstance(
-                nombre, apellido, numControl, carrera, email, "", role, perfil, true // true = es Google Sign-In
+                nombre, apellido, numControl, carrera, email, "", role, photoUrl, true // true = es Google Sign-In
             )
             // Establecer el listener para manejar la cancelación
             nfcDialog.setOnRegistrationCancelledListener(this)
@@ -418,5 +431,129 @@ class MainLoginActivity : AppCompatActivity(), NfcBottomSheetDialogFragment.OnRe
         }
 
         dialog.show()
+    }
+
+    private fun mostrarDialogoNfcNoDisponibleGoogle(
+        nombre: String,
+        apellido: String,
+        email: String,
+        photoUrl: String
+    ) {
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_nfc_no_habilitado, null)
+        val builder = android.app.AlertDialog.Builder(this).setView(dialogView).setCancelable(false)
+        val dialog = builder.create()
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+        // Cambiar el mensaje para indicar que el dispositivo no soporta NFC
+        val txtMensaje = dialogView.findViewById<TextView>(R.id.txtMensajeNfc)
+        txtMensaje.text = "Este dispositivo no soporta NFC"
+
+        val btnConfiguracion = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnConfiguracionNfc)
+        btnConfiguracion.visibility = android.view.View.GONE
+
+        val btnCancelar = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnCancelarNfc)
+        val layoutParams = btnCancelar.layoutParams
+        layoutParams.width = 0
+        btnCancelar.layoutParams = layoutParams
+
+        val btnContinuarSinLlavero = dialogView.findViewById<androidx.cardview.widget.CardView>(R.id.btnContinuarSinLlavero)
+        btnContinuarSinLlavero.visibility = android.view.View.VISIBLE
+        val layoutParamsContinuar = btnContinuarSinLlavero.layoutParams
+        layoutParamsContinuar.width = 0
+        btnContinuarSinLlavero.layoutParams = layoutParamsContinuar
+
+        btnCancelar.setOnClickListener {
+            dialog.dismiss()
+            // Cerrar sesión de Google si se cancela
+            mGoogleSignInClient.signOut().addOnCompleteListener {
+                auth.signOut()
+                currentGoogleUser = null
+            }
+        }
+
+        btnContinuarSinLlavero.setOnClickListener {
+            dialog.dismiss()
+            // Continuar con el registro sin NFC para Google
+            registrarUsuarioGoogleSinNfc(nombre, apellido, email, photoUrl)
+        }
+
+        dialog.show()
+    }
+
+    private fun registrarUsuarioGoogleSinNfc(
+        nombre: String,
+        apellido: String,
+        email: String,
+        photoUrl: String
+    ) {
+        val nip = NipGenerator.generateNip()
+        android.util.Log.d(TAG, "NIP generado para usuario Google sin NFC: $nip")
+
+        val currentUser = auth.currentUser
+        if (currentUser != null) {
+            FirebaseMessaging.getInstance().token
+                .addOnCompleteListener { tokenTask ->
+                    if (!tokenTask.isSuccessful) {
+                        android.util.Log.e(TAG, "Error obteniendo token FCM")
+                        Toast.makeText(this, "Error obteniendo token FCM", Toast.LENGTH_SHORT).show()
+                        return@addOnCompleteListener
+                    }
+
+                    val token = tokenTask.result
+                    val db = FirebaseDatabase.getInstance().reference
+                    val role = determineUserRole(email)
+                    val usuario = Usuario(
+                        currentUser.uid,
+                        nombre,
+                        apellido,
+                        "",
+                        "",
+                        email,
+                        role,
+                        photoUrl,
+                        "" // NFC vacío
+                    ).apply {
+                        usuario_puntos = 0
+                        usuario_tokenFCM = token
+                        usuario_provider = "google"
+                        usuario_nip = nip
+                    }
+
+                    db.child("usuarios").child(currentUser.uid).setValue(usuario)
+                        .addOnSuccessListener {
+                            db.child("usuarios").child(currentUser.uid).child("usuario_puntos").setValue(0)
+                                .addOnSuccessListener {
+                                    android.util.Log.d(TAG, "Registro Google completado sin NFC con NIP: $nip")
+                                    Toast.makeText(
+                                        this,
+                                        "Registro completo. Tu NIP es: $nip",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+
+                                    // Actualizar token FCM
+                                    FCMTokenManager.updateTokenForCurrentUser()
+                                    FCMTokenManager.checkAndUsePendingToken(this)
+
+                                    // Navegar según el rol
+                                    if (role == "admin") {
+                                        goTo(AdminPanel::class.java)
+                                    } else {
+                                        goTo(UserPanelDynamic::class.java)
+                                    }
+                                }
+                                .addOnFailureListener { e ->
+                                    android.util.Log.e(TAG, "Error guardando puntos: ${e.message}")
+                                    Toast.makeText(this, "Error guardando puntos: ${e.message}", Toast.LENGTH_SHORT).show()
+                                }
+                        }
+                        .addOnFailureListener { e ->
+                            android.util.Log.e(TAG, "Error guardando datos: ${e.message}")
+                            Toast.makeText(this, "Error guardando datos: ${e.message}", Toast.LENGTH_SHORT).show()
+                        }
+                }
+        } else {
+            android.util.Log.e(TAG, "Usuario autenticado es null después de Google Sign In")
+            Toast.makeText(this, "Error: No se pudo obtener información del usuario", Toast.LENGTH_SHORT).show()
+        }
     }
 }
